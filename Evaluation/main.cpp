@@ -7,8 +7,20 @@
 
 #include <iostream>
 
+#include "RXBitBoard.hpp"
+#include "RXBBpatterns.hpp"
+
 int main(int argc, const char * argv[]) {
     // insert code here...
-    std::cout << "Hello, World!\n";
+    
+    RXBBPatterns board;
+    
+    std::string othellier = "XXXOXXXXOXXXXXXXOOXXXXXXOOOXXXXXOOOXXOO-OOOOO---OOOOOOO-OOOOOOO- X";
+    
+    board.build(othellier);
+    
+    std::cout << board << std::endl;
+    
+    
     return EXIT_SUCCESS;
 }
