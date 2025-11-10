@@ -13,7 +13,9 @@
 
 std::ostream& operator<<(std::ostream& os, RXBBPatterns& sBoard) {
 	
-	os << sBoard.board << std::setprecision(6) << std::endl;
+	os << sBoard.board << std::endl;
+    
+    os << *(sBoard.pattern) << std::endl;
 				
 	return os;
 

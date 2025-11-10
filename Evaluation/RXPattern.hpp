@@ -10,12 +10,12 @@
 #ifndef RXPATTERN_HPP
 #define RXPATTERN_HPP
 
+#include <iostream>
+
 
 
 class alignas(16) RXPattern {
-    
-    //    static const int structure_patterns[];
-    
+        
 public:
     
     short diag_5a;
@@ -50,8 +50,6 @@ public:
     int corner11b;
     int corner11c;
     int corner11d;
-    
-    
     
     int edge_1;
     int edge_2;
@@ -101,8 +99,9 @@ public:
     
     void clear();
     
-    //    static void generate_pattern();
-    
+    /* DEBUG */
+    friend std::ostream& operator<<(std::ostream& os, RXPattern& pattern);
+
     
 };
 

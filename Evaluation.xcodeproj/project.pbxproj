@@ -6,6 +6,18 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		37186BEB2EBE09CC0041EA59 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 37186BDC2EBE09CC0041EA59 /* main.cpp */; };
+		37186BEC2EBE09CC0041EA59 /* RXBBCountFlips_NEON_Edax.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 37186BDD2EBE09CC0041EA59 /* RXBBCountFlips_NEON_Edax.cpp */; };
+		37186BED2EBE09CC0041EA59 /* RXBBDoFlips_NEON_Edax.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 37186BDE2EBE09CC0041EA59 /* RXBBDoFlips_NEON_Edax.cpp */; };
+		37186BEE2EBE09CC0041EA59 /* RXBBGenerateFlips_NEON_Edax.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 37186BDF2EBE09CC0041EA59 /* RXBBGenerateFlips_NEON_Edax.cpp */; };
+		37186BEF2EBE09CC0041EA59 /* RXBBPatterns.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 37186BE12EBE09CC0041EA59 /* RXBBPatterns.cpp */; };
+		37186BF02EBE09CC0041EA59 /* RXBitBoard.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 37186BE32EBE09CC0041EA59 /* RXBitBoard.cpp */; };
+		37186BF12EBE09CC0041EA59 /* RXMove.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 37186BE62EBE09CC0041EA59 /* RXMove.cpp */; };
+		37186BF22EBE09CC0041EA59 /* RXPattern.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 37186BE82EBE09CC0041EA59 /* RXPattern.cpp */; };
+		3742EBCD2EBE365100496265 /* RXPatternGenerate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3742EBCC2EBE365000496265 /* RXPatternGenerate.cpp */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXCopyFilesBuildPhase section */
 		3725DD832EBB66C40054D555 /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
@@ -19,16 +31,24 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		37186BDC2EBE09CC0041EA59 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+		37186BDD2EBE09CC0041EA59 /* RXBBCountFlips_NEON_Edax.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = RXBBCountFlips_NEON_Edax.cpp; sourceTree = "<group>"; };
+		37186BDE2EBE09CC0041EA59 /* RXBBDoFlips_NEON_Edax.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = RXBBDoFlips_NEON_Edax.cpp; sourceTree = "<group>"; };
+		37186BDF2EBE09CC0041EA59 /* RXBBGenerateFlips_NEON_Edax.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = RXBBGenerateFlips_NEON_Edax.cpp; sourceTree = "<group>"; };
+		37186BE02EBE09CC0041EA59 /* RXBBPatterns.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = RXBBPatterns.hpp; sourceTree = "<group>"; };
+		37186BE12EBE09CC0041EA59 /* RXBBPatterns.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = RXBBPatterns.cpp; sourceTree = "<group>"; };
+		37186BE22EBE09CC0041EA59 /* RXBitBoard.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = RXBitBoard.hpp; sourceTree = "<group>"; };
+		37186BE32EBE09CC0041EA59 /* RXBitBoard.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = RXBitBoard.cpp; sourceTree = "<group>"; };
+		37186BE42EBE09CC0041EA59 /* RXConstantes.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = RXConstantes.hpp; sourceTree = "<group>"; };
+		37186BE52EBE09CC0041EA59 /* RXMove.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = RXMove.hpp; sourceTree = "<group>"; };
+		37186BE62EBE09CC0041EA59 /* RXMove.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = RXMove.cpp; sourceTree = "<group>"; };
+		37186BE72EBE09CC0041EA59 /* RXPattern.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = RXPattern.hpp; sourceTree = "<group>"; };
+		37186BE82EBE09CC0041EA59 /* RXPattern.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = RXPattern.cpp; sourceTree = "<group>"; };
+		37186BE92EBE09CC0041EA59 /* RXTools.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = RXTools.hpp; sourceTree = "<group>"; };
+		37186BF32EBE173F0041EA59 /* RXPatternGenerate.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = RXPatternGenerate.hpp; sourceTree = "<group>"; };
 		3725DD852EBB66C40054D555 /* Evaluation */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Evaluation; sourceTree = BUILT_PRODUCTS_DIR; };
+		3742EBCC2EBE365000496265 /* RXPatternGenerate.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = RXPatternGenerate.cpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
-
-/* Begin PBXFileSystemSynchronizedRootGroup section */
-		3725DD872EBB66C40054D555 /* Evaluation */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = Evaluation;
-			sourceTree = "<group>";
-		};
-/* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		3725DD822EBB66C40054D555 /* Frameworks */ = {
@@ -41,10 +61,33 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		37186BEA2EBE09CC0041EA59 /* Evaluation */ = {
+			isa = PBXGroup;
+			children = (
+				37186BF32EBE173F0041EA59 /* RXPatternGenerate.hpp */,
+				3742EBCC2EBE365000496265 /* RXPatternGenerate.cpp */,
+				37186BDC2EBE09CC0041EA59 /* main.cpp */,
+				37186BE92EBE09CC0041EA59 /* RXTools.hpp */,
+				37186BE42EBE09CC0041EA59 /* RXConstantes.hpp */,
+				37186BE02EBE09CC0041EA59 /* RXBBPatterns.hpp */,
+				37186BE12EBE09CC0041EA59 /* RXBBPatterns.cpp */,
+				37186BE52EBE09CC0041EA59 /* RXMove.hpp */,
+				37186BE62EBE09CC0041EA59 /* RXMove.cpp */,
+				37186BE72EBE09CC0041EA59 /* RXPattern.hpp */,
+				37186BE82EBE09CC0041EA59 /* RXPattern.cpp */,
+				37186BE22EBE09CC0041EA59 /* RXBitBoard.hpp */,
+				37186BE32EBE09CC0041EA59 /* RXBitBoard.cpp */,
+				37186BDD2EBE09CC0041EA59 /* RXBBCountFlips_NEON_Edax.cpp */,
+				37186BDE2EBE09CC0041EA59 /* RXBBDoFlips_NEON_Edax.cpp */,
+				37186BDF2EBE09CC0041EA59 /* RXBBGenerateFlips_NEON_Edax.cpp */,
+			);
+			path = Evaluation;
+			sourceTree = "<group>";
+		};
 		3725DD7C2EBB66C40054D555 = {
 			isa = PBXGroup;
 			children = (
-				3725DD872EBB66C40054D555 /* Evaluation */,
+				37186BEA2EBE09CC0041EA59 /* Evaluation */,
 				3725DD862EBB66C40054D555 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -71,9 +114,6 @@
 			buildRules = (
 			);
 			dependencies = (
-			);
-			fileSystemSynchronizedGroups = (
-				3725DD872EBB66C40054D555 /* Evaluation */,
 			);
 			name = Evaluation;
 			packageProductDependencies = (
@@ -120,6 +160,15 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				37186BEB2EBE09CC0041EA59 /* main.cpp in Sources */,
+				37186BEC2EBE09CC0041EA59 /* RXBBCountFlips_NEON_Edax.cpp in Sources */,
+				37186BED2EBE09CC0041EA59 /* RXBBDoFlips_NEON_Edax.cpp in Sources */,
+				37186BEE2EBE09CC0041EA59 /* RXBBGenerateFlips_NEON_Edax.cpp in Sources */,
+				3742EBCD2EBE365100496265 /* RXPatternGenerate.cpp in Sources */,
+				37186BEF2EBE09CC0041EA59 /* RXBBPatterns.cpp in Sources */,
+				37186BF02EBE09CC0041EA59 /* RXBitBoard.cpp in Sources */,
+				37186BF12EBE09CC0041EA59 /* RXMove.cpp in Sources */,
+				37186BF22EBE09CC0041EA59 /* RXPattern.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

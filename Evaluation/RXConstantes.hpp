@@ -48,4 +48,6 @@ static const short INTERRUPT_SEARCH = 512;
 static const short MAX_SCORE = 192;
 static const unsigned int SHARED = BLACK;
 
+static const unsigned int pow3[] = {1, 3, 9, 27, 81, 243, 729, 2187, 6561, 19683, 59049, 177147, 531441};
+
 #endif

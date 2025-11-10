@@ -8,18 +8,15 @@
 #include <iostream>
 
 #include "RXBitBoard.hpp"
-#include "RXBBpatterns.hpp"
+#include "RXBBPatterns.hpp"
+#include "RXPatternGenerate.hpp"
 
 int main(int argc, const char * argv[]) {
     // insert code here...
-    
-    RXBBPatterns board;
-    
-    std::string othellier = "XXXOXXXXOXXXXXXXOOXXXXXXOOOXXXXXOOOXXOO-OOOOO---OOOOOOO-OOOOOOO- X";
-    
-    board.build(othellier);
-    
-    std::cout << board << std::endl;
+            
+    RXPatternGenerate gen;
+
+    gen.display();
     
     
     return EXIT_SUCCESS;
