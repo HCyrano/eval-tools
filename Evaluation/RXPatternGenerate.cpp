@@ -126,6 +126,16 @@ int RXPatternGenerate::id_sym(int index, int sym_id) {
 
 void RXPatternGenerate::generate_method() {
     
+    for (const auto& f : eval)
+        std::cout << "int " << f.name << ";" << std::endl;
+
+    std::cout << std::endl;
+
+    for (const auto& f : eval)
+        std::cout << f.name << " = 0;" << std::endl;
+
+    std::cout << std::endl;
+
     std::string signature = "inline void RXPattern::set_BLACK_";
     unsigned int color = BLACK;
     unsigned int offset = 1;

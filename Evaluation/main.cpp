@@ -16,7 +16,7 @@ int main(int argc, const char * argv[]) {
             
     RXPatternGenerate gen;
 
-    gen.display();
+    gen.generate_method();
     
     
     return EXIT_SUCCESS;
