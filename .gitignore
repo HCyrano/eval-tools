@@ -90,8 +90,15 @@ xcuserdata/
 # ignorer le dossier build
 build/
 
-# ignorer le dossier garoucid_Train_Data
+# ignorer les dossiers
 Egaroucid_Train_Data/
+stages/
+weights/
+weights_A/
+docs/
+datas/
+datas_norm/
+
 
 # ignorer le dossier OptimizationProfiles
 OptimizationProfiles/

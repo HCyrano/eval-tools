@@ -8,27 +8,35 @@
 #include <stdio.h>
 #include <iostream>
 #include <iomanip>
+#include <fstream>
 
 
 #include "RXPatternGenerate.hpp"
 #include "RXMove.hpp"
+#include "RXPattern.hpp"
 #include "RXBitBoard.hpp"
+#include "RXBBPatterns.hpp"
 
+
+// Affiche la disposition du motif (pattern) sur l’othellier,
+// en montrant les cases concernées et leur ordre
+// affiche egalement le pattern symetrique
 void RXPatternGenerate::display() {
     
     std::cout << "nombre de  patterns : " << std::size(eval) << std::endl;
 
     std::cout << "affichage pattern : " << std::endl;
-    for (const auto& f : eval) {
-        std::cout << "name: " << f.name << " symID: " << f.symID << ", squares: ";
+    for(int i = 0; i<std::size(eval); ++i) {
+        const auto& f = eval[i];
+        std::cout << "name: " << "patt[" << std::setw(2) << i << "]" << " symID: " << f.symID << ", squares: ";
 
         std::cout << "\n  A B C D E F G H " << std::endl;
         for(int iLine = 1; iLine<=8; iLine++) {
             std::cout  << iLine << " ";
             for(int iPosition = (9-iLine)*8 - 1; iPosition>(8-iLine)*8-1; iPosition--) {
                 bool find = false;
-                for(int id = 0; id < std::size(f.square); id++)
-                    if(iPosition == f.square[id]) {
+                for(int id = 0; id < std::size(f.squares); id++)
+                    if(iPosition == f.squares[id]) {
                         if(id>=10)
                             std::cout  << (char)('A' + (id-10)) << " ";
                         else
@@ -51,8 +59,8 @@ void RXPatternGenerate::display() {
             std::cout  << iLine << " ";
             for(int iPosition = (9-iLine)*8 - 1; iPosition>(8-iLine)*8-1; iPosition--) {
                 bool find = false;
-                for(int id = 0; id < std::size(f.square); id++)
-                    if(iPosition == f.square[sym[f.symID][id]]) {
+                for(int id = 0; id < std::size(f.squares); id++)
+                    if(iPosition == f.squares[sym[f.symID][id]]) {
                         if(id>=10)
                             std::cout  << (char)('A' + (id-10)) << " ";
                         else
@@ -79,8 +87,8 @@ int RXPatternGenerate::patt_id(RXBitBoard board, RXFeature f) {
     int patt_id_1 = 0;
     int patt_id_2 = 0;
 
-    for(unsigned int id_1 = 0; id_1<std::size(f.square); ++id_1) {
-        unsigned int id_2 = f.square[sym[f.symID][id_1]];
+    for(unsigned int id_1 = 0; id_1<std::size(f.squares); ++id_1) {
+        unsigned int id_2 = f.squares[sym[f.symID][id_1]];
         
         unsigned long long pos_1 = 0x1ULL<<id_1;
         
@@ -98,6 +106,7 @@ int RXPatternGenerate::patt_id(RXBitBoard board, RXFeature f) {
     
 }
 
+// Retourne l'indice du motif symétrique par rapport à l'indice du motif donné
 int RXPatternGenerate::id_sym(int index, int sym_id) {
     
     int id_sym = 0;
@@ -124,17 +133,49 @@ int RXPatternGenerate::id_sym(int index, int sym_id) {
     return id_sym;
 };
 
+
+// Génère automatiquement les méthodes 'set' et 'flip' pour l’othellier,
+// en suivant la définition des motifs (patterns) utilisés
 void RXPatternGenerate::generate_method() {
     
-    for (const auto& f : eval)
-        std::cout << "int " << f.name << ";" << std::endl;
+    std::cout << "int patt[" << std::size(eval) << "];" << std::endl;
+
+    std::cout << std::endl;
+    
+    std::cout << "std::vector<unsigned int> offset_patt = {" << std::endl;
+    
+    unsigned int offset_patt = 0;
+    for(unsigned int i = 0; i<std::size(eval); ++i) {
+        
+        offset_patt = pow3[std::size(eval[i].squares)]/2;
+        std::cout << std::setw(6) << offset_patt << ", " ;
+
+        if(eval[i].lastPatternType)
+            std::cout << std::endl; ;
+
+    }
+
+    std::cout << "};" << std::endl;
 
     std::cout << std::endl;
 
-    for (const auto& f : eval)
-        std::cout << f.name << " = 0;" << std::endl;
+    std::cout << "std::vector<unsigned int> offset_index = {" << std::endl;
+    
+    unsigned int offset_index = 0;
+    for(unsigned int i = 0; i<std::size(eval); ++i) {
+        const auto& f = eval[i];
+        if(f.lastPatternType) {
+            std::cout << std::setw(6) << offset_index << "," << std::endl ;
+            offset_index += pow3[std::size(f.squares)];
+        } else {
+            std::cout << std::setw(6) << offset_index << ", " ;
+        }
+        
+    }
+    
+    std::cout << offset_index << std::endl;
 
-    std::cout << std::endl;
+    std::cout << "};" << std::endl;
 
     std::string signature = "inline void RXPattern::set_BLACK_";
     unsigned int color = BLACK;
@@ -152,7 +193,7 @@ void RXPatternGenerate::generate_method() {
     
     std::cout << std::endl;
 
-    signature = "inline void RXPattern::flip_WHITE_";
+    signature = "inline void RXPattern::flip_BLACK_";
     color = BLACK;
     offset = 2;
 
@@ -183,18 +224,32 @@ void RXPatternGenerate::generate_method(std::string signature, unsigned int colo
         
         std::cout << signature << RXMove::index_to_coord(pos) << "() { ";
         
-        for (const auto& f : eval) {
-            std::string name = f.name;
+        for(int i = 0; i<std::size(eval); ++i) {
+            const auto& f = eval[i];
             
             unsigned int id = 0;
-            for (int s : f.square) {
+            for (int s : f.squares) {
                 if (pos == s) {
-                    std::cout << std::setw(11) << name << (color == BLACK? " -= ":" += ") << std::setw(7) << offset*pow3[id] << "; ";
+                    std::cout  << "patt[" << std::setw(2) << i << "] " << (color == BLACK? " -= ":" += ") << std::setw(7) << offset*pow3[id] << "; ";
                     break;
                 }
                 ++id;
             }
+
         }
+        
+//        for (const auto& f : eval) {
+//            std::string name = f.name;
+//            
+//            unsigned int id = 0;
+//            for (int s : f.square) {
+//                if (pos == s) {
+//                    std::cout << std::setw(11) << name << (color == BLACK? " -= ":" += ") << std::setw(7) << offset*pow3[id] << "; ";
+//                    break;
+//                }
+//                ++id;
+//            }
+//        }
             
             
         std::cout << "};" <<std::endl;
@@ -202,4 +257,135 @@ void RXPatternGenerate::generate_method(std::string signature, unsigned int colo
     }
     
 };
+
+
+// Transforme les données brutes de la base 'egaroucid' en données structurées,
+// organisées par stage
+void RXPatternGenerate::egrcd_rawdata_to_stage() {
+    
+    std::string dir_str = "/Users/caussebruno/Documents/developpement/Evaluation";
+
+    for( unsigned int stage = 0; stage<60; ++stage){
+        
+        std::string file_name_in;
+        std::string file_name_out;
+        
+        std::ostringstream oss_out;
+        oss_out << std::setw(2) << std::setfill('0') << stage;
+        file_name_out = dir_str + "/stages/stage_" + oss_out.str() + ".txt";
+        
+        std::cout << file_name_out << std::endl;
+        
+        std::ofstream ofs(file_name_out.c_str());
+        
+        if(ofs) {
+            
+            for(int i = 0; i <= 25; ++i) {
+                
+                std::ostringstream oss_in;
+                oss_in << std::setw(7) << std::setfill('0') << i;
+                file_name_in = dir_str + "/Egaroucid_Train_Data/0001_egaroucid_7_5_1_lv17/" + oss_in.str() + ".txt";
+                
+                
+                std::ifstream in(file_name_in.c_str());
+                if(in) {
+                    
+                    std::string line;
+                    
+                    while(std::getline(in, line)){
+                        
+                        auto n_empty = std::count(line.begin(), line.begin() + std::min<size_t>(64, line.size()), '-');
+                        
+                        if(stage == 60-n_empty) {
+                            
+                            ofs << line << std::endl;
+                            
+                        }
+                    }
+                    in.close();
+                }
+                
+                
+                
+            }
+            
+            ofs.close();
+        }
+    }
+    
+};
+
+void RXPatternGenerate::stage_to_data(const unsigned int stage) {
+    
+    std::string dir_str = "/Users/caussebruno/Documents/developpement/Evaluation";
+    
+    std::ostringstream oss;
+    oss << std::setw(2) << std::setfill('0') << stage;
+    
+    std::string file_name_in = dir_str + "/stages/stage_" + oss.str() + ".txt";
+    std::string file_name_out = dir_str + "/datas/data_" + oss.str() + ".txt";
+    
+    std::ofstream ofs(file_name_out.c_str());
+    
+    if(ofs) {
+
+        std::ifstream in(file_name_in.c_str());
+        if(in) {
+            
+            std::string line;
+            
+            while(std::getline(in, line)) {
+                
+                std::stringstream ss;
+                int score;
+                ss << line.substr(line.find(" ")+1);
+                ss >> score;
+                
+                std::string othellier = line.substr(0, 65) + 'X';
+                
+                RXBBPatterns sBoard;
+                sBoard.build(othellier);
+                
+                std::ostringstream oss;
+                int* patt = sBoard.pattern->patt;
+                for(int i = 0; i<std::size(sBoard.pattern->patt); ++i) {
+                    
+                    //normalisation de l'index:
+                    int pattern_ID = id_sym(patt[i], eval[i].symID);
+                    pattern_ID = std::min(patt[i],pattern_ID);
+                    pattern_ID += sBoard.pattern->offset_patt[i];
+                    pattern_ID += sBoard.pattern->offset_index[i];
+                    
+                    oss << pattern_ID << " ";
+                    
+                }
+                
+                oss << score;
+                
+                ofs << oss.str() << std::endl;
+                    
+            }
+
+            
+            in.close();
+        }
+
+        ofs.close();
+    }
+    
+
+};
+
+/*
+void RXPatternGenerate::write_eval() {
+    
+    for(int i = 0; i < offset_index[47]; i++) {
+        
+    }
+    
+};
+*/
+
+
+
 

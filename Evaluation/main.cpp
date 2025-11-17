@@ -15,9 +15,12 @@ int main(int argc, const char * argv[]) {
     // insert code here...
             
     RXPatternGenerate gen;
-
-    gen.generate_method();
+/*
+    for(int stage = 0; stage<60; ++stage)
+        gen.stage_to_data(stage);
+*/
     
+    gen.generate_method();
     
     return EXIT_SUCCESS;
 }
