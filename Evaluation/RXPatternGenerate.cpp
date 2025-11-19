@@ -23,11 +23,11 @@
 // affiche egalement le pattern symetrique
 void RXPatternGenerate::display() {
     
-    std::cout << "nombre de  patterns : " << std::size(eval) << std::endl;
+    std::cout << "nombre de  patterns : " << std::size(pattern_def) << std::endl;
 
     std::cout << "affichage pattern : " << std::endl;
-    for(int i = 0; i<std::size(eval); ++i) {
-        const auto& f = eval[i];
+    for(int i = 0; i<std::size(pattern_def); ++i) {
+        const auto& f = pattern_def[i];
         std::cout << "name: " << "patt[" << std::setw(2) << i << "]" << " symID: " << f.symID << ", squares: ";
 
         std::cout << "\n  A B C D E F G H " << std::endl;
@@ -60,7 +60,7 @@ void RXPatternGenerate::display() {
             for(int iPosition = (9-iLine)*8 - 1; iPosition>(8-iLine)*8-1; iPosition--) {
                 bool find = false;
                 for(int id = 0; id < std::size(f.squares); id++)
-                    if(iPosition == f.squares[sym[f.symID][id]]) {
+                    if(iPosition == f.squares[pattern_sym[f.symID][id]]) {
                         if(id>=10)
                             std::cout  << (char)('A' + (id-10)) << " ";
                         else
@@ -82,37 +82,13 @@ void RXPatternGenerate::display() {
 
 };
 
-int RXPatternGenerate::patt_id(RXBitBoard board, RXFeature f) {
-    
-    int patt_id_1 = 0;
-    int patt_id_2 = 0;
-
-    for(unsigned int id_1 = 0; id_1<std::size(f.squares); ++id_1) {
-        unsigned int id_2 = f.squares[sym[f.symID][id_1]];
-        
-        unsigned long long pos_1 = 0x1ULL<<id_1;
-        
-        if(board.discs[BLACK] & pos_1) {
-            patt_id_1 -= pow3[id_1];
-            patt_id_2 -= pow3[id_2];
-        } else if(board.discs[WHITE] & pos_1) {
-            patt_id_1 += pow3[id_1];
-            patt_id_2 += pow3[id_2];
-        }
-
-    }
-    
-    return patt_id_1 <= patt_id_2 ? patt_id_1: patt_id_2;
-    
-}
-
 // Retourne l'indice du motif symétrique par rapport à l'indice du motif donné
 int RXPatternGenerate::id_sym(int index, int sym_id) {
     
     int id_sym = 0;
     
     int x = index;
-    unsigned long n_squares = std::size(sym[sym_id]);
+    unsigned long n_squares = std::size(pattern_sym[sym_id]);
     
     for(int i = 0; i<n_squares; ++i) {
         int r = x % 3;
@@ -126,7 +102,7 @@ int RXPatternGenerate::id_sym(int index, int sym_id) {
             x -= 1;
         }
 
-        id_sym += r * pow3[sym[sym_id][i]];
+        id_sym += r * pow3[pattern_sym[sym_id][i]];
         
     }
     
@@ -137,45 +113,7 @@ int RXPatternGenerate::id_sym(int index, int sym_id) {
 // Génère automatiquement les méthodes 'set' et 'flip' pour l’othellier,
 // en suivant la définition des motifs (patterns) utilisés
 void RXPatternGenerate::generate_method() {
-    
-    std::cout << "int patt[" << std::size(eval) << "];" << std::endl;
 
-    std::cout << std::endl;
-    
-    std::cout << "std::vector<unsigned int> offset_patt = {" << std::endl;
-    
-    unsigned int offset_patt = 0;
-    for(unsigned int i = 0; i<std::size(eval); ++i) {
-        
-        offset_patt = pow3[std::size(eval[i].squares)]/2;
-        std::cout << std::setw(6) << offset_patt << ", " ;
-
-        if(eval[i].lastPatternType)
-            std::cout << std::endl; ;
-
-    }
-
-    std::cout << "};" << std::endl;
-
-    std::cout << std::endl;
-
-    std::cout << "std::vector<unsigned int> offset_index = {" << std::endl;
-    
-    unsigned int offset_index = 0;
-    for(unsigned int i = 0; i<std::size(eval); ++i) {
-        const auto& f = eval[i];
-        if(f.lastPatternType) {
-            std::cout << std::setw(6) << offset_index << "," << std::endl ;
-            offset_index += pow3[std::size(f.squares)];
-        } else {
-            std::cout << std::setw(6) << offset_index << ", " ;
-        }
-        
-    }
-    
-    std::cout << offset_index << std::endl;
-
-    std::cout << "};" << std::endl;
 
     std::string signature = "inline void RXPattern::set_BLACK_";
     unsigned int color = BLACK;
@@ -224,8 +162,8 @@ void RXPatternGenerate::generate_method(std::string signature, unsigned int colo
         
         std::cout << signature << RXMove::index_to_coord(pos) << "() { ";
         
-        for(int i = 0; i<std::size(eval); ++i) {
-            const auto& f = eval[i];
+        for(int i = 0; i<std::size(pattern_def); ++i) {
+            const auto& f = pattern_def[i];
             
             unsigned int id = 0;
             for (int s : f.squares) {
@@ -237,20 +175,6 @@ void RXPatternGenerate::generate_method(std::string signature, unsigned int colo
             }
 
         }
-        
-//        for (const auto& f : eval) {
-//            std::string name = f.name;
-//            
-//            unsigned int id = 0;
-//            for (int s : f.square) {
-//                if (pos == s) {
-//                    std::cout << std::setw(11) << name << (color == BLACK? " -= ":" += ") << std::setw(7) << offset*pow3[id] << "; ";
-//                    break;
-//                }
-//                ++id;
-//            }
-//        }
-            
             
         std::cout << "};" <<std::endl;
         
@@ -350,11 +274,19 @@ void RXPatternGenerate::stage_to_data(const unsigned int stage) {
                 int* patt = sBoard.pattern->patt;
                 for(int i = 0; i<std::size(sBoard.pattern->patt); ++i) {
                     
+                    //find pattern description
+                    unsigned int id_info = 0;
+                    for(const auto& info : pattern_info) {
+                        if(info[0] <= i )
+                            break;
+                        ++id_info;
+                    }
+                    
                     //normalisation de l'index:
-                    int pattern_ID = id_sym(patt[i], eval[i].symID);
+                    int pattern_ID = id_sym(patt[i], pattern_def[i].symID);
                     pattern_ID = std::min(patt[i],pattern_ID);
-                    pattern_ID += sBoard.pattern->offset_patt[i];
-                    pattern_ID += sBoard.pattern->offset_index[i];
+                    pattern_ID += pattern_info[id_info][2]/2;
+                    pattern_ID += pattern_info[id_info][1];
                     
                     oss << pattern_ID << " ";
                     
@@ -437,8 +369,8 @@ void RXPatternGenerate::norm_weight(float* weigths, short* weigths_out, unsigned
         int p_idx = i;
         int p_inv = (n_weights-1) - p_idx;
 
-        int p_sym_idx = id_sym(p_idx-n_weights/2, 2) + 243/2;
-        int p_sym_inv = id_sym(p_inv-n_weights/2, 2) + 243/2;
+        int p_sym_idx = id_sym(p_idx-n_weights/2, 2) + n_weights/2;
+        int p_sym_inv = id_sym(p_inv-n_weights/2, 2) + n_weights/2;
 
         float weight_idx = (weigths[p_idx] + weigths[p_sym_idx])/2.0f;
         float weight_inv = (weigths[p_inv] + weigths[p_sym_inv])/2.0f;
