@@ -20,7 +20,7 @@ int main(int argc, const char * argv[]) {
         gen.stage_to_data(stage);
 */
     
-    gen.generate_method();
+    gen.write_eval(5);
     
     return EXIT_SUCCESS;
 }

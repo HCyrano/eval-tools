@@ -376,15 +376,94 @@ void RXPatternGenerate::stage_to_data(const unsigned int stage) {
 
 };
 
-/*
-void RXPatternGenerate::write_eval() {
+
+void RXPatternGenerate::write_eval(const unsigned int stage) {
     
-    for(int i = 0; i < offset_index[47]; i++) {
+    std::string dir_str = "/Users/caussebruno/Documents/developpement/Evaluation";
+    
+    std::ostringstream oss;
+    oss << std::setw(2) << std::setfill('0') << stage;
+    
+    std::string file_name_in = dir_str + "/weights/weight_" + oss.str() + ".txt";
+    
+    float weigths_in[383697];
+    float weigth = 0.0f;
+    
+    std::ifstream in(file_name_in.c_str());
+    if (in.is_open()) {
+            std::cout << "Ouverture du fichier reussie. Lecture des donnees..." << std::endl;
+            
+            // 2. Boucle de lecture jusqu'a la fin du fichier (ou erreur)
+            // La condition 'fichier >> valeur_lue' est vraie tant qu'un float peut etre lu.
+            unsigned int i = 0;
+            while (in >> weigth) {
+                // 3. Ajout de la valeur lue dans le tableau
+                weigths_in[i] = weigth;
+                ++i;
+            }
+
+            // 4. Verification de la raison de la sortie de la boucle
+            if (in.eof()) {
+                // Sortie normale : la fin du fichier a été atteinte.
+                std::cout << "Lecture terminee : Fin du fichier atteinte." << std::endl;
+            } else if (in.fail() && i != 0) {
+                // La derniere tentative de lecture a echouee (ex: caractere non-numerique)
+                std::cerr << "Attention : La lecture a ete interrompue par une entree non-valide." << std::endl;
+            } else if (in.fail() && i == 0) {
+                 // Aucune valeur n'a pu être lue (fichier vide ou premier element non-float)
+                std::cerr << "Erreur : Le fichier est vide ou la premiere entree n'est pas un float." << std::endl;
+            }
+
+            // 5. Fermeture du fichier
+            in.close();
+
+        } else {
+            std::cerr << "Erreur : Impossible d'ouvrir le fichier '" << file_name_in << "'" << std::endl;
+            return;
+        }
+    
+        short weigths_out[383697];
         
-    }
-    
+        //norm_weight(weigths_in, weigths_out, 0, 243, 2);
+
 };
-*/
+
+void RXPatternGenerate::norm_weight(float* weigths, short* weigths_out, unsigned int id_start, unsigned int n_weights, unsigned int sym) {
+    
+    unsigned int id_end = id_start + n_weights;
+
+    for(int i = id_start; i <= id_end/2; i++) {
+                
+        int p_idx = i;
+        int p_inv = (n_weights-1) - p_idx;
+
+        int p_sym_idx = id_sym(p_idx-n_weights/2, 2) + 243/2;
+        int p_sym_inv = id_sym(p_inv-n_weights/2, 2) + 243/2;
+
+        float weight_idx = (weigths[p_idx] + weigths[p_sym_idx])/2.0f;
+        float weight_inv = (weigths[p_inv] + weigths[p_sym_inv])/2.0f;
+
+        short weight = static_cast<short>(((weight_idx-weight_inv)/2.0f)*256);
+        
+
+        weigths_out[p_idx]      =  weight;
+        weigths_out[p_inv]      = -weight;
+        weigths_out[p_sym_idx]  =  weight;
+        weigths_out[p_sym_inv]  = -weight;
+
+        std::cout << "patt[" << std::setw(3) << p_idx << "] = " << weigths_out[p_idx] << std::endl;
+        std::cout << "patt[" << std::setw(3) << p_inv << "] = " << weigths_out[p_inv] << std::endl;
+        std::cout << "patt[" << std::setw(3) << p_sym_idx << "] = " << weigths_out[p_sym_idx] << std::endl;
+        std::cout << "patt[" << std::setw(3) << p_sym_inv << "] = " << weigths_out[p_sym_inv] << std::endl;
+
+        std::cout << std::endl;
+
+    }
+
+};
+
+
+
 
 
 

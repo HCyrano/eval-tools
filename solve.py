@@ -3,8 +3,9 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy.sparse import csr_matrix
 from scipy.sparse.linalg import lsqr
+from scipy.sparse.linalg import lsmr
+from pathlib import Path
 
-print()
 
 # ----------------------------------------------------------
 # estime le poids des patterns pour le stage (60-n_empty)
@@ -12,31 +13,25 @@ print()
 
 
 #recupere le paramettre
-stage = int(sys.argv[1])
+# --- Suggestion pour l'argument
+if len(sys.argv) < 2:
+    print("Usage: python solve.py <stage_number>")
+    sys.exit(1)
 
-'''
-# chemin vers les fichier data_XX.txt
-filenames_in = []
+try:
+    stage = int(sys.argv[1])
+except ValueError:
+    print("Erreur: Le numéro de stage doit être un entier.")
+    sys.exit(1)
 
-# Cas général : on ajoute stage
-filenames_in.append(f"datas/data_{stage:02}.txt")
+DATA_DIR = Path("datas_norm")
+WEIGHTS_DIR = Path("weights")
 
-# Ajoute fichier précédent si stage > 9
-if stage > 9:
-    filenames_in.insert(0, f"datas/data_{stage-1:02}.txt")
+# Créer le répertoire de sortie s'il n'existe pas
+WEIGHTS_DIR.mkdir(exist_ok=True)
 
-# ajoute fichier suivant si stage [9;59[
-if stage > 8 and stage < 59:
-    filenames_in.append(f"datas/data_{stage+1:02}.txt")
-
-
-filename_out = f"weights/weight_{f"{stage:02}"}.txt"
-'''
-
-
-filenames_in = [f"datas_norm/data_norm_{stage:02}.txt"]
-
-filename_out = f"weights/weight_{stage:02}.txt"
+filenames_in = [DATA_DIR / f"data_norm_{stage:02}.txt"]
+filename_out = WEIGHTS_DIR / f"weight_{stage:02}.txt"
 
 
 rows = []
@@ -108,6 +103,10 @@ print(A.nnz, "valeurs non nulles")
 # Résolution du système Ax = b
 # -----------------------------
 x = lsqr(A, scores)[0]  # renvoie la solution au sens des moindres carrés
+
+
+#x = lsmr(A, scores)[0]  # renvoie la solution au sens des moindres carrés
+
 
 # -----------------------------
 # affichage des extremes (utile pour cast en short)
@@ -212,7 +211,7 @@ while inc <= 128:
     count_N += count_new
     pct = (count_N / N) * 100
 
-    print(f"evaluation dans [-{inc}, {inc}] nouvellement inclus : {count_new} "
+    print(f"erreur dans [-{inc}, {inc}] nouvellement inclus : {count_new} "
           f"({pct:.2f}%)")
 
     # mettre à jour le masque précédent
