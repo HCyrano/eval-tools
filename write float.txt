@@ -1,0 +1,49 @@
+#include <iostream>
+#include <fstream>
+#include <vector>
+
+int main() {
+    // 1. Les donnees a ecrire
+    std::vector<float> data_floats = {10.5f, -25.75f, 0.001f, 3.14159f, 999.0f};
+    size_t nombre_elements = data_floats.size();
+    const std::string nom_fichier = "data.bin";
+
+    // 2. Ouvrir le fichier en mode ecriture binaire
+    // ios::out pour l'ecriture et ios::binary pour le mode binaire
+    std::ofstream fichier(nom_fichier, std::ios::out | std::ios::binary);
+
+    if (fichier.is_open()) {
+        std::cout << "Fichier binaire ouvert pour ecriture." << std::endl;
+
+        // 3. Preparation pour la fonction write()
+        // La fonction write() a besoin :
+        // a) d'un pointeur sur le debut des donnees (en tant que const char*)
+        // b) de la taille totale des donnees en octets (bytes)
+        
+        // Calcul de la taille totale en octets
+        long taille_en_octets = nombre_elements * sizeof(float);
+
+        // 4. Ecriture des donnees
+        // data_floats.data() retourne un pointeur vers le premier element (similaire a &data_floats[0])
+        fichier.write(
+            reinterpret_cast<const char*>(data_floats.data()), // Pointeur casté
+            taille_en_octets                                   // Taille en octets
+        );
+
+        if (fichier.good()) {
+            std::cout << "Ecriture reussie de " << nombre_elements 
+                      << " floats (" << taille_en_octets << " octets)." << std::endl;
+        } else {
+            std::cerr << "Erreur lors de l'ecriture des donnees." << std::endl;
+        }
+
+        // 5. Fermeture du fichier
+        fichier.close();
+        
+    } else {
+        std::cerr << "Erreur : Impossible d'ouvrir le fichier '" << nom_fichier << "'" << std::endl;
+        return 1;
+    }
+
+    return 0;
+}

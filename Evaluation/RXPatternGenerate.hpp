@@ -31,36 +31,7 @@ class RXFeature {
 
 class RXPatternGenerate {
     
-    std::vector<std::vector<unsigned int>> pattern_info = {
-        
-        //{id_end, offset_id, n_index}
-        
-        //diag_5
-        {3, 0, 243},
-        //diag_6
-        {7, 243, 729},
-        //diag_7
-        {11, 972, 2187},
-        //diag_8
-        {13, 3159, 6561},
-        // edge + 2x
-        {17, 9720, 59049},
-        // hv_2
-        {21, 68769, 6561},
-        // hv_3
-        {25, 75330, 6561},
-        // hv_4
-        {29, 81891, 6561},
-        // corner 2 bord 5 + X
-        {33, 88452, 59049},
-        // corner 2*5
-        {41, 147501, 59049},
-        // corner 4/3/3/1
-        {45, 206550, 177147}
-        
-    };
-
-    std::vector<std::vector<unsigned int>> pattern_sym = {
+    std::vector<std::vector<unsigned int>> rotates = {
         // 0,  1,  2,  3,  4,  5,  6,  7,  8,  9,  10,  11,  12,  13,  14,  15
         
         //pas de symetrie
@@ -86,6 +57,36 @@ class RXPatternGenerate {
         // symetrie corner 2 bords 5 + X
         {  9,  8,  7,  6,  4,  5,  3,  2,  1,  0}                                       // 15
 
+    };
+
+
+    std::vector<std::vector<unsigned int>> pattern_info = {
+        
+        //[{last index of pattern, offset index global, n_index local, rotate index}
+        
+        //diag_5
+        {3, 0, 243, 5},
+        //diag_6
+        {7, 243, 729, 6},
+        //diag_7
+        {11, 972, 2187, 7},
+        //diag_8
+        {13, 3159, 6561, 8},
+        // edge + 2x
+        {17, 9720, 59049, 10},
+        // hv_2
+        {21, 68769, 6561, 8},
+        // hv_3
+        {25, 75330, 6561, 8},
+        // hv_4
+        {29, 81891, 6561, 8},
+        // corner 2 bord 5 + X
+        {33, 88452, 59049, 15},
+        // corner 2*5
+        {41, 147501, 59049, 0},
+        // corner 4/3/3/1
+        {45, 206550, 177147, 14}
+        
     };
 
 
@@ -175,16 +176,13 @@ class RXPatternGenerate {
     };
     
     
-        
-
-
     void generate_method(std::string signature, unsigned int color, unsigned int offset);
 
     public:
 
 
     void display();
-    int id_sym(int index, int sym_id);
+    int index_rotate(int index, int sym_id);
 
     void generate_method();
     

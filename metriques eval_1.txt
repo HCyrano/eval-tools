@@ -1,0 +1,1513 @@
+Last login: Sat Nov 22 09:24:07 on console
+(base) caussebruno@Mac-Studio ~ % cd /Users/caussebruno/Documents/developpement/Evaluation 
+(base) caussebruno@Mac-Studio Evaluation % pyhton /Users/caussebruno/Documents/developpement/Evaluation/solves_wrapper.py 
+zsh: command not found: pyhton
+(base) caussebruno@Mac-Studio Evaluation % python /Users/caussebruno/Documents/developpement/Evaluation/solves_wrapper.py 
+
+
+
+datas_norm/data_norm_00.txt
+
+matrix size : (1, 383697)
+13 valeurs non nulles
+
+Max :  0.0
+Min :  0.0
+nb de poids differents de zero :  0
+/Users/caussebruno/Documents/developpement/Evaluation/solve.py:170: RuntimeWarning: invalid value encountered in scalar divide
+  pseudo_R2 = 1 - (residual_norm**2) / (baseline_residual_norm**2)
+
+||Ax - scores||_2 = 0.000000
+RMSE = 0.000000
+MAE  = 0.000000
+Résidu relatif = nan
+Baseline (||y - mean||_2) = 0.000000
+Pseudo-R^2 = nan
+
+erreur dans [-1, 1] nouvellement inclus : 1 (100.00%)
+erreur dans [-2, 2] nouvellement inclus : 0 (100.00%)
+erreur dans [-4, 4] nouvellement inclus : 0 (100.00%)
+erreur dans [-8, 8] nouvellement inclus : 0 (100.00%)
+erreur dans [-16, 16] nouvellement inclus : 0 (100.00%)
+erreur dans [-32, 32] nouvellement inclus : 0 (100.00%)
+erreur dans [-64, 64] nouvellement inclus : 0 (100.00%)
+erreur dans [-128, 128] nouvellement inclus : 0 (100.00%)
+--------------------------------------------------------------------------------
+datas_norm/data_norm_01.txt
+
+matrix size : (1, 383697)
+18 valeurs non nulles
+
+Max :  0.0
+Min :  0.0
+nb de poids differents de zero :  0
+/Users/caussebruno/Documents/developpement/Evaluation/solve.py:170: RuntimeWarning: invalid value encountered in scalar divide
+  pseudo_R2 = 1 - (residual_norm**2) / (baseline_residual_norm**2)
+
+||Ax - scores||_2 = 0.000000
+RMSE = 0.000000
+MAE  = 0.000000
+Résidu relatif = nan
+Baseline (||y - mean||_2) = 0.000000
+Pseudo-R^2 = nan
+
+erreur dans [-1, 1] nouvellement inclus : 1 (100.00%)
+erreur dans [-2, 2] nouvellement inclus : 0 (100.00%)
+erreur dans [-4, 4] nouvellement inclus : 0 (100.00%)
+erreur dans [-8, 8] nouvellement inclus : 0 (100.00%)
+erreur dans [-16, 16] nouvellement inclus : 0 (100.00%)
+erreur dans [-32, 32] nouvellement inclus : 0 (100.00%)
+erreur dans [-64, 64] nouvellement inclus : 0 (100.00%)
+erreur dans [-128, 128] nouvellement inclus : 0 (100.00%)
+--------------------------------------------------------------------------------
+datas_norm/data_norm_02.txt
+
+matrix size : (3, 383697)
+59 valeurs non nulles
+
+Max :  0.5931564311636894
+Min :  -0.5934392232643648
+nb de poids differents de zero :  31
+
+||Ax - scores||_2 = 0.000000
+RMSE = 0.000000
+MAE  = 0.000000
+Résidu relatif = 3.321489e-14
+Baseline (||y - mean||_2) = 4.898979
+Pseudo-R^2 = 1.000000
+
+erreur dans [-1, 1] nouvellement inclus : 3 (100.00%)
+erreur dans [-2, 2] nouvellement inclus : 0 (100.00%)
+erreur dans [-4, 4] nouvellement inclus : 0 (100.00%)
+erreur dans [-8, 8] nouvellement inclus : 0 (100.00%)
+erreur dans [-16, 16] nouvellement inclus : 0 (100.00%)
+erreur dans [-32, 32] nouvellement inclus : 0 (100.00%)
+erreur dans [-64, 64] nouvellement inclus : 0 (100.00%)
+erreur dans [-128, 128] nouvellement inclus : 0 (100.00%)
+--------------------------------------------------------------------------------
+datas_norm/data_norm_03.txt
+
+matrix size : (14, 383697)
+308 valeurs non nulles
+
+Max :  3.6195099820294163
+Min :  -3.7221744078809804
+nb de poids differents de zero :  55
+
+||Ax - scores||_2 = 0.000000
+RMSE = 0.000000
+MAE  = 0.000000
+Résidu relatif = 4.314115e-09
+Baseline (||y - mean||_2) = 20.184860
+Pseudo-R^2 = 1.000000
+
+erreur dans [-1, 1] nouvellement inclus : 14 (100.00%)
+erreur dans [-2, 2] nouvellement inclus : 0 (100.00%)
+erreur dans [-4, 4] nouvellement inclus : 0 (100.00%)
+erreur dans [-8, 8] nouvellement inclus : 0 (100.00%)
+erreur dans [-16, 16] nouvellement inclus : 0 (100.00%)
+erreur dans [-32, 32] nouvellement inclus : 0 (100.00%)
+erreur dans [-64, 64] nouvellement inclus : 0 (100.00%)
+erreur dans [-128, 128] nouvellement inclus : 0 (100.00%)
+--------------------------------------------------------------------------------
+datas_norm/data_norm_04.txt
+
+matrix size : (60, 383697)
+1483 valeurs non nulles
+
+Max :  7.968750498300259
+Min :  -6.422456752024946
+nb de poids differents de zero :  123
+
+||Ax - scores||_2 = 3.676474
+RMSE = 0.474631
+MAE  = 0.299995
+Résidu relatif = 7.707984e-02
+Baseline (||y - mean||_2) = 47.165489
+Pseudo-R^2 = 0.993924
+
+erreur dans [-1, 1] nouvellement inclus : 56 (93.33%)
+erreur dans [-2, 2] nouvellement inclus : 4 (100.00%)
+erreur dans [-4, 4] nouvellement inclus : 0 (100.00%)
+erreur dans [-8, 8] nouvellement inclus : 0 (100.00%)
+erreur dans [-16, 16] nouvellement inclus : 0 (100.00%)
+erreur dans [-32, 32] nouvellement inclus : 0 (100.00%)
+erreur dans [-64, 64] nouvellement inclus : 0 (100.00%)
+erreur dans [-128, 128] nouvellement inclus : 0 (100.00%)
+--------------------------------------------------------------------------------
+datas_norm/data_norm_05.txt
+
+matrix size : (322, 383697)
+8414 valeurs non nulles
+
+Max :  9.857829953610226
+Min :  -9.72791096177168
+nb de poids differents de zero :  271
+
+||Ax - scores||_2 = 40.001149
+RMSE = 2.229177
+MAE  = 1.637049
+Résidu relatif = 2.082998e-01
+Baseline (||y - mean||_2) = 142.096022
+Pseudo-R^2 = 0.920753
+
+erreur dans [-1, 1] nouvellement inclus : 136 (42.24%)
+erreur dans [-2, 2] nouvellement inclus : 80 (67.08%)
+erreur dans [-4, 4] nouvellement inclus : 79 (91.61%)
+erreur dans [-8, 8] nouvellement inclus : 27 (100.00%)
+erreur dans [-16, 16] nouvellement inclus : 0 (100.00%)
+erreur dans [-32, 32] nouvellement inclus : 0 (100.00%)
+erreur dans [-64, 64] nouvellement inclus : 0 (100.00%)
+erreur dans [-128, 128] nouvellement inclus : 0 (100.00%)
+--------------------------------------------------------------------------------
+datas_norm/data_norm_06.txt
+
+matrix size : (1773, 383697)
+49980 valeurs non nulles
+
+Max :  12.631666599559718
+Min :  -13.119073455448437
+nb de poids differents de zero :  607
+
+||Ax - scores||_2 = 109.662657
+RMSE = 2.604380
+MAE  = 1.989677
+Résidu relatif = 2.683767e-01
+Baseline (||y - mean||_2) = 406.539115
+Pseudo-R^2 = 0.927237
+
+erreur dans [-1, 1] nouvellement inclus : 625 (35.25%)
+erreur dans [-2, 2] nouvellement inclus : 412 (58.49%)
+erreur dans [-4, 4] nouvellement inclus : 511 (87.31%)
+erreur dans [-8, 8] nouvellement inclus : 217 (99.55%)
+erreur dans [-16, 16] nouvellement inclus : 8 (100.00%)
+erreur dans [-32, 32] nouvellement inclus : 0 (100.00%)
+erreur dans [-64, 64] nouvellement inclus : 0 (100.00%)
+erreur dans [-128, 128] nouvellement inclus : 0 (100.00%)
+--------------------------------------------------------------------------------
+datas_norm/data_norm_07.txt
+
+matrix size : (10649, 383697)
+316408 valeurs non nulles
+
+Max :  45.75283464459828
+Min :  -19.69997443962448
+nb de poids differents de zero :  1313
+
+||Ax - scores||_2 = 357.783358
+RMSE = 3.467095
+MAE  = 2.595629
+Résidu relatif = 2.532747e-01
+Baseline (||y - mean||_2) = 1139.996394
+Pseudo-R^2 = 0.901501
+
+erreur dans [-1, 1] nouvellement inclus : 2746 (25.79%)
+erreur dans [-2, 2] nouvellement inclus : 2322 (47.59%)
+erreur dans [-4, 4] nouvellement inclus : 3323 (78.80%)
+erreur dans [-8, 8] nouvellement inclus : 2030 (97.86%)
+erreur dans [-16, 16] nouvellement inclus : 205 (99.78%)
+erreur dans [-32, 32] nouvellement inclus : 21 (99.98%)
+erreur dans [-64, 64] nouvellement inclus : 2 (100.00%)
+erreur dans [-128, 128] nouvellement inclus : 0 (100.00%)
+--------------------------------------------------------------------------------
+datas_norm/data_norm_08.txt
+
+matrix size : (67245, 383697)
+2114399 valeurs non nulles
+
+Max :  22.234169256054546
+Min :  -24.470256255961406
+nb de poids differents de zero :  2838
+
+||Ax - scores||_2 = 1082.579717
+RMSE = 4.174744
+MAE  = 2.767537
+Résidu relatif = 3.278722e-01
+Baseline (||y - mean||_2) = 3299.892338
+Pseudo-R^2 = 0.892373
+
+erreur dans [-1, 1] nouvellement inclus : 16480 (24.51%)
+erreur dans [-2, 2] nouvellement inclus : 14427 (45.96%)
+erreur dans [-4, 4] nouvellement inclus : 20835 (76.95%)
+erreur dans [-8, 8] nouvellement inclus : 13703 (97.32%)
+erreur dans [-16, 16] nouvellement inclus : 1660 (99.79%)
+erreur dans [-32, 32] nouvellement inclus : 72 (99.90%)
+erreur dans [-64, 64] nouvellement inclus : 17 (99.92%)
+erreur dans [-128, 128] nouvellement inclus : 51 (100.00%)
+--------------------------------------------------------------------------------
+datas_norm/data_norm_09.txt
+
+matrix size : (502300, 383697)
+17227870 valeurs non nulles
+
+Max :  54.190326637890415
+Min :  -51.499220806645134
+nb de poids differents de zero :  2794
+
+||Ax - scores||_2 = 3209.420001
+RMSE = 4.528402
+MAE  = 3.089580
+Résidu relatif = 2.959800e-01
+Baseline (||y - mean||_2) = 10842.498525
+Pseudo-R^2 = 0.912382
+
+erreur dans [-1, 1] nouvellement inclus : 109720 (21.84%)
+erreur dans [-2, 2] nouvellement inclus : 100957 (41.94%)
+erreur dans [-4, 4] nouvellement inclus : 152934 (72.39%)
+erreur dans [-8, 8] nouvellement inclus : 116578 (95.60%)
+erreur dans [-16, 16] nouvellement inclus : 20007 (99.58%)
+erreur dans [-32, 32] nouvellement inclus : 1600 (99.90%)
+erreur dans [-64, 64] nouvellement inclus : 246 (99.95%)
+erreur dans [-128, 128] nouvellement inclus : 258 (100.00%)
+--------------------------------------------------------------------------------
+datas_norm/data_norm_10.txt
+
+matrix size : (1002300, 383697)
+35070889 valeurs non nulles
+
+Max :  47.30852458072008
+Min :  -40.770213880023285
+nb de poids differents de zero :  3946
+
+||Ax - scores||_2 = 4517.442231
+RMSE = 4.512256
+MAE  = 3.149433
+Résidu relatif = 2.693265e-01
+Baseline (||y - mean||_2) = 16246.688400
+Pseudo-R^2 = 0.922686
+
+erreur dans [-1, 1] nouvellement inclus : 214919 (21.44%)
+erreur dans [-2, 2] nouvellement inclus : 197976 (41.19%)
+erreur dans [-4, 4] nouvellement inclus : 303325 (71.46%)
+erreur dans [-8, 8] nouvellement inclus : 237548 (95.16%)
+erreur dans [-16, 16] nouvellement inclus : 44010 (99.55%)
+erreur dans [-32, 32] nouvellement inclus : 3647 (99.91%)
+erreur dans [-64, 64] nouvellement inclus : 505 (99.96%)
+erreur dans [-128, 128] nouvellement inclus : 369 (100.00%)
+--------------------------------------------------------------------------------
+datas_norm/data_norm_11.txt
+
+matrix size : (1500000, 383697)
+52953011 valeurs non nulles
+
+Max :  41.80029299607854
+Min :  -49.411278902816576
+nb de poids differents de zero :  4935
+
+||Ax - scores||_2 = 6820.155329
+RMSE = 5.568634
+MAE  = 4.076658
+Résidu relatif = 3.226844e-01
+Baseline (||y - mean||_2) = 21026.098163
+Pseudo-R^2 = 0.894787
+
+erreur dans [-1, 1] nouvellement inclus : 244556 (16.30%)
+erreur dans [-2, 2] nouvellement inclus : 234302 (31.92%)
+erreur dans [-4, 4] nouvellement inclus : 403716 (58.84%)
+erreur dans [-8, 8] nouvellement inclus : 450915 (88.90%)
+erreur dans [-16, 16] nouvellement inclus : 152368 (99.06%)
+erreur dans [-32, 32] nouvellement inclus : 12546 (99.89%)
+erreur dans [-64, 64] nouvellement inclus : 1138 (99.97%)
+erreur dans [-128, 128] nouvellement inclus : 458 (100.00%)
+--------------------------------------------------------------------------------
+datas_norm/data_norm_12.txt
+
+matrix size : (1500000, 383697)
+54059475 valeurs non nulles
+
+Max :  38.42410297511599
+Min :  -29.821877513526292
+nb de poids differents de zero :  5796
+
+||Ax - scores||_2 = 7270.531721
+RMSE = 5.936364
+MAE  = 4.391001
+Résidu relatif = 3.257056e-01
+Baseline (||y - mean||_2) = 22060.988095
+Pseudo-R^2 = 0.891387
+
+erreur dans [-1, 1] nouvellement inclus : 233762 (15.58%)
+erreur dans [-2, 2] nouvellement inclus : 223152 (30.46%)
+erreur dans [-4, 4] nouvellement inclus : 385303 (56.15%)
+erreur dans [-8, 8] nouvellement inclus : 446244 (85.90%)
+erreur dans [-16, 16] nouvellement inclus : 190349 (98.59%)
+erreur dans [-32, 32] nouvellement inclus : 19606 (99.89%)
+erreur dans [-64, 64] nouvellement inclus : 1331 (99.98%)
+erreur dans [-128, 128] nouvellement inclus : 251 (100.00%)
+--------------------------------------------------------------------------------
+datas_norm/data_norm_13.txt
+
+matrix size : (1500000, 383697)
+54885881 valeurs non nulles
+
+Max :  48.38224721968953
+Min :  -47.86507182407206
+nb de poids differents de zero :  6442
+
+||Ax - scores||_2 = 7575.813285
+RMSE = 6.185626
+MAE  = 4.646219
+Résidu relatif = 3.368804e-01
+Baseline (||y - mean||_2) = 22455.234521
+Pseudo-R^2 = 0.886179
+
+erreur dans [-1, 1] nouvellement inclus : 216894 (14.46%)
+erreur dans [-2, 2] nouvellement inclus : 209039 (28.40%)
+erreur dans [-4, 4] nouvellement inclus : 370004 (53.06%)
+erreur dans [-8, 8] nouvellement inclus : 463310 (83.95%)
+erreur dans [-16, 16] nouvellement inclus : 215987 (98.35%)
+erreur dans [-32, 32] nouvellement inclus : 23250 (99.90%)
+erreur dans [-64, 64] nouvellement inclus : 1350 (99.99%)
+erreur dans [-128, 128] nouvellement inclus : 164 (100.00%)
+--------------------------------------------------------------------------------
+datas_norm/data_norm_14.txt
+
+matrix size : (1500000, 383697)
+55940765 valeurs non nulles
+
+Max :  43.70257197725979
+Min :  -37.111219008847414
+nb de poids differents de zero :  7249
+
+||Ax - scores||_2 = 7460.810855
+RMSE = 6.091727
+MAE  = 4.597371
+Résidu relatif = 3.288987e-01
+Baseline (||y - mean||_2) = 22641.291035
+Pseudo-R^2 = 0.891415
+
+erreur dans [-1, 1] nouvellement inclus : 218437 (14.56%)
+erreur dans [-2, 2] nouvellement inclus : 212290 (28.72%)
+erreur dans [-4, 4] nouvellement inclus : 372098 (53.52%)
+erreur dans [-8, 8] nouvellement inclus : 460790 (84.24%)
+erreur dans [-16, 16] nouvellement inclus : 212780 (98.43%)
+erreur dans [-32, 32] nouvellement inclus : 22230 (99.91%)
+erreur dans [-64, 64] nouvellement inclus : 1273 (99.99%)
+erreur dans [-128, 128] nouvellement inclus : 102 (100.00%)
+--------------------------------------------------------------------------------
+datas_norm/data_norm_15.txt
+
+matrix size : (1500000, 383697)
+56996966 valeurs non nulles
+
+Max :  41.3481990083775
+Min :  -32.9298606317426
+nb de poids differents de zero :  8112
+
+||Ax - scores||_2 = 7421.371420
+RMSE = 6.059524
+MAE  = 4.584107
+Résidu relatif = 3.242129e-01
+Baseline (||y - mean||_2) = 22855.363687
+Pseudo-R^2 = 0.894563
+
+erreur dans [-1, 1] nouvellement inclus : 219937 (14.66%)
+erreur dans [-2, 2] nouvellement inclus : 211937 (28.79%)
+erreur dans [-4, 4] nouvellement inclus : 371828 (53.58%)
+erreur dans [-8, 8] nouvellement inclus : 461984 (84.38%)
+erreur dans [-16, 16] nouvellement inclus : 211182 (98.46%)
+erreur dans [-32, 32] nouvellement inclus : 21867 (99.92%)
+erreur dans [-64, 64] nouvellement inclus : 1191 (100.00%)
+erreur dans [-128, 128] nouvellement inclus : 74 (100.00%)
+--------------------------------------------------------------------------------
+datas_norm/data_norm_16.txt
+
+matrix size : (1500000, 383697)
+57997058 valeurs non nulles
+
+Max :  37.538995863983885
+Min :  -24.95712483283032
+nb de poids differents de zero :  8936
+
+||Ax - scores||_2 = 7422.021887
+RMSE = 6.060055
+MAE  = 4.587656
+Résidu relatif = 3.210007e-01
+Baseline (||y - mean||_2) = 23076.171430
+Pseudo-R^2 = 0.896553
+
+erreur dans [-1, 1] nouvellement inclus : 220634 (14.71%)
+erreur dans [-2, 2] nouvellement inclus : 211376 (28.80%)
+erreur dans [-4, 4] nouvellement inclus : 371212 (53.55%)
+erreur dans [-8, 8] nouvellement inclus : 461080 (84.29%)
+erreur dans [-16, 16] nouvellement inclus : 212385 (98.45%)
+erreur dans [-32, 32] nouvellement inclus : 22056 (99.92%)
+erreur dans [-64, 64] nouvellement inclus : 1191 (100.00%)
+erreur dans [-128, 128] nouvellement inclus : 66 (100.00%)
+--------------------------------------------------------------------------------
+datas_norm/data_norm_17.txt
+
+matrix size : (1500000, 383697)
+58971925 valeurs non nulles
+
+Max :  32.22315142845457
+Min :  -33.132127280538235
+nb de poids differents de zero :  9875
+
+||Ax - scores||_2 = 7420.475477
+RMSE = 6.058793
+MAE  = 4.595917
+Résidu relatif = 3.176787e-01
+Baseline (||y - mean||_2) = 23321.756096
+Pseudo-R^2 = 0.898763
+
+erreur dans [-1, 1] nouvellement inclus : 218568 (14.57%)
+erreur dans [-2, 2] nouvellement inclus : 211555 (28.67%)
+erreur dans [-4, 4] nouvellement inclus : 371119 (53.42%)
+erreur dans [-8, 8] nouvellement inclus : 462342 (84.24%)
+erreur dans [-16, 16] nouvellement inclus : 213003 (98.44%)
+erreur dans [-32, 32] nouvellement inclus : 22230 (99.92%)
+erreur dans [-64, 64] nouvellement inclus : 1134 (100.00%)
+erreur dans [-128, 128] nouvellement inclus : 49 (100.00%)
+--------------------------------------------------------------------------------
+datas_norm/data_norm_18.txt
+
+matrix size : (1500000, 383697)
+59885770 valeurs non nulles
+
+Max :  41.06539809392394
+Min :  -28.72400998302586
+nb de poids differents de zero :  10927
+
+||Ax - scores||_2 = 7430.773358
+RMSE = 6.067201
+MAE  = 4.606172
+Résidu relatif = 3.145416e-01
+Baseline (||y - mean||_2) = 23576.322769
+Pseudo-R^2 = 0.900662
+
+erreur dans [-1, 1] nouvellement inclus : 219157 (14.61%)
+erreur dans [-2, 2] nouvellement inclus : 209938 (28.61%)
+erreur dans [-4, 4] nouvellement inclus : 370873 (53.33%)
+erreur dans [-8, 8] nouvellement inclus : 462059 (84.14%)
+erreur dans [-16, 16] nouvellement inclus : 214235 (98.42%)
+erreur dans [-32, 32] nouvellement inclus : 22622 (99.93%)
+erreur dans [-64, 64] nouvellement inclus : 1079 (100.00%)
+erreur dans [-128, 128] nouvellement inclus : 37 (100.00%)
+--------------------------------------------------------------------------------
+datas_norm/data_norm_19.txt
+
+matrix size : (1500000, 383697)
+60751907 valeurs non nulles
+      
+Max :  56.406263290081725
+Min :  -26.187839879230264
+nb de poids differents de zero :  11952
+
+||Ax - scores||_2 = 7460.927286
+RMSE = 6.091822
+MAE  = 4.627147
+Résidu relatif = 3.122307e-01
+Baseline (||y - mean||_2) = 23857.580627
+Pseudo-R^2 = 0.902201
+
+erreur dans [-1, 1] nouvellement inclus : 217633 (14.51%)
+erreur dans [-2, 2] nouvellement inclus : 209809 (28.50%)
+erreur dans [-4, 4] nouvellement inclus : 369961 (53.16%)
+erreur dans [-8, 8] nouvellement inclus : 462436 (83.99%)
+erreur dans [-16, 16] nouvellement inclus : 215600 (98.36%)
+erreur dans [-32, 32] nouvellement inclus : 23450 (99.93%)
+erreur dans [-64, 64] nouvellement inclus : 1088 (100.00%)
+erreur dans [-128, 128] nouvellement inclus : 23 (100.00%)
+--------------------------------------------------------------------------------
+datas_norm/data_norm_20.txt
+
+matrix size : (1500000, 383697)
+61552891 valeurs non nulles
+
+Max :  38.26220839203618
+Min :  -24.411335085103026
+nb de poids differents de zero :  13121
+
+||Ax - scores||_2 = 7492.847397
+RMSE = 6.117884
+MAE  = 4.645064
+Résidu relatif = 3.097835e-01
+Baseline (||y - mean||_2) = 24137.008062
+Pseudo-R^2 = 0.903633
+
+erreur dans [-1, 1] nouvellement inclus : 217341 (14.49%)
+erreur dans [-2, 2] nouvellement inclus : 209002 (28.42%)
+erreur dans [-4, 4] nouvellement inclus : 368599 (53.00%)
+erreur dans [-8, 8] nouvellement inclus : 462377 (83.82%)
+erreur dans [-16, 16] nouvellement inclus : 217449 (98.32%)
+erreur dans [-32, 32] nouvellement inclus : 24086 (99.92%)
+erreur dans [-64, 64] nouvellement inclus : 1127 (100.00%)
+erreur dans [-128, 128] nouvellement inclus : 19 (100.00%)
+--------------------------------------------------------------------------------
+datas_norm/data_norm_21.txt
+
+matrix size : (1500000, 383697)
+62302749 valeurs non nulles
+
+Max :  29.65068897725148
+Min :  -30.651066873572113
+nb de poids differents de zero :  14316
+
+||Ax - scores||_2 = 7526.868388
+RMSE = 6.145662
+MAE  = 4.670334
+Résidu relatif = 3.074522e-01
+Baseline (||y - mean||_2) = 24442.662312
+Pseudo-R^2 = 0.905173
+
+erreur dans [-1, 1] nouvellement inclus : 215419 (14.36%)
+erreur dans [-2, 2] nouvellement inclus : 208104 (28.23%)
+erreur dans [-4, 4] nouvellement inclus : 368193 (52.78%)
+erreur dans [-8, 8] nouvellement inclus : 462843 (83.64%)
+erreur dans [-16, 16] nouvellement inclus : 219846 (98.29%)
+erreur dans [-32, 32] nouvellement inclus : 24458 (99.92%)
+erreur dans [-64, 64] nouvellement inclus : 1122 (100.00%)
+erreur dans [-128, 128] nouvellement inclus : 15 (100.00%)
+--------------------------------------------------------------------------------
+datas_norm/data_norm_22.txt
+
+matrix size : (1500000, 383697)
+62980027 valeurs non nulles
+
+Max :  32.974834585948656
+Min :  -30.201355633854586
+nb de poids differents de zero :  15640
+
+||Ax - scores||_2 = 7571.124086
+RMSE = 6.181797
+MAE  = 4.696848
+Résidu relatif = 3.056358e-01
+Baseline (||y - mean||_2) = 24723.381117
+Pseudo-R^2 = 0.906221
+
+erreur dans [-1, 1] nouvellement inclus : 214849 (14.32%)
+erreur dans [-2, 2] nouvellement inclus : 207657 (28.17%)
+erreur dans [-4, 4] nouvellement inclus : 365853 (52.56%)
+erreur dans [-8, 8] nouvellement inclus : 462478 (83.39%)
+erreur dans [-16, 16] nouvellement inclus : 222923 (98.25%)
+erreur dans [-32, 32] nouvellement inclus : 25090 (99.92%)
+erreur dans [-64, 64] nouvellement inclus : 1135 (100.00%)
+erreur dans [-128, 128] nouvellement inclus : 15 (100.00%)
+--------------------------------------------------------------------------------
+datas_norm/data_norm_23.txt
+
+matrix size : (1500000, 383697)
+63599076 valeurs non nulles
+
+Max :  40.082060527058644
+Min :  -27.40011511286465
+nb de poids differents de zero :  16922
+
+||Ax - scores||_2 = 7621.111228
+RMSE = 6.222611
+MAE  = 4.727048
+Résidu relatif = 3.044497e-01
+Baseline (||y - mean||_2) = 24996.597645
+Pseudo-R^2 = 0.907045
+
+erreur dans [-1, 1] nouvellement inclus : 213984 (14.27%)
+erreur dans [-2, 2] nouvellement inclus : 205968 (28.00%)
+erreur dans [-4, 4] nouvellement inclus : 365128 (52.34%)
+erreur dans [-8, 8] nouvellement inclus : 461985 (83.14%)
+erreur dans [-16, 16] nouvellement inclus : 225969 (98.20%)
+erreur dans [-32, 32] nouvellement inclus : 25772 (99.92%)
+erreur dans [-64, 64] nouvellement inclus : 1182 (100.00%)
+erreur dans [-128, 128] nouvellement inclus : 12 (100.00%)
+--------------------------------------------------------------------------------
+datas_norm/data_norm_24.txt
+
+matrix size : (1500000, 383697)
+64152791 valeurs non nulles
+
+Max :  33.70504730711492
+Min :  -24.648688437629627
+nb de poids differents de zero :  18409
+
+||Ax - scores||_2 = 7643.529092
+RMSE = 6.240915
+MAE  = 4.741690
+Résidu relatif = 3.023437e-01
+Baseline (||y - mean||_2) = 25235.218767
+Pseudo-R^2 = 0.908257
+
+erreur dans [-1, 1] nouvellement inclus : 213070 (14.20%)
+erreur dans [-2, 2] nouvellement inclus : 205463 (27.90%)
+erreur dans [-4, 4] nouvellement inclus : 364003 (52.17%)
+erreur dans [-8, 8] nouvellement inclus : 462405 (83.00%)
+erreur dans [-16, 16] nouvellement inclus : 227876 (98.19%)
+erreur dans [-32, 32] nouvellement inclus : 26014 (99.92%)
+erreur dans [-64, 64] nouvellement inclus : 1157 (100.00%)
+erreur dans [-128, 128] nouvellement inclus : 12 (100.00%)
+--------------------------------------------------------------------------------
+datas_norm/data_norm_25.txt
+
+matrix size : (1500000, 383697)
+64654664 valeurs non nulles
+
+Max :  37.91501755438053
+Min :  -25.01738230708183
+nb de poids differents de zero :  19876
+
+||Ax - scores||_2 = 7662.421602
+RMSE = 6.256341
+MAE  = 4.756601
+Résidu relatif = 3.001849e-01
+Baseline (||y - mean||_2) = 25495.906306
+Pseudo-R^2 = 0.909678
+
+erreur dans [-1, 1] nouvellement inclus : 212026 (14.14%)
+erreur dans [-2, 2] nouvellement inclus : 205157 (27.81%)
+erreur dans [-4, 4] nouvellement inclus : 362802 (52.00%)
+erreur dans [-8, 8] nouvellement inclus : 463374 (82.89%)
+erreur dans [-16, 16] nouvellement inclus : 229079 (98.16%)
+erreur dans [-32, 32] nouvellement inclus : 26398 (99.92%)
+erreur dans [-64, 64] nouvellement inclus : 1158 (100.00%)
+erreur dans [-128, 128] nouvellement inclus : 6 (100.00%)
+--------------------------------------------------------------------------------
+datas_norm/data_norm_26.txt
+
+matrix size : (1500000, 383697)
+65087200 valeurs non nulles
+
+Max :  28.97589230615541
+Min :  -25.807048045595096
+nb de poids differents de zero :  21360
+
+||Ax - scores||_2 = 7678.743472
+RMSE = 6.269668
+MAE  = 4.770422
+Résidu relatif = 2.978749e-01
+Baseline (||y - mean||_2) = 25738.954225
+Pseudo-R^2 = 0.910998
+
+erreur dans [-1, 1] nouvellement inclus : 211623 (14.11%)
+erreur dans [-2, 2] nouvellement inclus : 204126 (27.72%)
+erreur dans [-4, 4] nouvellement inclus : 362759 (51.90%)
+erreur dans [-8, 8] nouvellement inclus : 462746 (82.75%)
+erreur dans [-16, 16] nouvellement inclus : 231070 (98.15%)
+erreur dans [-32, 32] nouvellement inclus : 26502 (99.92%)
+erreur dans [-64, 64] nouvellement inclus : 1168 (100.00%)
+erreur dans [-128, 128] nouvellement inclus : 6 (100.00%)
+--------------------------------------------------------------------------------
+datas_norm/data_norm_27.txt
+
+matrix size : (1500000, 383697)
+65474646 valeurs non nulles
+
+Max :  31.283976232442754
+Min :  -25.399798008950295
+nb de poids differents de zero :  22864
+
+||Ax - scores||_2 = 7692.410454
+RMSE = 6.280827
+MAE  = 4.783399
+Résidu relatif = 2.956045e-01
+Baseline (||y - mean||_2) = 25999.029286
+Pseudo-R^2 = 0.912459
+
+erreur dans [-1, 1] nouvellement inclus : 211053 (14.07%)
+erreur dans [-2, 2] nouvellement inclus : 203415 (27.63%)
+erreur dans [-4, 4] nouvellement inclus : 361621 (51.74%)
+erreur dans [-8, 8] nouvellement inclus : 463678 (82.65%)
+erreur dans [-16, 16] nouvellement inclus : 232246 (98.13%)
+erreur dans [-32, 32] nouvellement inclus : 26905 (99.93%)
+erreur dans [-64, 64] nouvellement inclus : 1075 (100.00%)
+erreur dans [-128, 128] nouvellement inclus : 7 (100.00%)
+--------------------------------------------------------------------------------
+datas_norm/data_norm_28.txt
+
+matrix size : (1500000, 383697)
+65803102 valeurs non nulles
+
+Max :  26.583468051195275
+Min :  -24.547320707271215
+nb de poids differents de zero :  24460
+
+||Ax - scores||_2 = 7709.044754
+RMSE = 6.294409
+MAE  = 4.799121
+Résidu relatif = 2.934226e-01
+Baseline (||y - mean||_2) = 26238.846343
+Pseudo-R^2 = 0.913680
+
+erreur dans [-1, 1] nouvellement inclus : 209711 (13.98%)
+erreur dans [-2, 2] nouvellement inclus : 203445 (27.54%)
+erreur dans [-4, 4] nouvellement inclus : 360854 (51.60%)
+erreur dans [-8, 8] nouvellement inclus : 462932 (82.46%)
+erreur dans [-16, 16] nouvellement inclus : 234696 (98.11%)
+erreur dans [-32, 32] nouvellement inclus : 27325 (99.93%)
+erreur dans [-64, 64] nouvellement inclus : 1033 (100.00%)
+erreur dans [-128, 128] nouvellement inclus : 4 (100.00%)
+--------------------------------------------------------------------------------
+datas_norm/data_norm_29.txt
+
+matrix size : (1500000, 383697)
+66087807 valeurs non nulles
+
+Max :  27.300688118166423
+Min :  -21.752606128662546
+nb de poids differents de zero :  26029
+
+||Ax - scores||_2 = 7724.451587
+RMSE = 6.306988
+MAE  = 4.813471
+Résidu relatif = 2.913327e-01
+Baseline (||y - mean||_2) = 26495.784906
+Pseudo-R^2 = 0.915007
+
+erreur dans [-1, 1] nouvellement inclus : 209271 (13.95%)
+erreur dans [-2, 2] nouvellement inclus : 202753 (27.47%)
+erreur dans [-4, 4] nouvellement inclus : 359772 (51.45%)
+erreur dans [-8, 8] nouvellement inclus : 462973 (82.32%)
+erreur dans [-16, 16] nouvellement inclus : 236848 (98.11%)
+erreur dans [-32, 32] nouvellement inclus : 27414 (99.94%)
+erreur dans [-64, 64] nouvellement inclus : 964 (100.00%)
+erreur dans [-128, 128] nouvellement inclus : 5 (100.00%)
+--------------------------------------------------------------------------------
+datas_norm/data_norm_30.txt
+
+matrix size : (1500000, 383697)
+66317812 valeurs non nulles
+
+Max :  31.174591844260398
+Min :  -21.467549404789985
+nb de poids differents de zero :  27608
+
+||Ax - scores||_2 = 7719.861278
+RMSE = 6.303240
+MAE  = 4.814433
+Résidu relatif = 2.884956e-01
+Baseline (||y - mean||_2) = 26729.850151
+Pseudo-R^2 = 0.916588
+
+erreur dans [-1, 1] nouvellement inclus : 209010 (13.93%)
+erreur dans [-2, 2] nouvellement inclus : 202724 (27.45%)
+erreur dans [-4, 4] nouvellement inclus : 359776 (51.43%)
+erreur dans [-8, 8] nouvellement inclus : 462825 (82.29%)
+erreur dans [-16, 16] nouvellement inclus : 237424 (98.12%)
+erreur dans [-32, 32] nouvellement inclus : 27306 (99.94%)
+erreur dans [-64, 64] nouvellement inclus : 931 (100.00%)
+erreur dans [-128, 128] nouvellement inclus : 4 (100.00%)
+--------------------------------------------------------------------------------
+datas_norm/data_norm_31.txt
+
+matrix size : (1500000, 383697)
+66516402 valeurs non nulles
+
+Max :  27.605325702121014
+Min :  -23.457059091914065
+nb de poids differents de zero :  29244
+
+||Ax - scores||_2 = 7715.478087
+RMSE = 6.299661
+MAE  = 4.815646
+Résidu relatif = 2.858224e-01
+Baseline (||y - mean||_2) = 26980.538621
+Pseudo-R^2 = 0.918224
+
+erreur dans [-1, 1] nouvellement inclus : 209160 (13.94%)
+erreur dans [-2, 2] nouvellement inclus : 201716 (27.39%)
+erreur dans [-4, 4] nouvellement inclus : 360220 (51.41%)
+erreur dans [-8, 8] nouvellement inclus : 463025 (82.27%)
+erreur dans [-16, 16] nouvellement inclus : 237776 (98.13%)
+erreur dans [-32, 32] nouvellement inclus : 27230 (99.94%)
+erreur dans [-64, 64] nouvellement inclus : 866 (100.00%)
+erreur dans [-128, 128] nouvellement inclus : 7 (100.00%)
+--------------------------------------------------------------------------------
+datas_norm/data_norm_32.txt
+
+matrix size : (1500000, 383697)
+66672157 valeurs non nulles
+
+Max :  22.42260264231976
+Min :  -24.097762295878514
+nb de poids differents de zero :  30914
+
+||Ax - scores||_2 = 7672.327464
+RMSE = 6.264429
+MAE  = 4.790868
+Résidu relatif = 2.817053e-01
+Baseline (||y - mean||_2) = 27207.011165
+Pseudo-R^2 = 0.920477
+
+erreur dans [-1, 1] nouvellement inclus : 210722 (14.05%)
+erreur dans [-2, 2] nouvellement inclus : 202777 (27.57%)
+erreur dans [-4, 4] nouvellement inclus : 360488 (51.60%)
+erreur dans [-8, 8] nouvellement inclus : 462797 (82.45%)
+erreur dans [-16, 16] nouvellement inclus : 235772 (98.17%)
+erreur dans [-32, 32] nouvellement inclus : 26658 (99.95%)
+erreur dans [-64, 64] nouvellement inclus : 784 (100.00%)
+erreur dans [-128, 128] nouvellement inclus : 2 (100.00%)
+--------------------------------------------------------------------------------
+datas_norm/data_norm_33.txt
+
+matrix size : (1500000, 383697)
+66798691 valeurs non nulles
+
+Max :  22.283635133252005
+Min :  -26.195534745045247
+nb de poids differents de zero :  32571
+
+||Ax - scores||_2 = 7639.736098
+RMSE = 6.237818
+MAE  = 4.776006
+Résidu relatif = 2.780700e-01
+Baseline (||y - mean||_2) = 27463.071463
+Pseudo-R^2 = 0.922615
+
+erreur dans [-1, 1] nouvellement inclus : 210464 (14.03%)
+erreur dans [-2, 2] nouvellement inclus : 203374 (27.59%)
+erreur dans [-4, 4] nouvellement inclus : 361427 (51.68%)
+erreur dans [-8, 8] nouvellement inclus : 463200 (82.56%)
+erreur dans [-16, 16] nouvellement inclus : 234786 (98.22%)
+erreur dans [-32, 32] nouvellement inclus : 25991 (99.95%)
+erreur dans [-64, 64] nouvellement inclus : 756 (100.00%)
+erreur dans [-128, 128] nouvellement inclus : 2 (100.00%)
+--------------------------------------------------------------------------------
+datas_norm/data_norm_34.txt
+
+matrix size : (1500000, 383697)
+66892926 valeurs non nulles
+
+Max :  24.866880563140533
+Min :  -24.844782807733782
+nb de poids differents de zero :  34302
+
+||Ax - scores||_2 = 7641.765278
+RMSE = 6.239475
+MAE  = 4.783032
+Résidu relatif = 2.757420e-01
+Baseline (||y - mean||_2) = 27686.156474
+Pseudo-R^2 = 0.923816
+
+erreur dans [-1, 1] nouvellement inclus : 211231 (14.08%)
+erreur dans [-2, 2] nouvellement inclus : 202198 (27.56%)
+erreur dans [-4, 4] nouvellement inclus : 359693 (51.54%)
+erreur dans [-8, 8] nouvellement inclus : 463559 (82.45%)
+erreur dans [-16, 16] nouvellement inclus : 236795 (98.23%)
+erreur dans [-32, 32] nouvellement inclus : 25815 (99.95%)
+erreur dans [-64, 64] nouvellement inclus : 709 (100.00%)
+erreur dans [-128, 128] nouvellement inclus : 0 (100.00%)
+--------------------------------------------------------------------------------
+datas_norm/data_norm_35.txt
+
+matrix size : (1500000, 383697)
+66965843 valeurs non nulles
+
+Max :  23.29578123056096
+Min :  -26.19424390442343
+nb de poids differents de zero :  35928
+
+||Ax - scores||_2 = 7698.172980
+RMSE = 6.285532
+MAE  = 4.827194
+Résidu relatif = 2.754696e-01
+Baseline (||y - mean||_2) = 27934.784739
+Pseudo-R^2 = 0.924058
+
+erreur dans [-1, 1] nouvellement inclus : 208038 (13.87%)
+erreur dans [-2, 2] nouvellement inclus : 200278 (27.22%)
+erreur dans [-4, 4] nouvellement inclus : 358252 (51.10%)
+erreur dans [-8, 8] nouvellement inclus : 464411 (82.07%)
+erreur dans [-16, 16] nouvellement inclus : 242028 (98.20%)
+erreur dans [-32, 32] nouvellement inclus : 26304 (99.95%)
+erreur dans [-64, 64] nouvellement inclus : 689 (100.00%)
+erreur dans [-128, 128] nouvellement inclus : 0 (100.00%)
+--------------------------------------------------------------------------------
+datas_norm/data_norm_36.txt
+
+matrix size : (1500000, 383697)
+67020639 valeurs non nulles
+
+Max :  24.268113572754498
+Min :  -25.97967105865816
+nb de poids differents de zero :  37687
+
+||Ax - scores||_2 = 7749.184152
+RMSE = 6.327182
+MAE  = 4.871833
+Résidu relatif = 2.750544e-01
+Baseline (||y - mean||_2) = 28143.709179
+Pseudo-R^2 = 0.924186
+
+erreur dans [-1, 1] nouvellement inclus : 204880 (13.66%)
+erreur dans [-2, 2] nouvellement inclus : 198584 (26.90%)
+erreur dans [-4, 4] nouvellement inclus : 356032 (50.63%)
+erreur dans [-8, 8] nouvellement inclus : 465367 (81.66%)
+erreur dans [-16, 16] nouvellement inclus : 247743 (98.17%)
+erreur dans [-32, 32] nouvellement inclus : 26757 (99.96%)
+erreur dans [-64, 64] nouvellement inclus : 637 (100.00%)
+erreur dans [-128, 128] nouvellement inclus : 0 (100.00%)
+--------------------------------------------------------------------------------
+datas_norm/data_norm_37.txt
+
+matrix size : (1500000, 383697)
+67064576 valeurs non nulles
+
+Max :  25.240813707166623
+Min :  -27.723235395024638
+nb de poids differents de zero :  39330
+
+||Ax - scores||_2 = 7798.196198
+RMSE = 6.367201
+MAE  = 4.915619
+Résidu relatif = 2.747001e-01
+Baseline (||y - mean||_2) = 28377.636313
+Pseudo-R^2 = 0.924485
+
+erreur dans [-1, 1] nouvellement inclus : 202677 (13.51%)
+erreur dans [-2, 2] nouvellement inclus : 196520 (26.61%)
+erreur dans [-4, 4] nouvellement inclus : 351963 (50.08%)
+erreur dans [-8, 8] nouvellement inclus : 467637 (81.25%)
+erreur dans [-16, 16] nouvellement inclus : 253551 (98.16%)
+erreur dans [-32, 32] nouvellement inclus : 27061 (99.96%)
+erreur dans [-64, 64] nouvellement inclus : 590 (100.00%)
+erreur dans [-128, 128] nouvellement inclus : 1 (100.00%)
+--------------------------------------------------------------------------------
+datas_norm/data_norm_38.txt
+
+matrix size : (1500000, 383697)
+67089779 valeurs non nulles
+
+Max :  26.48536436373625
+Min :  -28.331266808778338
+nb de poids differents de zero :  40895
+
+||Ax - scores||_2 = 7825.204258
+RMSE = 6.389253
+MAE  = 4.944262
+Résidu relatif = 2.736765e-01
+Baseline (||y - mean||_2) = 28560.022240
+Pseudo-R^2 = 0.924929
+
+erreur dans [-1, 1] nouvellement inclus : 201872 (13.46%)
+erreur dans [-2, 2] nouvellement inclus : 194650 (26.43%)
+erreur dans [-4, 4] nouvellement inclus : 349384 (49.73%)
+erreur dans [-8, 8] nouvellement inclus : 468133 (80.94%)
+erreur dans [-16, 16] nouvellement inclus : 258275 (98.15%)
+erreur dans [-32, 32] nouvellement inclus : 27161 (99.97%)
+erreur dans [-64, 64] nouvellement inclus : 525 (100.00%)
+erreur dans [-128, 128] nouvellement inclus : 0 (100.00%)
+--------------------------------------------------------------------------------
+datas_norm/data_norm_39.txt
+
+matrix size : (1500000, 383697)
+67106435 valeurs non nulles
+
+Max :  25.893781909226423
+Min :  -24.948345652276284
+nb de poids differents de zero :  42266
+
+||Ax - scores||_2 = 7865.981915
+RMSE = 6.422547
+MAE  = 4.978693
+Résidu relatif = 2.732532e-01
+Baseline (||y - mean||_2) = 28776.710755
+Pseudo-R^2 = 0.925282
+
+erreur dans [-1, 1] nouvellement inclus : 199101 (13.27%)
+erreur dans [-2, 2] nouvellement inclus : 193332 (26.16%)
+erreur dans [-4, 4] nouvellement inclus : 348121 (49.37%)
+erreur dans [-8, 8] nouvellement inclus : 469260 (80.65%)
+erreur dans [-16, 16] nouvellement inclus : 262064 (98.13%)
+erreur dans [-32, 32] nouvellement inclus : 27632 (99.97%)
+erreur dans [-64, 64] nouvellement inclus : 490 (100.00%)
+erreur dans [-128, 128] nouvellement inclus : 0 (100.00%)
+--------------------------------------------------------------------------------
+datas_norm/data_norm_40.txt
+
+matrix size : (1500000, 383697)
+67106860 valeurs non nulles
+
+Max :  19.62468169674255
+Min :  -23.760675069380724
+nb de poids differents de zero :  43532
+
+||Ax - scores||_2 = 7894.444184
+RMSE = 6.445787
+MAE  = 5.001025
+Résidu relatif = 2.724449e-01
+Baseline (||y - mean||_2) = 28939.677460
+Pseudo-R^2 = 0.925586
+
+erreur dans [-1, 1] nouvellement inclus : 198489 (13.23%)
+erreur dans [-2, 2] nouvellement inclus : 192591 (26.07%)
+erreur dans [-4, 4] nouvellement inclus : 346389 (49.16%)
+erreur dans [-8, 8] nouvellement inclus : 468741 (80.41%)
+erreur dans [-16, 16] nouvellement inclus : 265426 (98.11%)
+erreur dans [-32, 32] nouvellement inclus : 27926 (99.97%)
+erreur dans [-64, 64] nouvellement inclus : 438 (100.00%)
+erreur dans [-128, 128] nouvellement inclus : 0 (100.00%)
+--------------------------------------------------------------------------------
+datas_norm/data_norm_41.txt
+
+matrix size : (1500000, 383697)
+67109422 valeurs non nulles
+
+Max :  22.464288710426207
+Min :  -20.23605356332669
+nb de poids differents de zero :  44787
+
+||Ax - scores||_2 = 7924.983007
+RMSE = 6.470722
+MAE  = 5.028225
+Résidu relatif = 2.717707e-01
+Baseline (||y - mean||_2) = 29152.112039
+Pseudo-R^2 = 0.926098
+
+erreur dans [-1, 1] nouvellement inclus : 196843 (13.12%)
+erreur dans [-2, 2] nouvellement inclus : 191322 (25.88%)
+erreur dans [-4, 4] nouvellement inclus : 344755 (48.86%)
+erreur dans [-8, 8] nouvellement inclus : 469911 (80.19%)
+erreur dans [-16, 16] nouvellement inclus : 268561 (98.09%)
+erreur dans [-32, 32] nouvellement inclus : 28229 (99.97%)
+erreur dans [-64, 64] nouvellement inclus : 379 (100.00%)
+erreur dans [-128, 128] nouvellement inclus : 0 (100.00%)
+--------------------------------------------------------------------------------
+datas_norm/data_norm_42.txt
+
+matrix size : (1500000, 383697)
+67106429 valeurs non nulles
+
+Max :  20.436087208984837
+Min :  -19.65958665902687
+nb de poids differents de zero :  46069
+
+||Ax - scores||_2 = 7940.679060
+RMSE = 6.483537
+MAE  = 5.042851
+Résidu relatif = 2.707866e-01
+Baseline (||y - mean||_2) = 29286.239015
+Pseudo-R^2 = 0.926483
+
+erreur dans [-1, 1] nouvellement inclus : 196831 (13.12%)
+erreur dans [-2, 2] nouvellement inclus : 190329 (25.81%)
+erreur dans [-4, 4] nouvellement inclus : 343475 (48.71%)
+erreur dans [-8, 8] nouvellement inclus : 469358 (80.00%)
+erreur dans [-16, 16] nouvellement inclus : 271384 (98.09%)
+erreur dans [-32, 32] nouvellement inclus : 28299 (99.98%)
+erreur dans [-64, 64] nouvellement inclus : 323 (100.00%)
+erreur dans [-128, 128] nouvellement inclus : 1 (100.00%)
+--------------------------------------------------------------------------------
+datas_norm/data_norm_43.txt
+
+matrix size : (1500000, 383697)
+67089185 valeurs non nulles
+
+Max :  16.340893979631662
+Min :  -20.883310015859983
+nb de poids differents de zero :  46963
+
+||Ax - scores||_2 = 7956.889583
+RMSE = 6.496773
+MAE  = 5.059505
+Résidu relatif = 2.700792e-01
+Baseline (||y - mean||_2) = 29456.232087
+Pseudo-R^2 = 0.927032
+
+erreur dans [-1, 1] nouvellement inclus : 195591 (13.04%)
+erreur dans [-2, 2] nouvellement inclus : 189786 (25.69%)
+erreur dans [-4, 4] nouvellement inclus : 342684 (48.54%)
+erreur dans [-8, 8] nouvellement inclus : 469082 (79.81%)
+erreur dans [-16, 16] nouvellement inclus : 274173 (98.09%)
+erreur dans [-32, 32] nouvellement inclus : 28360 (99.98%)
+erreur dans [-64, 64] nouvellement inclus : 322 (100.00%)
+erreur dans [-128, 128] nouvellement inclus : 2 (100.00%)
+--------------------------------------------------------------------------------
+datas_norm/data_norm_44.txt
+
+matrix size : (1500000, 383697)
+67065254 valeurs non nulles
+
+Max :  16.148352589892575
+Min :  -20.937844719502802
+nb de poids differents de zero :  47806
+
+||Ax - scores||_2 = 7975.229620
+RMSE = 6.511748
+MAE  = 5.073001
+Résidu relatif = 2.696752e-01
+Baseline (||y - mean||_2) = 29532.689325
+Pseudo-R^2 = 0.927074
+
+erreur dans [-1, 1] nouvellement inclus : 195449 (13.03%)
+erreur dans [-2, 2] nouvellement inclus : 188788 (25.62%)
+erreur dans [-4, 4] nouvellement inclus : 341669 (48.39%)
+erreur dans [-8, 8] nouvellement inclus : 469214 (79.67%)
+erreur dans [-16, 16] nouvellement inclus : 276122 (98.08%)
+erreur dans [-32, 32] nouvellement inclus : 28424 (99.98%)
+erreur dans [-64, 64] nouvellement inclus : 333 (100.00%)
+erreur dans [-128, 128] nouvellement inclus : 1 (100.00%)
+--------------------------------------------------------------------------------
+datas_norm/data_norm_45.txt
+
+matrix size : (1500000, 383697)
+67036504 valeurs non nulles
+
+Max :  15.830116278954437
+Min :  -20.689978664683043
+nb de poids differents de zero :  48478
+
+||Ax - scores||_2 = 7988.750261
+RMSE = 6.522787
+MAE  = 5.084605
+Résidu relatif = 2.692074e-01
+Baseline (||y - mean||_2) = 29673.715624
+Pseudo-R^2 = 0.927521
+
+erreur dans [-1, 1] nouvellement inclus : 194843 (12.99%)
+erreur dans [-2, 2] nouvellement inclus : 188257 (25.54%)
+erreur dans [-4, 4] nouvellement inclus : 340315 (48.23%)
+erreur dans [-8, 8] nouvellement inclus : 470787 (79.61%)
+erreur dans [-16, 16] nouvellement inclus : 276919 (98.07%)
+erreur dans [-32, 32] nouvellement inclus : 28568 (99.98%)
+erreur dans [-64, 64] nouvellement inclus : 310 (100.00%)
+erreur dans [-128, 128] nouvellement inclus : 1 (100.00%)
+--------------------------------------------------------------------------------
+datas_norm/data_norm_46.txt
+
+matrix size : (1500000, 383697)
+66992833 valeurs non nulles
+
+Max :  14.772426422913423
+Min :  -19.90827180670587
+nb de poids differents de zero :  48936
+
+||Ax - scores||_2 = 7991.479408
+RMSE = 6.525016
+MAE  = 5.087415
+Résidu relatif = 2.684282e-01
+Baseline (||y - mean||_2) = 29729.102570
+Pseudo-R^2 = 0.927741
+
+erreur dans [-1, 1] nouvellement inclus : 193853 (12.92%)
+erreur dans [-2, 2] nouvellement inclus : 188619 (25.50%)
+erreur dans [-4, 4] nouvellement inclus : 341446 (48.26%)
+erreur dans [-8, 8] nouvellement inclus : 469371 (79.55%)
+erreur dans [-16, 16] nouvellement inclus : 277555 (98.06%)
+erreur dans [-32, 32] nouvellement inclus : 28858 (99.98%)
+erreur dans [-64, 64] nouvellement inclus : 298 (100.00%)
+erreur dans [-128, 128] nouvellement inclus : 0 (100.00%)
+--------------------------------------------------------------------------------
+datas_norm/data_norm_47.txt
+
+matrix size : (1500000, 383697)
+66939306 valeurs non nulles
+
+Max :  18.48841047629347
+Min :  -20.545696497124062
+nb de poids differents de zero :  49148
+
+||Ax - scores||_2 = 7979.211200
+RMSE = 6.514999
+MAE  = 5.081282
+Résidu relatif = 2.672599e-01
+Baseline (||y - mean||_2) = 29855.618742
+Pseudo-R^2 = 0.928572
+
+erreur dans [-1, 1] nouvellement inclus : 193466 (12.90%)
+erreur dans [-2, 2] nouvellement inclus : 188722 (25.48%)
+erreur dans [-4, 4] nouvellement inclus : 342133 (48.29%)
+erreur dans [-8, 8] nouvellement inclus : 470111 (79.63%)
+erreur dans [-16, 16] nouvellement inclus : 276724 (98.08%)
+erreur dans [-32, 32] nouvellement inclus : 28572 (99.98%)
+erreur dans [-64, 64] nouvellement inclus : 272 (100.00%)
+erreur dans [-128, 128] nouvellement inclus : 0 (100.00%)
+--------------------------------------------------------------------------------
+datas_norm/data_norm_48.txt
+
+matrix size : (1500000, 383697)
+66869841 valeurs non nulles
+
+Max :  18.466493223449326
+Min :  -18.357978411303172
+nb de poids differents de zero :  49023
+
+||Ax - scores||_2 = 7949.340496
+RMSE = 6.490609
+MAE  = 5.061991
+Résidu relatif = 2.655985e-01
+Baseline (||y - mean||_2) = 29884.111847
+Pseudo-R^2 = 0.929241
+
+erreur dans [-1, 1] nouvellement inclus : 195390 (13.03%)
+erreur dans [-2, 2] nouvellement inclus : 188822 (25.61%)
+erreur dans [-4, 4] nouvellement inclus : 342381 (48.44%)
+erreur dans [-8, 8] nouvellement inclus : 469326 (79.73%)
+erreur dans [-16, 16] nouvellement inclus : 275961 (98.13%)
+erreur dans [-32, 32] nouvellement inclus : 27845 (99.98%)
+erreur dans [-64, 64] nouvellement inclus : 275 (100.00%)
+erreur dans [-128, 128] nouvellement inclus : 0 (100.00%)
+--------------------------------------------------------------------------------
+datas_norm/data_norm_49.txt
+
+matrix size : (1500000, 383697)
+66785257 valeurs non nulles
+
+Max :  16.896474614432947
+Min :  -16.16390344777467
+nb de poids differents de zero :  48527
+
+||Ax - scores||_2 = 7900.543777
+RMSE = 6.450767
+MAE  = 5.032707
+Résidu relatif = 2.634444e-01
+Baseline (||y - mean||_2) = 29987.416220
+Pseudo-R^2 = 0.930588
+
+erreur dans [-1, 1] nouvellement inclus : 195412 (13.03%)
+erreur dans [-2, 2] nouvellement inclus : 189840 (25.68%)
+erreur dans [-4, 4] nouvellement inclus : 344446 (48.65%)
+erreur dans [-8, 8] nouvellement inclus : 470721 (80.03%)
+erreur dans [-16, 16] nouvellement inclus : 272396 (98.19%)
+erreur dans [-32, 32] nouvellement inclus : 26907 (99.98%)
+erreur dans [-64, 64] nouvellement inclus : 278 (100.00%)
+erreur dans [-128, 128] nouvellement inclus : 0 (100.00%)
+--------------------------------------------------------------------------------
+datas_norm/data_norm_50.txt
+
+matrix size : (1500000, 383697)
+66687799 valeurs non nulles
+
+Max :  15.496254429943708
+Min :  -15.655024196261488
+nb de poids differents de zero :  47611
+
+||Ax - scores||_2 = 7847.898831
+RMSE = 6.407783
+MAE  = 4.999971
+Résidu relatif = 2.612467e-01
+Baseline (||y - mean||_2) = 29983.592159
+Pseudo-R^2 = 0.931492
+
+erreur dans [-1, 1] nouvellement inclus : 197453 (13.16%)
+erreur dans [-2, 2] nouvellement inclus : 191343 (25.92%)
+erreur dans [-4, 4] nouvellement inclus : 345395 (48.95%)
+erreur dans [-8, 8] nouvellement inclus : 469240 (80.23%)
+erreur dans [-16, 16] nouvellement inclus : 270604 (98.27%)
+erreur dans [-32, 32] nouvellement inclus : 25700 (99.98%)
+erreur dans [-64, 64] nouvellement inclus : 265 (100.00%)
+erreur dans [-128, 128] nouvellement inclus : 0 (100.00%)
+--------------------------------------------------------------------------------
+datas_norm/data_norm_51.txt
+
+matrix size : (1500000, 383697)
+66572623 valeurs non nulles
+
+Max :  12.692594507463102
+Min :  -15.506003834567553
+nb de poids differents de zero :  46254
+
+||Ax - scores||_2 = 7760.820924
+RMSE = 6.336684
+MAE  = 4.944066
+Résidu relatif = 2.580559e-01
+Baseline (||y - mean||_2) = 30063.751583
+Pseudo-R^2 = 0.933361
+
+erreur dans [-1, 1] nouvellement inclus : 199086 (13.27%)
+erreur dans [-2, 2] nouvellement inclus : 194295 (26.23%)
+erreur dans [-4, 4] nouvellement inclus : 347920 (49.42%)
+erreur dans [-8, 8] nouvellement inclus : 469312 (80.71%)
+erreur dans [-16, 16] nouvellement inclus : 264720 (98.36%)
+erreur dans [-32, 32] nouvellement inclus : 24451 (99.99%)
+erreur dans [-64, 64] nouvellement inclus : 216 (100.00%)
+erreur dans [-128, 128] nouvellement inclus : 0 (100.00%)
+--------------------------------------------------------------------------------
+datas_norm/data_norm_52.txt
+
+matrix size : (1500000, 383697)
+66437319 valeurs non nulles
+
+Max :  15.532929469369364
+Min :  -17.399686146436878
+nb de poids differents de zero :  44156
+
+||Ax - scores||_2 = 7639.076409
+RMSE = 6.237280
+MAE  = 4.863415
+Résidu relatif = 2.537959e-01
+Baseline (||y - mean||_2) = 30016.032258
+Pseudo-R^2 = 0.935230
+
+erreur dans [-1, 1] nouvellement inclus : 203564 (13.57%)
+erreur dans [-2, 2] nouvellement inclus : 197526 (26.74%)
+erreur dans [-4, 4] nouvellement inclus : 352077 (50.21%)
+erreur dans [-8, 8] nouvellement inclus : 466905 (81.34%)
+erreur dans [-16, 16] nouvellement inclus : 257131 (98.48%)
+erreur dans [-32, 32] nouvellement inclus : 22621 (99.99%)
+erreur dans [-64, 64] nouvellement inclus : 176 (100.00%)
+erreur dans [-128, 128] nouvellement inclus : 0 (100.00%)
+--------------------------------------------------------------------------------
+datas_norm/data_norm_53.txt
+
+matrix size : (1500000, 383697)
+66281949 valeurs non nulles
+
+Max :  14.353301145665778
+Min :  -16.432056146116675
+nb de poids differents de zero :  41545
+
+||Ax - scores||_2 = 7442.213942
+RMSE = 6.076542
+MAE  = 4.731703
+Résidu relatif = 2.471930e-01
+Baseline (||y - mean||_2) = 30077.002765
+Pseudo-R^2 = 0.938774
+
+erreur dans [-1, 1] nouvellement inclus : 209983 (14.00%)
+erreur dans [-2, 2] nouvellement inclus : 202644 (27.51%)
+erreur dans [-4, 4] nouvellement inclus : 359289 (51.46%)
+erreur dans [-8, 8] nouvellement inclus : 465886 (82.52%)
+erreur dans [-16, 16] nouvellement inclus : 241859 (98.64%)
+erreur dans [-32, 32] nouvellement inclus : 20203 (99.99%)
+erreur dans [-64, 64] nouvellement inclus : 136 (100.00%)
+erreur dans [-128, 128] nouvellement inclus : 0 (100.00%)
+--------------------------------------------------------------------------------
+datas_norm/data_norm_54.txt
+
+matrix size : (1500000, 383697)
+66114802 valeurs non nulles
+
+Max :  13.351690353098471
+Min :  -12.604478304743434
+nb de poids differents de zero :  38166
+
+||Ax - scores||_2 = 7212.067709
+RMSE = 5.888629
+MAE  = 4.576675
+Résidu relatif = 2.396446e-01
+Baseline (||y - mean||_2) = 29943.572649
+Pseudo-R^2 = 0.941989
+
+erreur dans [-1, 1] nouvellement inclus : 218613 (14.57%)
+erreur dans [-2, 2] nouvellement inclus : 210483 (28.61%)
+erreur dans [-4, 4] nouvellement inclus : 367159 (53.08%)
+erreur dans [-8, 8] nouvellement inclus : 459149 (83.69%)
+erreur dans [-16, 16] nouvellement inclus : 227220 (98.84%)
+erreur dans [-32, 32] nouvellement inclus : 17281 (99.99%)
+erreur dans [-64, 64] nouvellement inclus : 95 (100.00%)
+erreur dans [-128, 128] nouvellement inclus : 0 (100.00%)
+--------------------------------------------------------------------------------
+datas_norm/data_norm_55.txt
+
+matrix size : (1500000, 383697)
+65913257 valeurs non nulles
+
+Max :  13.430481019363414
+Min :  -15.796198957480355
+nb de poids differents de zero :  34332
+
+||Ax - scores||_2 = 6831.887352
+RMSE = 5.578213
+MAE  = 4.315879
+Résidu relatif = 2.273935e-01
+Baseline (||y - mean||_2) = 29967.991674
+Pseudo-R^2 = 0.948028
+
+erreur dans [-1, 1] nouvellement inclus : 233224 (15.55%)
+erreur dans [-2, 2] nouvellement inclus : 224402 (30.51%)
+erreur dans [-4, 4] nouvellement inclus : 381344 (55.93%)
+erreur dans [-8, 8] nouvellement inclus : 448158 (85.81%)
+erreur dans [-16, 16] nouvellement inclus : 199176 (99.09%)
+erreur dans [-32, 32] nouvellement inclus : 13638 (100.00%)
+erreur dans [-64, 64] nouvellement inclus : 58 (100.00%)
+erreur dans [-128, 128] nouvellement inclus : 0 (100.00%)
+--------------------------------------------------------------------------------
+datas_norm/data_norm_56.txt
+
+matrix size : (1500000, 383697)
+65709110 valeurs non nulles
+
+Max :  11.890289693200922
+Min :  -14.023152548254895
+nb de poids differents de zero :  30117
+
+||Ax - scores||_2 = 6313.311702
+RMSE = 5.154797
+MAE  = 3.966089
+Résidu relatif = 2.108221e-01
+Baseline (||y - mean||_2) = 29643.307912
+Pseudo-R^2 = 0.954641
+
+erreur dans [-1, 1] nouvellement inclus : 258260 (17.22%)
+erreur dans [-2, 2] nouvellement inclus : 242490 (33.38%)
+erreur dans [-4, 4] nouvellement inclus : 399975 (60.05%)
+erreur dans [-8, 8] nouvellement inclus : 426115 (88.46%)
+erreur dans [-16, 16] nouvellement inclus : 164060 (99.39%)
+erreur dans [-32, 32] nouvellement inclus : 9071 (100.00%)
+erreur dans [-64, 64] nouvellement inclus : 29 (100.00%)
+erreur dans [-128, 128] nouvellement inclus : 0 (100.00%)
+--------------------------------------------------------------------------------
+datas_norm/data_norm_57.txt
+
+matrix size : (1500000, 383697)
+65380206 valeurs non nulles
+
+Max :  10.30610568014424
+Min :  -10.128107148028393
+nb de poids differents de zero :  25078
+
+||Ax - scores||_2 = 5495.985687
+RMSE = 4.487454
+MAE  = 3.395666
+Résidu relatif = 1.846249e-01
+Baseline (||y - mean||_2) = 29547.791295
+Pseudo-R^2 = 0.965403
+
+erreur dans [-1, 1] nouvellement inclus : 311821 (20.79%)
+erreur dans [-2, 2] nouvellement inclus : 282867 (39.65%)
+erreur dans [-4, 4] nouvellement inclus : 421620 (67.75%)
+erreur dans [-8, 8] nouvellement inclus : 365945 (92.15%)
+erreur dans [-16, 16] nouvellement inclus : 112878 (99.68%)
+erreur dans [-32, 32] nouvellement inclus : 4862 (100.00%)
+erreur dans [-64, 64] nouvellement inclus : 7 (100.00%)
+erreur dans [-128, 128] nouvellement inclus : 0 (100.00%)
+--------------------------------------------------------------------------------
+datas_norm/data_norm_58.txt
+
+matrix size : (1500000, 383697)
+64961020 valeurs non nulles
+
+Max :  11.724860242298945
+Min :  -11.770539428247218
+nb de poids differents de zero :  19580
+
+||Ax - scores||_2 = 4320.741981
+RMSE = 3.527871
+MAE  = 2.479348
+Résidu relatif = 1.472184e-01
+Baseline (||y - mean||_2) = 28435.044402
+Pseudo-R^2 = 0.976911
+
+erreur dans [-1, 1] nouvellement inclus : 508252 (33.88%)
+erreur dans [-2, 2] nouvellement inclus : 334927 (56.21%)
+erreur dans [-4, 4] nouvellement inclus : 356485 (79.98%)
+erreur dans [-8, 8] nouvellement inclus : 236226 (95.73%)
+erreur dans [-16, 16] nouvellement inclus : 61958 (99.86%)
+erreur dans [-32, 32] nouvellement inclus : 2152 (100.00%)
+erreur dans [-64, 64] nouvellement inclus : 0 (100.00%)
+erreur dans [-128, 128] nouvellement inclus : 0 (100.00%)
+--------------------------------------------------------------------------------
+datas_norm/data_norm_59.txt
+
+matrix size : (1000000, 383697)
+43104284 valeurs non nulles
+
+Max :  14.786405232695655
+Min :  -15.536754466466277
+nb de poids differents de zero :  13495
+
+||Ax - scores||_2 = 2607.729069
+RMSE = 2.607729
+MAE  = 1.718574
+Résidu relatif = 1.096936e-01
+Baseline (||y - mean||_2) = 22969.182774
+Pseudo-R^2 = 0.987111
+
+erreur dans [-1, 1] nouvellement inclus : 476719 (47.67%)
+erreur dans [-2, 2] nouvellement inclus : 238443 (71.52%)
+erreur dans [-4, 4] nouvellement inclus : 181991 (89.72%)
+erreur dans [-8, 8] nouvellement inclus : 83475 (98.06%)
+erreur dans [-16, 16] nouvellement inclus : 18941 (99.96%)
+erreur dans [-32, 32] nouvellement inclus : 431 (100.00%)
+erreur dans [-64, 64] nouvellement inclus : 0 (100.00%)
+erreur dans [-128, 128] nouvellement inclus : 0 (100.00%)
+--------------------------------------------------------------------------------
+(base) caussebruno@Mac-Studio Evaluation % 
