@@ -189,7 +189,7 @@ class RXPatternGenerate {
     void egrcd_rawdata_to_stage();
     void stage_to_data(const unsigned int stage);
     
-    void write_eval(const unsigned int stage);
+    void write_eval();
     void norm_weight(float* weights, short* weigths_out, unsigned int id_start, unsigned int n_weights, unsigned int sym);
 
 };

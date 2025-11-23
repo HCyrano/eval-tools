@@ -93,11 +93,11 @@ build/
 # ignorer les dossiers
 Egaroucid_Train_Data/
 stages/
-weights/
-weights_A/
+weights*/
 docs/
 datas/
 datas_norm/
+eval_v*/
 
 
 # ignorer le dossier OptimizationProfiles

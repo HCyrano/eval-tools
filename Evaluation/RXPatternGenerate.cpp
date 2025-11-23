@@ -306,80 +306,105 @@ void RXPatternGenerate::stage_to_data(const unsigned int stage) {
 
 };
 
+/**
+ * @brief Écrit les poids d'évaluation des stages dans un fichier binaire normalisé.
+ *
+ * Cette fonction lit les poids bruts stage par stage à partir d'un fichier texte,
+ * applique des normalisations ( moyenne des poids symetriques et miroirs)
+ * et écrit les résultats, stage par stage, dans un format binaire.
+ * */
 
-void RXPatternGenerate::write_eval(const unsigned int stage) {
+void RXPatternGenerate::write_eval() {
+    
+    unsigned int n_index = 383697;
     
     std::string dir_str = "/Users/caussebruno/Documents/developpement/Evaluation";
     
-    std::ostringstream oss;
-    oss << std::setw(2) << std::setfill('0') << stage;
+    std::string file_name_out = dir_str + "/weights/weight_v1.bin";
+    // 2. Ouvrir le fichier en mode ecriture binaire
+    // ios::out pour l'ecriture et ios::binary pour le mode binaire
+    std::ofstream out(file_name_out, std::ios::out | std::ios::binary);
     
-    std::string file_name_in = dir_str + "/weights_1/weight_" + oss.str() + ".txt";
-    
-    float weigths_in[383697];
-    float weigth = 0.0f;
-    
-    std::ifstream in(file_name_in.c_str());
-    if (in.is_open()) {
-        std::cout << "Ouverture du fichier reussie. Lecture des donnees..." << std::endl;
-        
-        // 2. Boucle de lecture jusqu'a la fin du fichier (ou erreur)
-        // La condition 'fichier >> valeur_lue' est vraie tant qu'un float peut etre lu.
-        unsigned int i = 0;
-        while (in >> weigth) {
-            // 3. Ajout de la valeur lue dans le tableau
-            weigths_in[i] = weigth;
-            ++i;
+
+    if (out.is_open()) {
+
+        for(unsigned int stage = 0; stage<60; ++stage) {
+            
+            std::cout << "stage : " << stage << std::endl;
+            
+            std::ostringstream oss;
+            oss << std::setw(2) << std::setfill('0') << stage;
+            
+            std::string file_name_in = dir_str + "/weights/weight_" + oss.str() + ".txt";
+            
+            float weigths_in[n_index];
+            float weigth = 0.0f;
+            
+            std::ifstream in(file_name_in.c_str());
+            if (in.is_open()) {
+                std::cout << "Ouverture du fichier reussie. Lecture des donnees..." << std::endl;
+                
+                // 2. Boucle de lecture jusqu'a la fin du fichier (ou erreur)
+                // La condition 'fichier >> valeur_lue' est vraie tant qu'un float peut etre lu.
+                unsigned int i = 0;
+                while (in >> weigth) {
+                    // 3. Ajout de la valeur lue dans le tableau
+                    weigths_in[i] = weigth;
+                    ++i;
+                }
+                
+                // 4. Verification de la raison de la sortie de la boucle
+                if (in.eof()) {
+                    // Sortie normale : la fin du fichier a été atteinte.
+                    std::cout << "Lecture terminee : Fin du fichier atteinte." << std::endl;
+                } else if (in.fail() && i != 0) {
+                    // La derniere tentative de lecture a echouee (ex: caractere non-numerique)
+                    std::cerr << "Attention : La lecture a ete interrompue par une entree non-valide." << std::endl;
+                } else if (in.fail() && i == 0) {
+                    // Aucune valeur n'a pu être lue (fichier vide ou premier element non-float)
+                    std::cerr << "Erreur : Le fichier est vide ou la premiere entree n'est pas un float." << std::endl;
+                }
+                
+                // 5. Fermeture du fichier
+                in.close();
+                
+            } else {
+                std::cerr << "Erreur : Impossible d'ouvrir le fichier '" << file_name_in << "'" << std::endl;
+                return;
+            }
+            
+            
+            short weigths_out[n_index];
+            
+            
+            for(unsigned int id_patt = 0; id_patt < std::size(pattern_info); ++id_patt)
+                norm_weight(weigths_in, weigths_out, pattern_info[id_patt][1], pattern_info[id_patt][2], pattern_info[id_patt][3]);
+            
+            // 4. Ecriture des donnees
+            // weigths_out retourne un pointeur vers le premier element
+            out.write(
+                reinterpret_cast<const char*>(weigths_out), // Pointeur casté
+                sizeof(weigths_out)                         // Taille en octets
+            );
+
+            if (out.good()) {
+                std::cout << "Ecriture reussie de " << n_index
+                          << " short (" << sizeof(weigths_out) << " octets)." << std::endl;
+            } else {
+                std::cerr << "Erreur lors de l'ecriture des donnees." << std::endl;
+            }
+
+             
+            std::cout << std::endl;
+
         }
-        
-        // 4. Verification de la raison de la sortie de la boucle
-        if (in.eof()) {
-            // Sortie normale : la fin du fichier a été atteinte.
-            std::cout << "Lecture terminee : Fin du fichier atteinte." << std::endl;
-        } else if (in.fail() && i != 0) {
-            // La derniere tentative de lecture a echouee (ex: caractere non-numerique)
-            std::cerr << "Attention : La lecture a ete interrompue par une entree non-valide." << std::endl;
-        } else if (in.fail() && i == 0) {
-            // Aucune valeur n'a pu être lue (fichier vide ou premier element non-float)
-            std::cerr << "Erreur : Le fichier est vide ou la premiere entree n'est pas un float." << std::endl;
-        }
-        
-        // 5. Fermeture du fichier
-        in.close();
-        
     } else {
-        std::cerr << "Erreur : Impossible d'ouvrir le fichier '" << file_name_in << "'" << std::endl;
-        return;
+        std::cerr << "Erreur : Impossible d'ouvrir le fichier '" << file_name_out << "'" << std::endl;
     }
 
-    
-    short weigths_out[383697];
-    
-    
-    for(unsigned int id_patt = 0; id_patt < std::size(pattern_info); ++id_patt)
-        norm_weight(weigths_in, weigths_out, pattern_info[id_patt][1], pattern_info[id_patt][2], pattern_info[id_patt][3]);
-    
-    
-    //diag_5
-    unsigned int n_index_local = pattern_info[0][2];
-    unsigned int offset_local = n_index_local/2;
-    for(unsigned int id = pattern_info[0][1]; id < offset_local +1; ++id) {
-        
-        int p_idx = id;
-        int p_inv = (n_index_local-1) - p_idx;
-        
-        int p_sym_idx = index_rotate(p_idx-offset_local, pattern_info[0][3]) + offset_local;
-        int p_sym_inv = index_rotate(p_inv-offset_local, pattern_info[0][3]) + offset_local;
+    // 5. Fermeture du fichier
+    out.close();
 
-
-        std::cout << "patt[" << std::setw(3) << p_idx << "] = " << weigths_out[p_idx] << std::endl;
-        std::cout << "patt[" << std::setw(3) << p_inv << "] = " << weigths_out[p_inv] << std::endl;
-        std::cout << "patt[" << std::setw(3) << p_sym_idx << "] = " << weigths_out[p_sym_idx] << std::endl;
-        std::cout << "patt[" << std::setw(3) << p_sym_inv << "] = " << weigths_out[p_sym_inv] << std::endl;
-        
-        std::cout << std::endl;
-        
-    }
     
 };
 
