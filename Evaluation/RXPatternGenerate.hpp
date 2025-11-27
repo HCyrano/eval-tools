@@ -99,12 +99,7 @@ class RXPatternGenerate {
          { 4, { H5, G6, F7, E8}},
          { 4, { D8, C7, B6, A5}},
          */
-        //  diag_5
-        { 5, { A5, B4, C3, D2, E1}},
-        { 5, { D1, E2, F3, G4, H5}},
-        { 5, { H4, G5, F6, E7, D8}},
-        { 5, { E8, D7, C6, B5, A4}},
-        
+
         // diag_6
         { 6, { A6, B5, C4, D3, E2, F1}},
         { 6, { C1, D2, E3, F4, G5, H6}},
@@ -186,7 +181,7 @@ class RXPatternGenerate {
 
     void generate_method();
     
-    void egrcd_rawdata_to_stage();
+    void rawdata_to_stage();
     void stage_to_data(const unsigned int stage);
     
     void write_eval();

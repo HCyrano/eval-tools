@@ -98,6 +98,8 @@ docs/
 datas/
 datas_norm/
 eval_v*/
+dedups/
+n_occs/
 
 
 # ignorer le dossier OptimizationProfiles

@@ -171,7 +171,7 @@ except ValueError:
 # bornage inferieur et superieur des stages a normaliser
 stage_borne_inf = 9
 stage_borne_sup = 60
-stage = max(stage_borne_inf, stage)
+stage = max(stage, stage_borne_inf)
 
 # nombre d'occurences minimum
 occurence_min = 100
@@ -186,7 +186,7 @@ DATA_NORM_DIR.mkdir(exist_ok=True)
 
 
 filenames_in = []
-# Créer les chemins avec pathlib
+
 for s in [stage - 1, stage, stage + 1]:
     if stage_borne_inf <= s < stage_borne_sup: # Assurer que l'index du stage est dans la plage
         path = Path(DATA_DIR / f"data_{s:02}.txt")

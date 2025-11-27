@@ -185,13 +185,14 @@ void RXPatternGenerate::generate_method(std::string signature, unsigned int colo
 
 // Transforme les données brutes de la base 'egaroucid' en données structurées,
 // organisées par stage
-void RXPatternGenerate::egrcd_rawdata_to_stage() {
+void RXPatternGenerate::rawdata_to_stage() {
     
-    std::string dir_str = "/Users/caussebruno/Documents/developpement/Evaluation";
+    std::string dir_str = "/Users/caussebruno/Documents/developpement/database/edax";
+    std::string file_name_in = "/Users/caussebruno/Documents/developpement/database/edax/LotK-6Mpositions-MG24@80-EG32@80-24@100-resultatFinal.txt";
 
     for( unsigned int stage = 0; stage<60; ++stage){
         
-        std::string file_name_in;
+        //std::string file_name_in;
         std::string file_name_out;
         
         std::ostringstream oss_out;
@@ -204,11 +205,11 @@ void RXPatternGenerate::egrcd_rawdata_to_stage() {
         
         if(ofs) {
             
-            for(int i = 0; i <= 25; ++i) {
+            //for(int i = 0; i <= 25; ++i) {
                 
-                std::ostringstream oss_in;
-                oss_in << std::setw(7) << std::setfill('0') << i;
-                file_name_in = dir_str + "/Egaroucid_Train_Data/0001_egaroucid_7_5_1_lv17/" + oss_in.str() + ".txt";
+                //std::ostringstream oss_in;
+                //oss_in << std::setw(7) << std::setfill('0') << i;
+                //file_name_in = dir_str + "/Egaroucid_Train_Data/0001_egaroucid_7_5_1_lv17/" + oss_in.str() + ".txt";
                 
                 
                 std::ifstream in(file_name_in.c_str());
@@ -231,13 +232,21 @@ void RXPatternGenerate::egrcd_rawdata_to_stage() {
                 
                 
                 
-            }
+            //}
             
             ofs.close();
         }
     }
     
 };
+
+// la methode realise le traitement suivant
+// lecture du fichier texte : dedup_xx.txt
+// produit un othellier et les index des patterns
+// transforme les index en index canoniques puis en index globaux
+// ecrit un fichier texte data__xx.txt contenant les  index globaux et le score associé
+
+// les dossiers stages/ et datas/ doivent existés
 
 void RXPatternGenerate::stage_to_data(const unsigned int stage) {
     
@@ -246,7 +255,7 @@ void RXPatternGenerate::stage_to_data(const unsigned int stage) {
     std::ostringstream oss;
     oss << std::setw(2) << std::setfill('0') << stage;
     
-    std::string file_name_in = dir_str + "/stages/stage_" + oss.str() + ".txt";
+    std::string file_name_in = dir_str + "/dedups/dedup_" + oss.str() + ".txt";
     std::string file_name_out = dir_str + "/datas/data_" + oss.str() + ".txt";
     
     std::ofstream ofs(file_name_out.c_str());
@@ -277,12 +286,13 @@ void RXPatternGenerate::stage_to_data(const unsigned int stage) {
                     //find pattern description
                     unsigned int id_info = 0;
                     for(; id_info < std::size(pattern_info); ++id_info)
-                        if(pattern_info[id_info][0] <= id_patt )
+                        if(pattern_info[id_info][0] >= id_patt )
                             break;
                     
-                    //normalisation de l'index:
+                    //canonisation de l'index
                     int pattern_ID = index_rotate(patt[id_patt], pattern_def[id_patt].symID);
                     pattern_ID = std::min(patt[id_patt],pattern_ID);
+                    //transformation index local => index global
                     pattern_ID += pattern_info[id_info][2]/2;
                     pattern_ID += pattern_info[id_info][1];
                     
@@ -316,6 +326,7 @@ void RXPatternGenerate::stage_to_data(const unsigned int stage) {
 
 void RXPatternGenerate::write_eval() {
     
+    //nombre d'index globaux
     unsigned int n_index = 383697;
     
     std::string dir_str = "/Users/caussebruno/Documents/developpement/Evaluation";
@@ -432,11 +443,11 @@ void RXPatternGenerate::norm_weight(float* weigths_in, short* weigths_out, unsig
         p_sym_idx += id_start;
         p_sym_inv += id_start;
         
+        
+        //les poids calculés sont dans les indices canoniques
         //mix weights
-        float weight_idx = (weigths_in[p_idx] + weigths_in[p_sym_idx])/2.0f;
-        float weight_inv = (weigths_in[p_inv] + weigths_in[p_sym_inv])/2.0f;
-
-        short weight = static_cast<short>(((weight_idx-weight_inv)/2.0f)*256);
+        //idee mixer les poids avec ponderation des occurences
+        short weight = static_cast<short>(((weigths_in[p_idx]-weigths_in[p_sym_inv])/2.0f)*256);
         
         //save
         weigths_out[p_idx]      =  weight;

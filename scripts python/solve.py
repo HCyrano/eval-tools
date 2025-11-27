@@ -6,6 +6,41 @@ from scipy.sparse.linalg import lsqr
 from scipy.sparse.linalg import lsmr
 from pathlib import Path
 
+def compter_occurrences_par_index(A_csr):
+    """
+    Calcule le nombre d'occurrences de chaque index (colonne) dans une matrice CSR.
+
+    Args:
+        A_csr (csr_matrix): La matrice creuse au format CSR.
+
+    Returns:
+        np.ndarray: Un vecteur 1D de taille N (nombre de colonnes)
+                    où chaque élément est le nombre d'occurrences (somme des non-zeros)
+                    pour l'index de colonne correspondant.
+    """
+
+    # 1. Transposer la matrice (A^T)
+    # Les colonnes de A deviennent les lignes de A_T.
+    # A_T = A_csr.transpose()
+
+    # Si A_csr est déjà une matrice creuse efficace pour les opérations par colonne
+    # (comme CSC), le transpose().tocsr() est rapide. Assurons-nous d'avoir un format
+    # optimisé pour les sommes par LIGNE sur A_T, c'est-à-dire CSR ou CSC.
+    # Dans ce cas, A_T sera généralement au format CSC, ce qui est très bien
+    # pour les sommes de colonnes (qui sont des sommes de lignes sur A_T).
+    
+    # 2. Calculer la somme des éléments le long de l'axe 1 (les lignes de A_T)
+    # Le résultat est une matrice colonne (N, 1) ou une matrice ligne (1, N).
+    # On utilise .A pour convertir la matrice creuse résultat en tableau NumPy dense.
+    # n_occurrences = A_T.sum(axis=1).A.flatten()
+
+    # Alternative plus concise :
+    n_occurrences = A_csr.sum(axis=0).A.flatten()
+    # sum(axis=0) calcule directement la somme par colonne sur la matrice A.
+    # Bien que CSR soit optimisé pour les lignes, SciPy gère l'efficacité
+    # de cette opération pour vous en interne.
+
+    return n_occurrences
 
 # ----------------------------------------------------------
 # estime le poids des patterns pour le stage (60-n_empty)
@@ -23,15 +58,24 @@ try:
 except ValueError:
     print("Erreur: Le numéro de stage doit être un entier.")
     sys.exit(1)
+    
+#nombre total d'index possible
+n_index = 383697
 
 DATA_DIR = Path("datas_norm")
-WEIGHTS_DIR = Path("weights")
 
+WEIGHTS_DIR = Path("weights")
 # Créer le répertoire de sortie s'il n'existe pas
 WEIGHTS_DIR.mkdir(exist_ok=True)
 
-filenames_in = [DATA_DIR / f"data_norm_{stage:02}.txt"]
-filename_out = WEIGHTS_DIR / f"weight_{stage:02}.txt"
+OCC_DIR = Path("n_occs")
+# Créer le répertoire de sortie s'il n'existe pas
+OCC_DIR.mkdir(exist_ok=True)
+
+
+datas_in = [DATA_DIR / f"data_norm_{stage:02}.txt"]
+weight_out = WEIGHTS_DIR / f"weight_{stage:02}.txt"
+n_occ_out = OCC_DIR / f"n_occ_{stage:02}.txt"
 
 
 rows = []
@@ -41,11 +85,11 @@ data = []
 scores = []
 
 row_offset = 0  # compteur global
-for filename_in in filenames_in:
-    print(filename_in)
+for data_in in datas_in:
+    print(data_in)
     try:
     
-        with open(filename_in, "r") as f:
+        with open(data_in, "r") as f:
             for i, line in enumerate(f):
                 vals = list(map(int, line.split()))
                 *indices, score = vals
@@ -67,7 +111,7 @@ for filename_in in filenames_in:
         #Sans np.unique, les doublons sont laissés tels quels, donc dans la matrice COO, plusieurs entrées (i, j) identiques coexistent.
         #Or, dans SciPy : coo_matrix.sum_duplicates() est souvent appelé automatiquement quand tu convertis la matrice en CSR/CSC
         # = les deux versions sont identique
-        with open(filename_in, "r") as f:
+        with open(data_in, "r") as f:
             for i, line in enumerate(f):
                 vals = list(map(int, line.split()))
                 *indices, score = vals
@@ -82,13 +126,13 @@ for filename_in in filenames_in:
         '''
 
     except Exception as e:
-        print('cannot open', filename_in, e)
+        print('cannot open', data_in, e)
 
-    # création de la matrice creuse
+# création de la matrice creuse
 
 # fixe la taille de la matrice
 n_rows = len(scores)
-n_cols = 383697  # indices entre 0 et n
+n_cols = n_index  # indices entre 0 et n
 A = csr_matrix((data, (rows, cols)), shape=(n_rows, n_cols))
 
 '''
@@ -98,6 +142,18 @@ A = csr_matrix((data, (rows, cols)))
 print()
 print(f"matrix size : {A.shape}")
 print(A.nnz, "valeurs non nulles")
+
+# Calcul du vecteur d'occurrences
+vecteur_occurrences = compter_occurrences_par_index(A)
+
+print()
+print(f"vecteur size : {len(vecteur_occurrences)}")
+print(np.count_nonzero(vecteur_occurrences), "valeurs non nulles")
+print()
+
+# save au ft txt identique a weigth
+np.savetxt(n_occ_out, vecteur_occurrences, fmt="%d")
+
 
 # -----------------------------
 # Résolution du système Ax = b
@@ -124,11 +180,10 @@ nb_non_zero = np.count_nonzero(x)
 print("nb de poids differents de zero : ", nb_non_zero)   # 3
 
 # -----------------------------
-# Sauvegarde de x
+# Sauvegarde de x en mode texte
 # -----------------------------
 
-np.savetxt(filename_out, x, fmt="%.6f")
-#np.save("weigth/weigth_27.npy", x)
+np.savetxt(weight_out, x, fmt="%.6f")
 
 # -----------------------------
 # Vérification des résidus
