@@ -346,41 +346,50 @@ void RXPatternGenerate::write_eval() {
             std::ostringstream oss;
             oss << std::setw(2) << std::setfill('0') << stage;
             
-            std::string file_name_in = dir_str + "/weights/weight_" + oss.str() + ".txt";
-            
+            std::string file_weigths_in = dir_str + "/weights/weight_" + oss.str() + ".txt";
+            std::string file_n_occs_in = dir_str + "/n_occs/n_occ_" + oss.str() + ".txt";
+
             float weigths_in[n_index];
-            float weigth = 0.0f;
+            int n_occs_in[n_index];
             
-            std::ifstream in(file_name_in.c_str());
-            if (in.is_open()) {
-                std::cout << "Ouverture du fichier reussie. Lecture des donnees..." << std::endl;
+            float weigth = 0.0f;
+            int n_occ = 0;
+            
+            std::ifstream weigths_ifs(file_weigths_in.c_str());
+            std::ifstream n_occs_ifs(file_n_occs_in.c_str());
+
+            
+            if (weigths_ifs.is_open() && n_occs_ifs.is_open()) {
+                std::cout << "Ouverture des fichiers reussies. Lecture des donnees..." << std::endl;
                 
                 // 2. Boucle de lecture jusqu'a la fin du fichier (ou erreur)
                 // La condition 'fichier >> valeur_lue' est vraie tant qu'un float peut etre lu.
                 unsigned int i = 0;
-                while (in >> weigth) {
+                while (weigths_ifs >> weigth && n_occs_ifs >> n_occ) {
                     // 3. Ajout de la valeur lue dans le tableau
                     weigths_in[i] = weigth;
+                    n_occs_in[i] = n_occ;
                     ++i;
                 }
                 
                 // 4. Verification de la raison de la sortie de la boucle
-                if (in.eof()) {
-                    // Sortie normale : la fin du fichier a été atteinte.
+                if (weigths_ifs.eof() && n_occs_ifs.eof()) {
+                    // Sortie normale : la fin des fichiers a été atteinte.
                     std::cout << "Lecture terminee : Fin du fichier atteinte." << std::endl;
-                } else if (in.fail() && i != 0) {
+                } else if (weigths_ifs.fail() && n_occs_ifs.fail() && i != 0) {
                     // La derniere tentative de lecture a echouee (ex: caractere non-numerique)
                     std::cerr << "Attention : La lecture a ete interrompue par une entree non-valide." << std::endl;
-                } else if (in.fail() && i == 0) {
+                } else if (weigths_ifs.fail() && n_occs_ifs.fail() && i == 0) {
                     // Aucune valeur n'a pu être lue (fichier vide ou premier element non-float)
                     std::cerr << "Erreur : Le fichier est vide ou la premiere entree n'est pas un float." << std::endl;
                 }
                 
-                // 5. Fermeture du fichier
-                in.close();
+                // 5. Fermeture des fichiers
+                weigths_ifs.close();
+                n_occs_ifs.close();
                 
             } else {
-                std::cerr << "Erreur : Impossible d'ouvrir le fichier '" << file_name_in << "'" << std::endl;
+                std::cerr << "Erreur : Impossible d'ouvrir le/les fichier(s) '" << file_weigths_in << "' '" << file_n_occs_in << "'" << std::endl;
                 return;
             }
             
@@ -389,7 +398,7 @@ void RXPatternGenerate::write_eval() {
             
             
             for(unsigned int id_patt = 0; id_patt < std::size(pattern_info); ++id_patt)
-                norm_weight(weigths_in, weigths_out, pattern_info[id_patt][1], pattern_info[id_patt][2], pattern_info[id_patt][3]);
+                norm_weight(weigths_in, n_occs_in, weigths_out, pattern_info[id_patt][1], pattern_info[id_patt][2], pattern_info[id_patt][3]);
             
             // 4. Ecriture des donnees
             // weigths_out retourne un pointeur vers le premier element
@@ -421,7 +430,7 @@ void RXPatternGenerate::write_eval() {
 
 
 //normalise les poids pour les index miroirs et inverses des patterns
-void RXPatternGenerate::norm_weight(float* weigths_in, short* weigths_out, unsigned int id_start, unsigned int n_index_local, unsigned int id_rot) {
+void RXPatternGenerate::norm_weight(float* weigths_in, int* n_occs_in, short* weigths_out, unsigned int id_start, unsigned int n_index_local, unsigned int id_rot) {
     
     // offset pour retrouver le codage ternaire {-1, 0, 1} = {noir, vide, blanc}
     unsigned int offset_local = n_index_local/2;
@@ -447,7 +456,10 @@ void RXPatternGenerate::norm_weight(float* weigths_in, short* weigths_out, unsig
         //les poids calculés sont dans les indices canoniques
         //mix weights
         //idee mixer les poids avec ponderation des occurences
-        short weight = static_cast<short>(((weigths_in[p_idx]-weigths_in[p_sym_inv])/2.0f)*256);
+        float temp = n_occs_in[p_idx] * weigths_in[p_idx] - n_occs_in[p_sym_inv] * weigths_in[p_sym_inv];
+        temp /= static_cast<float>(n_occs_in[p_idx]+n_occs_in[p_sym_inv]);
+                             
+        short weight = static_cast<short>(temp*256);
         
         //save
         weigths_out[p_idx]      =  weight;

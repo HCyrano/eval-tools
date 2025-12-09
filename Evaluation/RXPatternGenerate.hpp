@@ -100,6 +100,12 @@ class RXPatternGenerate {
          { 4, { D8, C7, B6, A5}},
          */
 
+        // diag_5
+        { 5, { A5, B4, C3, D2, E1}},
+        { 5, { D1, E2, F3, G4, H5}},
+        { 5, { H4, G5, F6, E7, D8}},
+        { 5, { E8, D7, C6, B5, A4}},
+
         // diag_6
         { 6, { A6, B5, C4, D3, E2, F1}},
         { 6, { C1, D2, E3, F4, G5, H6}},
@@ -161,6 +167,7 @@ class RXPatternGenerate {
         { 14, { E1, F2, F1, G1, H1, G2, F3, H2, H3, G3, H4}},
         { 14, { H5, G6, H6, H7, H8, G7, F6, G8, F8, F7, E8}},
         { 14, { D8, C7, C8, B8, A8, B7, C6, A7, A6, B6, A5}},
+
         /*
          // 2 bords
          { 11, { D2, C2, B2, A2, A1, B1, C1, D1, E1, F1, G1, H1, H2, G2, F2, E2}},
@@ -185,7 +192,7 @@ class RXPatternGenerate {
     void stage_to_data(const unsigned int stage);
     
     void write_eval();
-    void norm_weight(float* weights, short* weigths_out, unsigned int id_start, unsigned int n_weights, unsigned int sym);
+    void norm_weight(float* weights, int* n_occs_in, short* weigths_out, unsigned int id_start, unsigned int n_weights, unsigned int sym);
 
 };
 

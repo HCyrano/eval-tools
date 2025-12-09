@@ -98,4 +98,7 @@ type_rotate  = [  5,   6,    7,    8,    10,    8,    8,    8,    15,     0,    
 		le 1er contient le poids de l'index
 		le second le nombre d'occurence de l'index
 		
-6)
+6) écrire l'évaluation
+
+	c++ 
+		write_eval()
