@@ -327,7 +327,7 @@ void RXPatternGenerate::stage_to_data(const unsigned int stage) {
 void RXPatternGenerate::write_eval() {
     
     //nombre d'index globaux
-    unsigned int n_index = 383697;
+    const unsigned int n_index = 383697;
     
     std::string dir_str = "/Users/caussebruno/Documents/developpement/Evaluation";
     
@@ -396,9 +396,10 @@ void RXPatternGenerate::write_eval() {
             
             short weigths_out[n_index];
             
-            
+
             for(unsigned int id_patt = 0; id_patt < std::size(pattern_info); ++id_patt)
                 norm_weight(weigths_in, n_occs_in, weigths_out, pattern_info[id_patt][1], pattern_info[id_patt][2], pattern_info[id_patt][3]);
+            
             
             // 4. Ecriture des donnees
             // weigths_out retourne un pointeur vers le premier element
@@ -434,9 +435,16 @@ void RXPatternGenerate::norm_weight(float* weigths_in, int* n_occs_in, short* we
     
     // offset pour retrouver le codage ternaire {-1, 0, 1} = {noir, vide, blanc}
     unsigned int offset_local = n_index_local/2;
-
+    
+    std::vector<bool> processed_index(n_index_local, false);
+    
     // parcourt la moitié des index
     for(int i = 0; i <= offset_local; i++) {
+        
+        
+        if(processed_index[i])
+            continue;
+        
         
         //calule l'index inverse et les index miroir en codage naturel
         int p_idx = i;
@@ -446,21 +454,30 @@ void RXPatternGenerate::norm_weight(float* weigths_in, int* n_occs_in, short* we
         int p_sym_idx = index_rotate(p_idx-offset_local, id_rot) + offset_local;
         int p_sym_inv = index_rotate(p_inv-offset_local, id_rot) + offset_local;
         
+        
+        //index traité
+        processed_index[p_idx]     = true;
+        processed_index[p_inv]     = true;
+        processed_index[p_sym_idx] = true;
+        processed_index[p_sym_inv] = true;
+        
+        
         //calcule des index globaux
-        p_idx += id_start;
-        p_inv += id_start;
+        p_idx     += id_start;
+        p_inv     += id_start;
         p_sym_idx += id_start;
         p_sym_inv += id_start;
         
-        
+         
         //les poids calculés sont dans les indices canoniques
         //mix weights
         //idee mixer les poids avec ponderation des occurences
-        float temp = n_occs_in[p_idx] * weigths_in[p_idx] - n_occs_in[p_sym_inv] * weigths_in[p_sym_inv];
-        temp /= static_cast<float>(n_occs_in[p_idx]+n_occs_in[p_sym_inv]);
+        double temp = (n_occs_in[p_idx] * weigths_in[p_idx]) - (n_occs_in[p_sym_inv] * weigths_in[p_sym_inv]);
+        temp /= (n_occs_in[p_idx]+n_occs_in[p_sym_inv]);
                              
-        short weight = static_cast<short>(temp*256);
+        short weight = static_cast<short>(std::round(temp*256));
         
+
         //save
         weigths_out[p_idx]      =  weight;
         weigths_out[p_inv]      = -weight;

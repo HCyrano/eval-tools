@@ -27,7 +27,7 @@ int main(int argc, const char * argv[]) {
     //gen.rawdata_to_stage();
 */
     
-    
+    gen.write_eval();
     
     return EXIT_SUCCESS;
 }

@@ -13,10 +13,8 @@
 
 std::ostream& operator<<(std::ostream& os, RXBBPatterns& sBoard) {
 	
-	os << sBoard.board << std::endl;
-    
-    os << *(sBoard.pattern) << std::endl;
-				
+    os << sBoard.board << "Evaluation : " << std::setprecision(6) << static_cast<float>(sBoard.get_score()) << std::endl;
+
 	return os;
 
 }
