@@ -16,6 +16,7 @@
 #include "RXConstantes.hpp"
 #include "RXBitBoard.hpp"
 #include "RXPattern.hpp"
+#include "RXEvaluation.hpp"
 
 
 class RXBBPatterns {
@@ -68,6 +69,8 @@ void update_patterns_WHITE_##pos(RXMove& move) const
     int get_n_empty() const { return board.n_empty; }
     
     int final_score() const;
+    int get_score() const;
+    int get_score(RXMove& move) const;
 
     /* DEBUG */
     friend std::ostream& operator<<(std::ostream& os, RXBBPatterns& sBoard);
@@ -94,7 +97,193 @@ inline int RXBBPatterns::final_score() const {
     return (MAX_SCORE-1) + (score-64);
 }
 
+inline int RXBBPatterns::get_score() const {
+    
+    const int stage = 60-board.n_empty;
+    const int color = 1 - 2*board.player;
+    
+    int eval;
 
+    //diag 5
+    const short* value = RXEvaluation::eval[stage][0];
+    eval  = value[pattern->patt[0]];
+    eval += value[pattern->patt[1]];
+    eval += value[pattern->patt[2]];
+    eval += value[pattern->patt[3]];
+    
+    //diag 6
+    value = RXEvaluation::eval[stage][1];
+    eval  = value[pattern->patt[4]];
+    eval += value[pattern->patt[5]];
+    eval += value[pattern->patt[6]];
+    eval += value[pattern->patt[7]];
+    
+    //diag 7
+    value = RXEvaluation::eval[stage][2];
+    eval  = value[pattern->patt[8]];
+    eval += value[pattern->patt[9]];
+    eval += value[pattern->patt[10]];
+    eval += value[pattern->patt[11]];
+
+    //diag 8
+    value = RXEvaluation::eval[stage][3];
+    eval  = value[pattern->patt[12]];
+    eval += value[pattern->patt[13]];
+
+    //edge+2X
+    value = RXEvaluation::eval[stage][4];
+    eval  = value[pattern->patt[14]];
+    eval += value[pattern->patt[15]];
+    eval += value[pattern->patt[16]];
+    eval += value[pattern->patt[17]];
+
+    //hv 2
+    value = RXEvaluation::eval[stage][5];
+    eval  = value[pattern->patt[18]];
+    eval += value[pattern->patt[19]];
+    eval += value[pattern->patt[20]];
+    eval += value[pattern->patt[21]];
+
+    //hv 3
+    value = RXEvaluation::eval[stage][6];
+    eval  = value[pattern->patt[22]];
+    eval += value[pattern->patt[23]];
+    eval += value[pattern->patt[24]];
+    eval += value[pattern->patt[25]];
+
+    //hv 4
+    value = RXEvaluation::eval[stage][7];
+    eval  = value[pattern->patt[26]];
+    eval += value[pattern->patt[27]];
+    eval += value[pattern->patt[28]];
+    eval += value[pattern->patt[29]];
+
+    //2 bords5 + X
+    value = RXEvaluation::eval[stage][8];
+    eval  = value[pattern->patt[30]];
+    eval += value[pattern->patt[31]];
+    eval += value[pattern->patt[32]];
+    eval += value[pattern->patt[33]];
+
+    //corner 2*5
+    value = RXEvaluation::eval[stage][9];
+    eval  = value[pattern->patt[34]];
+    eval += value[pattern->patt[35]];
+    eval += value[pattern->patt[36]];
+    eval += value[pattern->patt[37]];
+    eval  = value[pattern->patt[38]];
+    eval += value[pattern->patt[39]];
+    eval += value[pattern->patt[40]];
+    eval += value[pattern->patt[41]];
+
+    //corner 11
+    value = RXEvaluation::eval[stage][10];
+    eval  = value[pattern->patt[42]];
+    eval += value[pattern->patt[43]];
+    eval += value[pattern->patt[44]];
+    eval += value[pattern->patt[45]];
+
+    if(eval>0) eval += 128; else eval -= 128;
+    eval /= 256;
+    
+   return color*eval;
+
+}
+
+inline int RXBBPatterns::get_score(RXMove& move) const {
+    
+    const RXPattern* const p = move.pattern;
+    
+    const int stage = 61-board.n_empty;
+    const int color = 2*board.player-1;
+
+    int eval;
+
+    //diag 5
+    const short* value = RXEvaluation::eval[stage][0];
+    eval  = value[p->patt[0]];
+    eval += value[p->patt[1]];
+    eval += value[p->patt[2]];
+    eval += value[p->patt[3]];
+    
+    //diag 6
+    value = RXEvaluation::eval[stage][1];
+    eval  = value[p->patt[4]];
+    eval += value[p->patt[5]];
+    eval += value[p->patt[6]];
+    eval += value[p->patt[7]];
+    
+    //diag 7
+    value = RXEvaluation::eval[stage][2];
+    eval  = value[p->patt[8]];
+    eval += value[p->patt[9]];
+    eval += value[p->patt[10]];
+    eval += value[p->patt[11]];
+
+    //diag 8
+    value = RXEvaluation::eval[stage][3];
+    eval  = value[p->patt[12]];
+    eval += value[p->patt[13]];
+
+    //edge+2X
+    value = RXEvaluation::eval[stage][4];
+    eval  = value[p->patt[14]];
+    eval += value[p->patt[15]];
+    eval += value[p->patt[16]];
+    eval += value[p->patt[17]];
+
+    //hv 2
+    value = RXEvaluation::eval[stage][5];
+    eval  = value[p->patt[18]];
+    eval += value[p->patt[19]];
+    eval += value[p->patt[20]];
+    eval += value[p->patt[21]];
+
+    //hv 3
+    value = RXEvaluation::eval[stage][6];
+    eval  = value[p->patt[22]];
+    eval += value[p->patt[23]];
+    eval += value[p->patt[24]];
+    eval += value[p->patt[25]];
+
+    //hv 4
+    value = RXEvaluation::eval[stage][7];
+    eval  = value[p->patt[26]];
+    eval += value[p->patt[27]];
+    eval += value[p->patt[28]];
+    eval += value[p->patt[29]];
+
+    //2 bords5 + X
+    value = RXEvaluation::eval[stage][8];
+    eval  = value[p->patt[30]];
+    eval += value[p->patt[31]];
+    eval += value[p->patt[32]];
+    eval += value[p->patt[33]];
+
+    //corner 2*5
+    value = RXEvaluation::eval[stage][9];
+    eval  = value[p->patt[34]];
+    eval += value[p->patt[35]];
+    eval += value[p->patt[36]];
+    eval += value[p->patt[37]];
+    eval  = value[p->patt[38]];
+    eval += value[p->patt[39]];
+    eval += value[p->patt[40]];
+    eval += value[p->patt[41]];
+
+    //corner 11
+    value = RXEvaluation::eval[stage][10];
+    eval  = value[p->patt[42]];
+    eval += value[p->patt[43]];
+    eval += value[p->patt[44]];
+    eval += value[p->patt[45]];
+    
+    if(eval>0) eval += 128; else eval -= 128;
+    eval /= 256;
+
+    return color*eval;
+
+}
 
 
 
