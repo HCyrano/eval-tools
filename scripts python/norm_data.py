@@ -173,8 +173,8 @@ stage_borne_inf = 9
 stage_borne_sup = 60
 stage = max(stage, stage_borne_inf)
 
-# nombre d'occurences minimum
-occurence_min = 100
+# nombre d'occurences minimum (pattern + pattern reverse color)
+occurence_min = 100 # a tester 50
 
 # Construire la liste des fichiers input
 

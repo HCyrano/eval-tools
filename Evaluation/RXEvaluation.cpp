@@ -82,6 +82,8 @@ void RXEvaluation::load() {
     } else {
         std::cout << "erreur chargement eval" << std::endl;
     }
+    
+    std::cout << "eval[40][11][26636] = " << eval[40][11][26636] << std::endl;
 
     from.close();
     

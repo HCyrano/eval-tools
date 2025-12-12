@@ -331,7 +331,7 @@ void RXPatternGenerate::write_eval() {
     
     std::string dir_str = "/Users/caussebruno/Documents/developpement/Evaluation";
     
-    std::string file_name_out = dir_str + "/weights/weight_v1.bin";
+    std::string file_name_out = dir_str + "/weight_v1.bin";
     // 2. Ouvrir le fichier en mode ecriture binaire
     // ios::out pour l'ecriture et ios::binary pour le mode binaire
     std::ofstream out(file_name_out, std::ios::out | std::ios::binary);
@@ -346,7 +346,7 @@ void RXPatternGenerate::write_eval() {
             std::ostringstream oss;
             oss << std::setw(2) << std::setfill('0') << stage;
             
-            std::string file_weigths_in = dir_str + "/weights/weight_" + oss.str() + ".txt";
+            std::string file_weigths_in = dir_str + "/weights_lissés_W5_P2/weight_" + oss.str() + ".txt";
             std::string file_n_occs_in = dir_str + "/n_occs/n_occ_" + oss.str() + ".txt";
 
             float weigths_in[n_index];
@@ -468,7 +468,8 @@ void RXPatternGenerate::norm_weight(float* weigths_in, int* n_occs_in, short* we
         p_sym_idx += id_start;
         p_sym_inv += id_start;
         
-         
+
+        /*
         //les poids calculés sont dans les indices canoniques
         //mix weights
         //idee mixer les poids avec ponderation des occurences
@@ -477,13 +478,25 @@ void RXPatternGenerate::norm_weight(float* weigths_in, int* n_occs_in, short* we
                              
         short weight = static_cast<short>(std::round(temp*256));
         
-
         //save
         weigths_out[p_idx]      =  weight;
         weigths_out[p_inv]      = -weight;
         weigths_out[p_sym_idx]  =  weight;
         weigths_out[p_sym_inv]  = -weight;
+        */
+        
+        
+        //on ne mixe pas les poids (semble meilleur)
 
+        short weight_B = static_cast<short>(std::round(weigths_in[p_idx]*256));
+        short weight_W = static_cast<short>(std::round(weigths_in[p_sym_inv]*256));
+
+        weigths_out[p_idx]      =  weight_B;
+        weigths_out[p_inv]      =  weight_W;
+        weigths_out[p_sym_idx]  =  weight_B;
+        weigths_out[p_sym_inv]  =  weight_W;
+         
+        
 
     }
 

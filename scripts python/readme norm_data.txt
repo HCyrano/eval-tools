@@ -27,7 +27,7 @@ de chaque motif avec celle de son motif inverse couleur.
 
 
 
-1) les index identiques sur la meme ligne (une ligne == un othellier) sont bien prit
+1) les index identiques sur la meme ligne (une ligne == un othellier) sont bien pris
 en compte dans le calcul du nombre d'occurences
 
 2) gestion des index
