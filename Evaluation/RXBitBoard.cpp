@@ -11,7 +11,10 @@
 
 #include <cstddef> // define NULL
 #include <iomanip>
-
+#include <algorithm> // Pour std::shuffle
+#include <random>    // Pour le moteur de génération aléatoire (std::mt19937)
+#include <chrono>    // Pour l'initialisation de la graine
+#include <array>
 
 const unsigned long long RXBitBoard::hashSquare[64][2] = {
     
@@ -608,6 +611,87 @@ void RXBitBoard::build(const std::string& init) {
         
     
 }
+
+void RXBitBoard::random_setup(unsigned int n_discs) {
+    
+    // --- Identification des squares à éviter (coins et adjacences) ---
+    static const unsigned long long avoids = 0xC3C300000000C3C3ULL;
+    static unsigned central_squares[] = { C3, D3, E3, F3, C4, F4, C5, F5, C6, D6, E6, F6};
+    // --- tirage d'une serie de 5 couleurs aleatoires ---
+    std::array<std::array<unsigned int, 5>, 2> random_color = {{
+        {BLACK, BLACK, BLACK, BLACK, WHITE},
+        {BLACK, BLACK, BLACK, WHITE, WHITE}
+    }};
+
+        
+    // Créer le moteur de nombres aléatoires (Random Number Engine)
+    // Nous utilisons le Mersenne Twister (mt19937), le moteur standard de haute qualité.
+
+    static std::mt19937 generator;
+    
+    // Initialisation de la graine (seed) :
+    // Utiliser std::chrono::high_resolution_clock::now().time_since_epoch().count()
+    static bool rand_is_seeded = false;
+    if(!rand_is_seeded)
+    {
+        unsigned int seed = static_cast<unsigned int>(std::chrono::steady_clock::now().time_since_epoch().count());
+            
+        generator.seed(seed);
+        rand_is_seeded = true;
+    }
+
+
+    // fixe le nombre mini de discs
+    if(n_discs < 10) n_discs = 10;
+
+    //reset board at 0
+    discs[BLACK] = discs[WHITE] = 0ULL;
+    n_empty = 64;
+    parity = 0;
+    player = UNDEF_COLOR;
+    
+    // --- pour varier les plaisirs la othellier de depart (5 discs) peut ne pas etre legal ---
+    unsigned type_random_color = random_bounds(0, 1);
+
+    // 3. Appeler std::shuffle
+    // std::shuffle prend :
+    // a) Le début de la plage (begin)
+    // b) La fin de la plage (end)
+    // c) Le générateur de nombres aléatoires
+    
+    std::shuffle(random_color[type_random_color].begin(), random_color[type_random_color].end(), generator);
+    
+    // --- placement des cinq 1ers discs ---
+    discs[random_color[type_random_color][0]] = 0x1ULL << D4;
+    discs[random_color[type_random_color][1]] = 0x1ULL << E4;
+    discs[random_color[type_random_color][2]] = 0x1ULL << D5;
+    discs[random_color[type_random_color][3]] = 0x1ULL << D5;
+    discs[random_color[type_random_color][4]] = 0x1ULL << central_squares[random_bounds(0, 11)];
+    
+    player = WHITE;
+
+    // --- met en correpondance l'empties_list ---
+    RXSquareList* previous = empties_list;
+    for(int id = 0; id<60; id++) {
+        if(((discs[BLACK] | discs[WHITE]) & (1ULL<<PRESORTED_POSITION[id])) == 0) {
+            RXSquareList* empty = position_to_empties[PRESORTED_POSITION[id]];
+            empty->previous = previous;
+            previous->next = empty;
+            previous = previous->next;
+        }
+    }
+    empties_list[61].previous = previous;
+    previous->next = &empties_list[61];
+
+    n_discs -= 5;
+    
+    // --- joue les coups suivant jusqu'a placer n_discs
+    for( int i = 0; i < n_discs; ++i) {
+        //a finir
+    }
+
+}
+
 
 std::ostream& operator<<(std::ostream& os, RXBitBoard& board) {
 

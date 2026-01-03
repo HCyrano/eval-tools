@@ -1,0 +1,46 @@
+Le diagnostic est clair : votre version de NumPy est actuellement liée à OpenBLAS
+(installé via Anaconda) et non à Accelerate.
+
+Pourquoi c'est un problème pour vous ?
+OpenBLAS est une bibliothèque générique. Bien qu'elle soit performante sur ARM64,
+elle ne sait pas piloter les instructions spécifiques SME de la puce M4.
+
+Elle utilise les extensions NEON (comme on le voit dans votre section SIMD Extensions),
+ce qui limite le traitement à des vecteurs de 128 bits, là où le SME pourrait traiter
+des tuiles de matrices bien plus larges.
+
+Comment basculer vers le support SME/Accelerate
+Sur macOS, Apple et la communauté NumPy recommandent désormais d'utiliser la bibliothèque
+système. Voici la procédure pour corriger votre environnement Anaconda :
+
+1. Désinstaller la version "Conda" de NumPy
+Anaconda installe souvent ses propres binaires pré-compilés avec OpenBLAS par souci
+de compatibilité multi-plateforme.
+
+Bash
+conda remove numpy scipy
+
+2. Réinstaller via pip (plus récent et optimisé macOS)
+Depuis NumPy 1.25+ (vous êtes en 2.1.3, ce qui est parfait),
+le moteur Accelerate est utilisé par défaut si aucun autre BLAS n'est forcé.
+
+Bash
+pip install numpy scipy
+
+3. Vérifier le changement
+Relancez votre script test.py. Vous devriez voir :
+
+name: accelerate (au lieu de openblas)
+
+Des chemins pointant vers /System/Library/Frameworks/Accelerate.framework
+
+Pourquoi est-ce vital pour votre matrice 400k x 1.5M ?
+Avec votre configuration actuelle (OpenBLAS), le calcul est limité par le débit
+du cache L2 et les registres SIMD classiques. En passant sur Accelerate :
+
+ZA Storage : Accelerate va activer le "mode streaming" du SME. Il va charger des blocs
+de votre matrice creuse directement dans la "tuile" ZA du processeur.
+
+Performance énergétique : Le SME effectue plus d'opérations par cycle d'horloge.
+Pour une matrice de cette taille, vous gagnerez plusieurs minutes (ou heures) sur
+les calculs de moindres carrés (lsqr).

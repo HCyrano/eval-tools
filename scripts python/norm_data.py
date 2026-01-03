@@ -154,11 +154,22 @@ def sommer_occurrences_symetriques(compte: dict) -> dict:
     
 # --- end ---
 
+'''
+
+# 🛑 ATTENTION : Cette fonction est maintenant VIDE, car nous ne sommons plus.
+# La fonction originale retournait un dictionnaire de sommes, ici nous retournons
+# simplement le compte brut.
+def sommer_occurrences_symetriques(compte: dict) -> dict:
+    # On retourne le dictionnaire de comptage brut
+    return compte
+    
+# --- end ---
+'''
 
 #recupere le paramettre
 # --- Suggestion pour l'argument
 if len(sys.argv) < 2:
-    print("Usage: python solve.py <stage_number>")
+    print("Usage: python norm_data.py <stage_number>")
     sys.exit(1)
 
 try:
@@ -174,7 +185,7 @@ stage_borne_sup = 60
 stage = max(stage, stage_borne_inf)
 
 # nombre d'occurences minimum (pattern + pattern reverse color)
-occurence_min = 100 # a tester 50
+occurence_min = 50 # a tester 50
 
 # Construire la liste des fichiers input
 
@@ -195,11 +206,13 @@ for s in [stage - 1, stage, stage + 1]:
 
 
 filename_out =  DATA_NORM_DIR / f"data_norm_{stage:02}.txt"
+#filename_out =  DATA_NORM_DIR / f"data_norm_single_{stage:02}.txt"
 
 # 1) Lecture unique des fichiers d'entrée
 all_lines = []   # contiendra toutes les lignes déjà découpées en valeurs
 all_indices = [] # pour compter globalement les occurrences
 
+'''
 for filename_in in filenames_in:
     print(filename_in)
     with open(filename_in, "r") as f:
@@ -208,7 +221,31 @@ for filename_in in filenames_in:
             all_lines.append(vals)
             # On ne compte pas le dernier élément (score)
             all_indices.extend(vals[:-1])
+'''
 
+for filename_in in filenames_in:
+    print(f"Traitement de : {filename_in}")
+    
+    # Extraction du numéro de stage à partir du nom de fichier pour comparer
+    # On vérifie si c'est le stage actuel ou un contexte
+    current_file_stage = int(Path(filename_in).stem.split('_')[1])
+
+    with open(filename_in, "r") as f:
+        lines = f.readlines() # On lit toutes les lignes du fichier
+        
+        # Si c'est un fichier de contexte (différent du stage central)
+        if current_file_stage != stage:
+            lines = lines[::2]  # On ne garde qu'une ligne sur deux
+            
+        for line in lines:
+            vals = list(map(int, line.split()))
+            if not vals: continue # Sécurité si ligne vide
+            
+            all_lines.append(vals)
+            # On ne compte pas le dernier élément (score)
+            all_indices.extend(vals[:-1])
+            
+            
 # 2) Compter les occurrences
 compte = Counter(all_indices)
 

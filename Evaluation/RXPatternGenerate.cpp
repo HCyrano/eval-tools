@@ -183,12 +183,12 @@ void RXPatternGenerate::generate_method(std::string signature, unsigned int colo
 };
 
 
-// Transforme les données brutes de la base 'egaroucid' en données structurées,
+// Transforme les données brutes en données structurées,
 // organisées par stage
 void RXPatternGenerate::rawdata_to_stage() {
     
-    std::string dir_str = "/Users/caussebruno/Documents/developpement/database/edax";
-    std::string file_name_in = "/Users/caussebruno/Documents/developpement/database/edax/LotK-6Mpositions-MG24@80-EG32@80-24@100-resultatFinal.txt";
+    std::string dir_str = "/Users/caussebruno/Documents/developpement/database/Roxane";
+    //std::string file_name_in = "/Users/caussebruno/Documents/developpement/database/edax/LotK-6Mpositions-MG24@80-EG32@80-24@100-resultatFinal.txt";
 
     for( unsigned int stage = 0; stage<60; ++stage){
         
@@ -205,11 +205,11 @@ void RXPatternGenerate::rawdata_to_stage() {
         
         if(ofs) {
             
-            //for(int i = 0; i <= 25; ++i) {
+            for(int i = 52; i <= 99; ++i) {
                 
-                //std::ostringstream oss_in;
-                //oss_in << std::setw(7) << std::setfill('0') << i;
-                //file_name_in = dir_str + "/Egaroucid_Train_Data/0001_egaroucid_7_5_1_lv17/" + oss_in.str() + ".txt";
+                std::ostringstream oss_in;
+                oss_in << std::setw(2) << i;
+                std::string file_name_in = dir_str + "/base_" + oss_in.str() + ".txt";
                 
                 
                 std::ifstream in(file_name_in.c_str());
@@ -232,7 +232,7 @@ void RXPatternGenerate::rawdata_to_stage() {
                 
                 
                 
-            //}
+            }
             
             ofs.close();
         }
@@ -241,22 +241,22 @@ void RXPatternGenerate::rawdata_to_stage() {
 };
 
 // la methode realise le traitement suivant
-// lecture du fichier texte : dedup_xx.txt
+// lecture du fichier texte : stage_xx.txt
 // produit un othellier et les index des patterns
 // transforme les index en index canoniques puis en index globaux
-// ecrit un fichier texte data__xx.txt contenant les  index globaux et le score associé
+// ecrit un fichier texte data_xx.txt contenant les index globaux et le score associé
 
-// les dossiers stages/ et datas/ doivent existés
+// les dossiers stages_WS/ et datas/ doivent existés
 
 void RXPatternGenerate::stage_to_data(const unsigned int stage) {
     
-    std::string dir_str = "/Users/caussebruno/Documents/developpement/Evaluation";
+    std::string dir_str = "/Users/caussebruno/Documents/developpement/";
     
     std::ostringstream oss;
     oss << std::setw(2) << std::setfill('0') << stage;
     
-    std::string file_name_in = dir_str + "/dedups/dedup_" + oss.str() + ".txt";
-    std::string file_name_out = dir_str + "/datas/data_" + oss.str() + ".txt";
+    std::string file_name_in = dir_str + "/database/Edax_Egrcd_Roxane/stages_WS/stage_" + oss.str() + ".txt";
+    std::string file_name_out = dir_str + "/Evaluation/datas/data_" + oss.str() + ".txt";
     
     std::ofstream ofs(file_name_out.c_str());
     

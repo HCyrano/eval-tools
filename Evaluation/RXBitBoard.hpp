@@ -116,6 +116,7 @@ void generate_flips_##pos(RXMove& move) const \
     RXBitBoard& operator=(const RXBitBoard& src);
     
     void build(const std::string& init);
+    void random_setup(unsigned int n_discs);
     
     friend std::ostream& operator<<(std::ostream& os, RXBitBoard& board);
     

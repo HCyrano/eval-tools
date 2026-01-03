@@ -24,12 +24,14 @@ int main(int argc, const char * argv[]) {
         gen.stage_to_data(stage);
 
     
-    //gen.rawdata_to_stage();
  
     gen.write_eval();
 
-*/
+
     gen.write_eval();
+ */
+    
+    gen.rawdata_to_stage();
 
 
     return EXIT_SUCCESS;

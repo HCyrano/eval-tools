@@ -19,7 +19,7 @@ FILE_NAME_BASE = 'weight_'
 FILE_EXTENSION = '.txt'
 
 # Répertoire de sortie pour les 60 fichiers lissés
-OUTPUT_DIR = f'weights_lissés_W{WINDOW_SIZE}_P{POLYNOMIAL_ORDER}'
+OUTPUT_DIR = f'weights_SG_W{WINDOW_SIZE}_P{POLYNOMIAL_ORDER}'
 os.makedirs(OUTPUT_DIR, exist_ok=True)
 
 
