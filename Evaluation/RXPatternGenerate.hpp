@@ -54,7 +54,7 @@ class RXPatternGenerate {
         
         // symetrie corner 4/3/2/1
         { 10,  9,  8,  7,  4,  5,  6,  3,  2,  1,   0},                                 // 14
-        // symetrie corner 2 bords 5 + X
+        // symetrie corner 2 bords 5 + X & corner 4/3/2/1
         {  9,  8,  7,  6,  4,  5,  3,  2,  1,  0}                                       // 15
 
     };
@@ -64,6 +64,7 @@ class RXPatternGenerate {
         
         //[{last index of pattern, offset index global, n_index local, rotate index}
         
+        /*
         //diag_5
         {3, 0, 243, 5},
         //diag_6
@@ -86,20 +87,51 @@ class RXPatternGenerate {
         {41, 147501, 59049, 0},
         // corner 4/3/3/1
         {45, 206550, 177147, 14}
+         
+        //383697 index
+        */
+
+        //diag_5
+        {3, 0, 243, 5},
+        //diag_6
+        {7, 243, 729, 6},
+        //diag_7
+        {11, 972, 2187, 7},
+        //diag_8
+        {13, 3159, 6561, 8},
+        // edge + 2x
+        {17, 9720, 59049, 10},
+        // board 6+4
+        {21, 68769, 59049, 10},
+        // hv_2
+        {25, 127818, 6561, 8},
+        // hv_3
+        {29, 134379, 6561, 8},
+        // hv_4
+        {33, 140940, 6561, 8},
+        // corner 2 bord 5 + X
+        {37, 147501, 59049, 15},
+        // corner 2*5
+        {45, 206550, 59049, 0},
+        // corner 4/3/2/1
+        {49, 265599, 59049, 15},
+        // corner 5/5
+        {53, 324648, 59049, 10}
         
+        // 383697 index
+
     };
 
 
     std::vector<RXFeature> pattern_def = {
         
-        /*
-         // diag_4
-         { 4, { A4, B3, C2, D1}},
-         { 4, { E1, F2, G3, H4}},
-         { 4, { H5, G6, F7, E8}},
-         { 4, { D8, C7, B6, A5}},
-         */
-
+/*
+        // diag_4
+        { 4, { A4, B3, C2, D1}},
+        { 4, { E1, F2, G3, H4}},
+        { 4, { H5, G6, F7, E8}},
+        { 4, { D8, C7, B6, A5}},
+ */
         // diag_5
         { 5, { A5, B4, C3, D2, E1}},
         { 5, { D1, E2, F3, G4, H5}},
@@ -127,7 +159,13 @@ class RXPatternGenerate {
         { 10, { G2, H1, H2, H3, H4, H5, H6, H7, H8, G7}},
         { 10, { G7, H8, G8, F8, E8, D8, C8, B8, A8, B7}},
         { 10, { B7, A8, A7, A6, A5, A4, A3, A2, A1, B2}},
-        
+
+        // board 6+4
+        { 10, { D2, C2, B1, C1, D1, E1, F1, G1, F2, E2}},
+        { 10, { G4, G3, H2, H3, H4, H5, H6, H7, G6, G5}},
+        { 10, { E7, F7, G8, F8, E8, D8, C8, B8, C7, D7}},
+        { 10, { B5, B6, A7, A6, A5, A4, A3, A2, B3, B4}},
+
         // hv_2
         { 8, { A2, B2, C2, D2, E2, F2, G2, H2}},
         { 8, { G1, G2, G3, G4, G5, G6, G7, G8}},
@@ -161,20 +199,31 @@ class RXPatternGenerate {
         { 0, { G4, G5, G6, G7, G8, H8, H7, H6, H5, H4}},
         { 0, { E7, D7, C7, B7, A7, A8, B8, C8, D8, E8}},
         { 0, { B5, B4, B3, B2, B1, A1, A2, A3, A4, A5}},
-        
+/*
         // corner 4/3/3/1
         { 14, { A4, B3, A3, A2, A1, B2, C3, B1, C1, C2, D1}},
         { 14, { E1, F2, F1, G1, H1, G2, F3, H2, H3, G3, H4}},
         { 14, { H5, G6, H6, H7, H8, G7, F6, G8, F8, F7, E8}},
         { 14, { D8, C7, C8, B8, A8, B7, C6, A7, A6, B6, A5}},
-
-        /*
+*/
+        // corner 4/3/2/1
+        { 15, { A4, B3, A3, A2, A1, B2, B1, C1, C2, D1}},
+        { 15, { E1, F2, F1, G1, H1, G2, H2, H3, G3, H4}},
+        { 15, { H5, G6, H6, H7, H8, G7, G8, F8, F7, E8}},
+        { 15, { D8, C7, C8, B8, A8, B7, A7, A6, B6, A5}},
+        
+        // board 2*(3+2)
+        { 10, { B3, B4, A4, A3, A2, B1, C1, D1, D2, C2}},
+        { 10, { F2, E2, E1, F1, G1, H2, H3, H4, G4, G3}},
+        { 10, { G6, G5, H5, H6, H7, G8, F8, E8, E7, F7}},
+        { 10, { C7, D7, D8, C8, B8, A7, A6, A5, B5, B6}},
+/*
          // 2 bords
          { 11, { D2, C2, B2, A2, A1, B1, C1, D1, E1, F1, G1, H1, H2, G2, F2, E2}},
          { 11, { G4, G3, G2, G1, H1, H2, H3, H4, H5, H6, H7, H8, G8, G7, G6, G5}},
          { 11, { E7, F7, G7, H7, H8, G8, F8, E8, D8, C8, B8, A8, A7, B7, C7, D7}},
          { 11, { B5, B6, B7, B8, A8, A7, A6, A5, A4, A3, A2, A1, B1, B2, B3, B4}},
-         */
+*/
     };
     
     

@@ -346,7 +346,8 @@ void RXPatternGenerate::write_eval() {
             std::ostringstream oss;
             oss << std::setw(2) << std::setfill('0') << stage;
             
-            std::string file_weigths_in = dir_str + "/weights_lissés_W5_P2/weight_" + oss.str() + ".txt";
+            std::string file_weigths_in = dir_str + "/weights_SG_W5_P2/weight_" + oss.str() + ".txt";
+//            std::string file_weigths_in = dir_str + "/weights/weight_" + oss.str() + ".txt";
             std::string file_n_occs_in = dir_str + "/n_occs/n_occ_" + oss.str() + ".txt";
 
             float weigths_in[n_index];

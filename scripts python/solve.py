@@ -73,7 +73,7 @@ OCC_DIR = Path("n_occs")
 OCC_DIR.mkdir(exist_ok=True)
 
 
-datas_in = [DATA_DIR / f"data_norm_{stage:02}.txt"]
+datas_in = [DATA_DIR / f"data_{stage:02}.txt"]
 weight_out = WEIGHTS_DIR / f"weight_{stage:02}.txt"
 n_occ_out = OCC_DIR / f"n_occ_{stage:02}.txt"
 
@@ -158,10 +158,10 @@ np.savetxt(n_occ_out, vecteur_occurrences, fmt="%d")
 # -----------------------------
 # Résolution du système Ax = b
 # -----------------------------
-x = lsqr(A, scores)[0]  # renvoie la solution au sens des moindres carrés
+#x = lsqr(A, scores)[0]  # renvoie la solution au sens des moindres carrés
 
 
-#x = lsmr(A, scores)[0]  # renvoie la solution au sens des moindres carrés
+x = lsmr(A, scores)[0]  # renvoie la solution au sens des moindres carrés
 
 
 # -----------------------------

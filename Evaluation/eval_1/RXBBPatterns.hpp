@@ -99,8 +99,6 @@ inline int RXBBPatterns::final_score() const {
 
 inline int RXBBPatterns::get_score() const {
     
-    unsigned long long filled = board.discs[BLACK] | board.discs[WHITE];
-    
     const int stage = 60-board.n_empty;
     const int color = 1 - 2*board.player;
     
@@ -132,90 +130,58 @@ inline int RXBBPatterns::get_score() const {
     eval += value[pattern->patt[12]];
     eval += value[pattern->patt[13]];
 
-    //edge+2X & board 6+4
+    //edge+2X
     value = RXEvaluation::eval[stage][4];
-    const short* value_b = RXEvaluation::eval[stage][5];
-    if(filled & 0x8142000000000000ULL)    //A1 H1 B2 G2
-        eval += value[pattern->patt[14]];
-    else
-        eval += value_b[pattern->patt[18]];
-    
-    if(filled & 0x0102000000000201ULL) //H1 G2 G7 H8
-        eval += value[pattern->patt[15]];
-    else
-        eval += value_b[pattern->patt[19]];
-    
-    if(filled & 0x0000000000004281ULL)    //B7 G7 A8 H8
-        eval += value[pattern->patt[16]];
-    else
-        eval += value_b[pattern->patt[20]];
-    
-    if(filled & 0x8040000000004080ULL)    //A1 B2 B7 A8
-        eval += value[pattern->patt[17]];
-    else
-        eval += value_b[pattern->patt[21]];
+    eval += value[pattern->patt[14]];
+    eval += value[pattern->patt[15]];
+    eval += value[pattern->patt[16]];
+    eval += value[pattern->patt[17]];
 
     //hv 2
+    value = RXEvaluation::eval[stage][5];
+    eval += value[pattern->patt[18]];
+    eval += value[pattern->patt[19]];
+    eval += value[pattern->patt[20]];
+    eval += value[pattern->patt[21]];
+
+    //hv 3
     value = RXEvaluation::eval[stage][6];
     eval += value[pattern->patt[22]];
     eval += value[pattern->patt[23]];
     eval += value[pattern->patt[24]];
     eval += value[pattern->patt[25]];
 
-    //hv 3
+    //hv 4
     value = RXEvaluation::eval[stage][7];
     eval += value[pattern->patt[26]];
     eval += value[pattern->patt[27]];
     eval += value[pattern->patt[28]];
     eval += value[pattern->patt[29]];
 
-    //hv 4
+    //2 bords5 + X
     value = RXEvaluation::eval[stage][8];
     eval += value[pattern->patt[30]];
     eval += value[pattern->patt[31]];
     eval += value[pattern->patt[32]];
     eval += value[pattern->patt[33]];
 
-    //2 bords5 + X
+    //corner 2*5
     value = RXEvaluation::eval[stage][9];
     eval += value[pattern->patt[34]];
     eval += value[pattern->patt[35]];
     eval += value[pattern->patt[36]];
     eval += value[pattern->patt[37]];
-
-    //corner 2*5
-    value = RXEvaluation::eval[stage][10];
     eval += value[pattern->patt[38]];
     eval += value[pattern->patt[39]];
     eval += value[pattern->patt[40]];
     eval += value[pattern->patt[41]];
+
+    //corner 11
+    value = RXEvaluation::eval[stage][10];
     eval += value[pattern->patt[42]];
     eval += value[pattern->patt[43]];
     eval += value[pattern->patt[44]];
     eval += value[pattern->patt[45]];
-
-    //corner 4/3/2/1 & corner 2*(3+2)
-    value = RXEvaluation::eval[stage][11];
-    value = RXEvaluation::eval[stage][12];
-    if(filled & 0x8040000000000000ULL)    //A1 B2
-        eval += value[pattern->patt[46]];
-    else
-        eval += value_b[pattern->patt[50]];
-                        
-    if(filled & 0x0102000000000000ULL) //H1 G2
-        eval += value[pattern->patt[47]];
-    else
-        eval += value_b[pattern->patt[51]];
-                        
-    if(filled & 0x0000000000000201ULL)    //G7 H8
-        eval += value[pattern->patt[48]];
-    else
-        eval += value_b[pattern->patt[52]];
-                        
-    if(filled & 0x0000000000004080ULL)    //B7 A8
-        eval += value[pattern->patt[49]];
-    else
-        eval += value_b[pattern->patt[53]];
 
     if(eval>0) eval += 128; else eval -= 128;
     eval /= 256;
@@ -225,8 +191,6 @@ inline int RXBBPatterns::get_score() const {
 }
 
 inline int RXBBPatterns::get_score(RXMove& move) const {
-    
-    unsigned long long filled = board.discs[BLACK] | board.discs[WHITE] | move.square;
     
     const RXPattern* const p = move.pattern;
     
@@ -261,90 +225,59 @@ inline int RXBBPatterns::get_score(RXMove& move) const {
     eval += value[p->patt[12]];
     eval += value[p->patt[13]];
 
-    //edge+2X & board 6+4
+    //edge+2X
     value = RXEvaluation::eval[stage][4];
-    const short* value_b = RXEvaluation::eval[stage][5];
-    if(filled & 0x8142000000000000ULL)    //A1 H1 B2 G2
-        eval += value[p->patt[14]];
-    else
-        eval += value_b[p->patt[18]];
-    
-    if(filled & 0x0102000000000201ULL) //H1 G2 G7 H8
-        eval += value[p->patt[15]];
-    else
-        eval += value_b[p->patt[19]];
-    
-    if(filled & 0x0000000000004281ULL)    //B7 G7 A8 H8
-        eval += value[p->patt[16]];
-    else
-        eval += value_b[p->patt[20]];
-    
-    if(filled & 0x8040000000004080ULL)    //A1 B2 B7 A8
-        eval += value[p->patt[17]];
-    else
-        eval += value_b[p->patt[21]];
+    eval += value[p->patt[14]];
+    eval += value[p->patt[15]];
+    eval += value[p->patt[16]];
+    eval += value[p->patt[17]];
 
     //hv 2
+    value = RXEvaluation::eval[stage][5];
+    eval += value[p->patt[18]];
+    eval += value[p->patt[19]];
+    eval += value[p->patt[20]];
+    eval += value[p->patt[21]];
+
+    //hv 3
     value = RXEvaluation::eval[stage][6];
     eval += value[p->patt[22]];
     eval += value[p->patt[23]];
     eval += value[p->patt[24]];
     eval += value[p->patt[25]];
 
-    //hv 3
+    //hv 4
     value = RXEvaluation::eval[stage][7];
     eval += value[p->patt[26]];
     eval += value[p->patt[27]];
     eval += value[p->patt[28]];
     eval += value[p->patt[29]];
 
-    //hv 4
+    //2 bords5 + X
     value = RXEvaluation::eval[stage][8];
     eval += value[p->patt[30]];
     eval += value[p->patt[31]];
     eval += value[p->patt[32]];
     eval += value[p->patt[33]];
 
-    //2 bords5 + X
+    //corner 2*5
     value = RXEvaluation::eval[stage][9];
     eval += value[p->patt[34]];
     eval += value[p->patt[35]];
     eval += value[p->patt[36]];
     eval += value[p->patt[37]];
-
-    //corner 2*5
-    value = RXEvaluation::eval[stage][10];
     eval += value[p->patt[38]];
     eval += value[p->patt[39]];
     eval += value[p->patt[40]];
     eval += value[p->patt[41]];
+
+    //corner 11
+    value = RXEvaluation::eval[stage][10];
     eval += value[p->patt[42]];
     eval += value[p->patt[43]];
     eval += value[p->patt[44]];
     eval += value[p->patt[45]];
-
-    //corner 4/3/2/1 & corner 2*(3+2)
-    value = RXEvaluation::eval[stage][11];
-    value = RXEvaluation::eval[stage][12];
-    if(filled & 0x8040000000000000ULL)    //A1 B2
-        eval += value[p->patt[46]];
-    else
-        eval += value_b[p->patt[50]];
-                        
-    if(filled & 0x0102000000000000ULL) //H1 G2
-        eval += value[p->patt[47]];
-    else
-        eval += value_b[p->patt[51]];
-                        
-    if(filled & 0x0000000000000201ULL)    //G7 H8
-        eval += value[p->patt[48]];
-    else
-        eval += value_b[p->patt[52]];
-                        
-    if(filled & 0x0000000000004080ULL)    //B7 A8
-        eval += value[p->patt[49]];
-    else
-        eval += value_b[p->patt[53]];
+    
     if(eval>0) eval += 128; else eval -= 128;
     eval /= 256;
 

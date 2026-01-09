@@ -110,7 +110,7 @@ def index_rotate(index, id_patt):
     
 # --- end ---
 
-
+'''
 # --- Somme les occurrences d'un index et de son index inverse. ---
 
 def sommer_occurrences_symetriques(compte: dict) -> dict:
@@ -164,7 +164,7 @@ def sommer_occurrences_symetriques(compte: dict) -> dict:
     return compte
     
 # --- end ---
-'''
+
 
 #recupere le paramettre
 # --- Suggestion pour l'argument
@@ -198,53 +198,25 @@ DATA_NORM_DIR.mkdir(exist_ok=True)
 
 filenames_in = []
 
-for s in [stage - 1, stage, stage + 1]:
-    if stage_borne_inf <= s < stage_borne_sup: # Assurer que l'index du stage est dans la plage
-        path = Path(DATA_DIR / f"data_{s:02}.txt")
-        if path.exists():
-            filenames_in.append(str(path)) # Convertir en str pour le reste du code
+path = Path(DATA_DIR / f"data_{stage:02}.txt")
+if path.exists():
+    filenames_in.append(str(path)) # Convertir en str pour le reste du code
 
 
-filename_out =  DATA_NORM_DIR / f"data_norm_{stage:02}.txt"
-#filename_out =  DATA_NORM_DIR / f"data_norm_single_{stage:02}.txt"
+filename_out =  DATA_NORM_DIR / f"data_{stage:02}.txt"
 
 # 1) Lecture unique des fichiers d'entrée
 all_lines = []   # contiendra toutes les lignes déjà découpées en valeurs
 all_indices = [] # pour compter globalement les occurrences
 
-'''
+
 for filename_in in filenames_in:
-    print(filename_in)
     with open(filename_in, "r") as f:
         for line in f:
             vals = list(map(int, line.split()))
             all_lines.append(vals)
             # On ne compte pas le dernier élément (score)
-            all_indices.extend(vals[:-1])
-'''
-
-for filename_in in filenames_in:
-    print(f"Traitement de : {filename_in}")
-    
-    # Extraction du numéro de stage à partir du nom de fichier pour comparer
-    # On vérifie si c'est le stage actuel ou un contexte
-    current_file_stage = int(Path(filename_in).stem.split('_')[1])
-
-    with open(filename_in, "r") as f:
-        lines = f.readlines() # On lit toutes les lignes du fichier
-        
-        # Si c'est un fichier de contexte (différent du stage central)
-        if current_file_stage != stage:
-            lines = lines[::2]  # On ne garde qu'une ligne sur deux
-            
-        for line in lines:
-            vals = list(map(int, line.split()))
-            if not vals: continue # Sécurité si ligne vide
-            
-            all_lines.append(vals)
-            # On ne compte pas le dernier élément (score)
-            all_indices.extend(vals[:-1])
-            
+            all_indices.extend(vals[:-1])            
             
 # 2) Compter les occurrences
 compte = Counter(all_indices)
@@ -254,7 +226,18 @@ compte_final = sommer_occurrences_symetriques(compte)
 
 # 3) Déterminer les index à supprimer ( < occurence_min)
 a_supprimer = {idx for idx, occ in compte_final.items() if occ < occurence_min}
-print(len(a_supprimer))
+
+# --- Affichage explicite des statistiques ---
+total_patterns_unique = len(compte_final)
+nb_suppr = len(a_supprimer)
+pourcentage_suppr = (nb_suppr / total_patterns_unique * 100) if total_patterns_unique > 0 else 0
+
+print(f"--- Statistiques de normalisation (Stage {stage:02}) ---")
+print(f"Nombre total de patterns uniques : {total_patterns_unique}")
+print(f"Nombre de patterns à supprimer   : {nb_suppr} ({pourcentage_suppr:.2f}%)")
+print(f"Seuil d'occurrence choisi        : {occurence_min}")
+print(f"Nombre de patterns conservés     : {total_patterns_unique - nb_suppr}")
+print("-" * 48)
 
 # 4) Écriture directe du fichier filtré
 with open(filename_out, "w") as f:
