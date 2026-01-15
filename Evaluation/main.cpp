@@ -27,13 +27,15 @@ int main(int argc, const char * argv[]) {
 
 
     gen.write_eval();
- 
+
     
     gen.rawdata_to_stage();
 
-*/
-    
     gen.generate_method();
-    
+
+*/
+ 
+    gen.generate_method();
+
     return EXIT_SUCCESS;
 }

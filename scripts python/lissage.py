@@ -47,7 +47,7 @@ def smooth_and_rewrite_files():
             print(f"Erreur de lecture du fichier {input_filename}: {e}")
             return
             
-    # La matrice finale a la forme (nb weigths, 60)
+    # La matrice finale a la forme (nb patterns weight, 60)
     data_matrix = np.stack(all_data, axis=1)
     NUM_LINES = data_matrix.shape[0]
     print(f"Toutes les données ({NUM_LINES} lignes) chargées en mémoire.")
@@ -56,7 +56,7 @@ def smooth_and_rewrite_files():
     
     # savgol_filter est appelé avec 'axis=1', ce qui applique le filtre 
     # le long de la dimension des 60 fichiers (les colonnes). 
-    # Il traite les weigths simultanément.
+    # Il traite les patterns weight simultanément.
     print(f"Application du filtre SG sur la matrice ({NUM_LINES}x{NUM_FILES})...")
     
     smoothed_matrix = savgol_filter(data_matrix, 

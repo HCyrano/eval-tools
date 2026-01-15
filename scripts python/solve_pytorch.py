@@ -73,7 +73,15 @@ print("Transfert de la matrice creuse vers la mémoire unifiée (MPS)...")
 indices_torch = torch.LongTensor([rows, cols])
 values_torch = torch.FloatTensor(data)
 # Création d'un tenseur creux (Sparse COO) compatible avec MPS
-A_torch = torch.sparse_coo_tensor(indices_torch, values_torch, size=(n_rows, n_index)).to(device)
+A_coo = torch.sparse_coo_tensor(indices_torch, values_torch, size=(n_rows, n_index)).to(device)
+
+# Conversion en CSR pour accélérer les produits matriciels répétés
+# Le format CSR est optimisé pour les lignes (rows), ce qui accélère torch.mv
+A_torch = A_coo.to_sparse_csr()
+
+# Libération de la mémoire intermédiaire
+del A_coo, indices_torch, values_torch
+
 b_torch = torch.tensor(scores, dtype=torch.float32).to(device)
 
 # Initialisation du vecteur de poids x (les paramètres à optimiser)

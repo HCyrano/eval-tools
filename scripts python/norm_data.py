@@ -5,11 +5,28 @@ import math
 
 # --- definition des patterns ---
 # a implementer nanuellement en fonctions des patterns choisis
+
+# eval v 1
 # diag5, diag6, diag7, diag8
 # edge+X, hv2, hv3, hv4
 # corner 2bords5+X, corner2x5, corner11
-index_offset = [243, 729, 2187, 6561, 59049, 6561, 6561, 6561, 59049, 59049, 177147]
-type_rotate  = [  5,   6,    7,    8,    10,    8,    8,    8,    15,     0,     14]
+# index_offset = [243, 729, 2187, 6561, 59049, 6561, 6561, 6561, 59049, 59049, 177147]
+# type_rotate  = [  5,   6,    7,    8,    10,    8,    8,    8,    15,     0,     14]
+
+# eval v 2
+# diag5, diag6, diag7, diag8
+# [edge+X,  edge 6+4], hv2, hv3, hv4
+# corner 2bords5+X, corner2x5, [corner4/3/2/1, corner 2*(3+2)]
+# index_offset = [243, 729, 2187, 6561, 59049, 59049, 6561, 6561, 6561, 59049, 59049, 59049, 59049]
+# type_rotate  = [  5,   6,    7,    8,    10,    10,    8,    8,    8,     15,    0,    15,    10]
+
+# eval v 3
+# diag5, diag6, diag7, diag8
+# [edge+X,  edge 6+4], hv2, hv3, hv4
+# [corner 2bords5+X, corner ALT] corner2x5, [corner4/3/3/1, corner ALT]
+index_offset = [243, 729, 2187, 6561, 59049, 59049, 6561, 6561, 6561, 59049, 59049, 59049, 177147, 177147]
+type_rotate  = [  5,   6,    7,    8,    10,    10,    8,    8,    8,     15,    10,    0,     15,     10]
+
 
 # 🔄 --- Conversion entre Index Global et Index Local/Individuel ---
 #

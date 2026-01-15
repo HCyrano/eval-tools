@@ -205,10 +205,10 @@ void RXPatternGenerate::rawdata_to_stage() {
         
         if(ofs) {
             
-            for(int i = 52; i <= 99; ++i) {
+            for(int i = 1; i <= 8; ++i) {
                 
                 std::ostringstream oss_in;
-                oss_in << std::setw(2) << i;
+                oss_in << std::setw(2) << std::setfill('0') << i;
                 std::string file_name_in = dir_str + "/base_" + oss_in.str() + ".txt";
                 
                 
@@ -228,6 +228,8 @@ void RXPatternGenerate::rawdata_to_stage() {
                         }
                     }
                     in.close();
+                } else {
+                    std::cout << "erreur lecture : " << file_name_in.c_str() << std::endl;
                 }
                 
                 
@@ -248,6 +250,7 @@ void RXPatternGenerate::rawdata_to_stage() {
 
 // les dossiers stages_WS/ et datas/ doivent existés
 
+/*
 void RXPatternGenerate::stage_to_data(const unsigned int stage) {
     
     std::string dir_str = "/Users/caussebruno/Documents/developpement/";
@@ -315,6 +318,115 @@ void RXPatternGenerate::stage_to_data(const unsigned int stage) {
     
 
 };
+ */
+
+void RXPatternGenerate::stage_to_data(const unsigned int stage) {
+    
+    std::string dir_str = "/Users/caussebruno/Documents/developpement/";
+    
+    std::ostringstream oss;
+    oss << std::setw(2) << std::setfill('0') << stage;
+    
+    std::string file_name_in = dir_str + "/database/Edax_Egrcd_Roxane/stages_WS/stage_" + oss.str() + ".txt";
+    std::string file_name_out = dir_str + "/Evaluation/datas/data_" + oss.str() + ".txt";
+    
+    std::ofstream ofs(file_name_out.c_str());
+    
+    if(ofs) {
+
+        std::ifstream in(file_name_in.c_str());
+        if(in) {
+            
+            std::string line;
+            std::ostringstream oss;
+
+            while(std::getline(in, line)) {
+                
+                std::stringstream ss;
+                int score;
+                ss << line.substr(line.find(" ")+1);
+                ss >> score;
+                
+                std::string othellier = line.substr(0, 65) + 'X';
+                
+                RXBBPatterns sBoard;
+                sBoard.build(othellier);
+                
+                oss.str(""); // Vider le contenu
+                oss.clear(); // Réinitialiser les flags
+                int* patt = sBoard.pattern->patt;
+                for(int id_patt = 0; id_patt<std::size(sBoard.pattern->patt); ++id_patt) {
+                    
+                    // On saute explicitement les indices 18, 19, 20 et 21 et les indices 50, 51, 52 et 53
+                    if((id_patt > 17 && id_patt <= 21) || id_patt > 49) {
+                        continue;
+                    }
+                    
+                    
+                    //find pattern description
+                    unsigned int id_info = 0;
+                    for(; id_info < std::size(pattern_info); ++id_info)
+                        if(pattern_info[id_info][0] >= id_patt )
+                            break;
+                    
+                    int id_patt_2 = id_patt;
+                    unsigned int id_info_2 = id_info;
+
+                    unsigned long long filled = sBoard.board.discs[BLACK] | sBoard.board.discs[WHITE];
+
+                    if(id_patt == 14 && ((filled & 0x8142000000000000ULL) == 0)) {         //A1 H1 B2 G2
+                        id_patt_2 = 18;
+                        id_info_2 += 1;
+                    } else if(id_patt == 15 && ((filled & 0x0102000000000201ULL) == 0)) {  //H1 G2 G7 H8
+                        id_patt_2 = 19;
+                        id_info_2 += 1;
+                    } else if(id_patt == 16 && ((filled & 0x0000000000004281ULL) == 0)) {  //B7 G7 A8 H8
+                        id_patt_2 = 20;
+                        id_info_2 += 1;
+                    } else if(id_patt == 17 && ((filled & 0x8040000000004080ULL) == 0)) {  //A1 B2 B7 A8
+                        id_patt_2 = 21;
+                        id_info_2 += 1;
+                    } else if(id_patt == 46 && ((filled & 0x8040000000000000ULL) == 0)) {  //A1 B2
+                        id_patt_2 = 50;
+                        id_info_2 += 1;
+                    } else if(id_patt == 47 && ((filled & 0x0102000000000000ULL) == 0)) {  //H1 G2
+                        id_patt_2 = 51;
+                        id_info_2 += 1;
+                    } else if(id_patt == 48 && ((filled & 0x0000000000000201ULL) == 0)) {  //G7 A8
+                        id_patt_2 = 52;
+                        id_info_2 += 1;
+                    } else if(id_patt == 49 && ((filled & 0x0000000000004080ULL) == 0)) {  //B7 A8
+                        id_patt_2 = 53;
+                        id_info_2 += 1;
+                    }
+
+                    //canonisation de l'index
+                    int pattern_ID = index_rotate(patt[id_patt_2], pattern_def[id_patt_2].symID);
+                    pattern_ID = std::min(patt[id_patt_2],pattern_ID);
+                    //transformation index local => index global
+                    pattern_ID += pattern_info[id_info_2][2]/2;
+                    pattern_ID += pattern_info[id_info_2][1];
+                    
+                    oss << pattern_ID << " ";
+                    
+                }
+                
+                oss << score;
+                
+                ofs << oss.str() << std::endl;
+                    
+            }
+
+            
+            in.close();
+        }
+
+        ofs.close();
+    }
+    
+
+};
+
 
 /**
  * @brief Écrit les poids d'évaluation des stages dans un fichier binaire normalisé.
@@ -331,7 +443,7 @@ void RXPatternGenerate::write_eval() {
     
     std::string dir_str = "/Users/caussebruno/Documents/developpement/Evaluation";
     
-    std::string file_name_out = dir_str + "/weight_v1.bin";
+    std::string file_name_out = dir_str + "/weight_v2.bin";
     // 2. Ouvrir le fichier en mode ecriture binaire
     // ios::out pour l'ecriture et ios::binary pour le mode binaire
     std::ofstream out(file_name_out, std::ios::out | std::ios::binary);
@@ -346,8 +458,8 @@ void RXPatternGenerate::write_eval() {
             std::ostringstream oss;
             oss << std::setw(2) << std::setfill('0') << stage;
             
-            std::string file_weigths_in = dir_str + "/weights_SG_W5_P2/weight_" + oss.str() + ".txt";
-//            std::string file_weigths_in = dir_str + "/weights/weight_" + oss.str() + ".txt";
+//            std::string file_weigths_in = dir_str + "/weights_SG_W5_P2/weight_" + oss.str() + ".txt";
+            std::string file_weigths_in = dir_str + "/weights/weight_" + oss.str() + ".txt";
             std::string file_n_occs_in = dir_str + "/n_occs/n_occ_" + oss.str() + ".txt";
 
             float weigths_in[n_index];
@@ -486,7 +598,7 @@ void RXPatternGenerate::norm_weight(float* weigths_in, int* n_occs_in, short* we
         weigths_out[p_sym_inv]  = -weight;
         */
         
-        
+
         //on ne mixe pas les poids (semble meilleur)
 
         short weight_B = static_cast<short>(std::round(weigths_in[p_idx]*256));
@@ -496,7 +608,6 @@ void RXPatternGenerate::norm_weight(float* weigths_in, int* n_occs_in, short* we
         weigths_out[p_inv]      =  weight_W;
         weigths_out[p_sym_idx]  =  weight_B;
         weigths_out[p_sym_inv]  =  weight_W;
-         
         
 
     }
