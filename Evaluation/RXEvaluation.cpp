@@ -72,25 +72,30 @@ void RXEvaluation::load() {
             from.read(reinterpret_cast<char*> (eval[iStage][9]), sizeof(short)*59049);
             eval[iStage][9] += 59049/2;
             
-            //corner 2*5 id_patt = 10
+            //corner ALT 2 bord 5 + X id_patt = 10
             eval[iStage][10] = new short[59049];
             from.read(reinterpret_cast<char*> (eval[iStage][10]), sizeof(short)*59049);
             eval[iStage][10] += 59049/2;
             
-            //corner 4/3/2/1 id_patt = 11
+            //corner 2*5 id_patt = 11
             eval[iStage][11] = new short[59049];
             from.read(reinterpret_cast<char*> (eval[iStage][11]), sizeof(short)*59049);
             eval[iStage][11] += 59049/2;
 
-            //corner 2*(3+2) id_patt = 12
-            eval[iStage][12] = new short[177147];
-            from.read(reinterpret_cast<char*> (eval[iStage][12]), sizeof(short)*177147);
-            eval[iStage][12] += 177147/2;
+            //hyper diag id_patt = 12
+            eval[iStage][11] = new short[59049];
+            from.read(reinterpret_cast<char*> (eval[iStage][12]), sizeof(short)*59049);
+            eval[iStage][12] += 59049/2;
 
-            //corner 2*(3+2) id_patt = 12
+            //corner 4/3/3/1 id_patt = 11
             eval[iStage][13] = new short[177147];
             from.read(reinterpret_cast<char*> (eval[iStage][13]), sizeof(short)*177147);
             eval[iStage][13] += 177147/2;
+
+            //corner ALT 4/3/3/1 id_patt = 11
+            eval[iStage][14] = new short[177147];
+            from.read(reinterpret_cast<char*> (eval[iStage][14]), sizeof(short)*177147);
+            eval[iStage][14] += 177147/2;
 
         }
     } else {

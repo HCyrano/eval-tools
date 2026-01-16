@@ -389,16 +389,16 @@ void RXPatternGenerate::stage_to_data(const unsigned int stage) {
                     } else if(id_patt == 17 && ((filled & 0x8040000000004080ULL) == 0)) {  //A1 B2 B7 A8
                         id_patt_2 = 21;
                         id_info_2 += 1;
-                    } else if((id_patt == 34 || id_patt == 50) && ((filled & 0x8040000000000000ULL) == 0)) {  //A1 B2
+                    } else if((id_patt == 34 || id_patt == 54) && ((filled & 0x8040000000000000ULL) == 0)) {  //A1 B2
                         id_patt_2 += 4;
                         id_info_2 += 1;
-                    } else if((id_patt == 35 || id_patt == 51) && ((filled & 0x0102000000000000ULL) == 0)) {  //H1 G2
+                    } else if((id_patt == 35 || id_patt == 55) && ((filled & 0x0102000000000000ULL) == 0)) {  //H1 G2
                         id_patt_2 += 4;
                         id_info_2 += 1;
-                    } else if((id_patt == 36 || id_patt == 52) && ((filled & 0x0000000000000201ULL) == 0)) {  //G7 A8
+                    } else if((id_patt == 36 || id_patt == 56) && ((filled & 0x0000000000000201ULL) == 0)) {  //G7 A8
                         id_patt_2 += 4;
                         id_info_2 += 1;
-                    } else if((id_patt == 37 || id_patt == 53) && ((filled & 0x0000000000004080ULL) == 0)) {  //B7 A8
+                    } else if((id_patt == 37 || id_patt == 57) && ((filled & 0x0000000000004080ULL) == 0)) {  //B7 A8
                         id_patt_2 += 4;
                         id_info_2 += 1;
                     }
@@ -442,7 +442,7 @@ void RXPatternGenerate::stage_to_data(const unsigned int stage) {
 void RXPatternGenerate::write_eval() {
     
     //nombre d'index globaux
-    const unsigned int n_index = 678942;
+    const unsigned int n_index = 737991;
     
     std::string dir_str = "/Users/caussebruno/Documents/developpement/Evaluation";
     
