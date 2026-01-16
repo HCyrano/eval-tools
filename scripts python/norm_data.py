@@ -25,7 +25,7 @@ import math
 # [edge+X,  edge 6+4], hv2, hv3, hv4
 # [corner 2bords5+X, corner ALT] corner2x5, [corner4/3/3/1, corner ALT]
 index_offset = [243, 729, 2187, 6561, 59049, 59049, 6561, 6561, 6561, 59049, 59049, 59049, 177147, 177147]
-type_rotate  = [  5,   6,    7,    8,    10,    10,    8,    8,    8,     15,    10,    0,     15,     10]
+type_rotate  = [  5,   6,    7,    8,    10,    10,    8,    8,    8,    15,    10,     0,     14,     11]
 
 
 # 🔄 --- Conversion entre Index Global et Index Local/Individuel ---

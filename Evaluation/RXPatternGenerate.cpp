@@ -357,8 +357,11 @@ void RXPatternGenerate::stage_to_data(const unsigned int stage) {
                 int* patt = sBoard.pattern->patt;
                 for(int id_patt = 0; id_patt<std::size(sBoard.pattern->patt); ++id_patt) {
                     
-                    // On saute explicitement les indices 18, 19, 20 et 21 et les indices 50, 51, 52 et 53
-                    if((id_patt > 17 && id_patt <= 21) || id_patt > 49) {
+                    // On saute explicitement les indices Alternatifs
+                    // 18, 19, 20, 21       edge ALT 6+4
+                    // 38, 39, 40, 41       Corner ALT 2 bord 5 + X
+                    // 54, 55, 56 et 57     Corner ALT 4/3/3/1
+                    if((id_patt > 17 && id_patt <= 21) || (id_patt > 37 && id_patt <= 41) || id_patt > 53) {
                         continue;
                     }
                     
@@ -386,17 +389,17 @@ void RXPatternGenerate::stage_to_data(const unsigned int stage) {
                     } else if(id_patt == 17 && ((filled & 0x8040000000004080ULL) == 0)) {  //A1 B2 B7 A8
                         id_patt_2 = 21;
                         id_info_2 += 1;
-                    } else if(id_patt == 46 && ((filled & 0x8040000000000000ULL) == 0)) {  //A1 B2
-                        id_patt_2 = 50;
+                    } else if((id_patt == 34 || id_patt == 50) && ((filled & 0x8040000000000000ULL) == 0)) {  //A1 B2
+                        id_patt_2 += 4;
                         id_info_2 += 1;
-                    } else if(id_patt == 47 && ((filled & 0x0102000000000000ULL) == 0)) {  //H1 G2
-                        id_patt_2 = 51;
+                    } else if((id_patt == 35 || id_patt == 51) && ((filled & 0x0102000000000000ULL) == 0)) {  //H1 G2
+                        id_patt_2 += 4;
                         id_info_2 += 1;
-                    } else if(id_patt == 48 && ((filled & 0x0000000000000201ULL) == 0)) {  //G7 A8
-                        id_patt_2 = 52;
+                    } else if((id_patt == 36 || id_patt == 52) && ((filled & 0x0000000000000201ULL) == 0)) {  //G7 A8
+                        id_patt_2 += 4;
                         id_info_2 += 1;
-                    } else if(id_patt == 49 && ((filled & 0x0000000000004080ULL) == 0)) {  //B7 A8
-                        id_patt_2 = 53;
+                    } else if((id_patt == 37 || id_patt == 53) && ((filled & 0x0000000000004080ULL) == 0)) {  //B7 A8
+                        id_patt_2 += 4;
                         id_info_2 += 1;
                     }
 
@@ -439,11 +442,11 @@ void RXPatternGenerate::stage_to_data(const unsigned int stage) {
 void RXPatternGenerate::write_eval() {
     
     //nombre d'index globaux
-    const unsigned int n_index = 383697;
+    const unsigned int n_index = 678942;
     
     std::string dir_str = "/Users/caussebruno/Documents/developpement/Evaluation";
     
-    std::string file_name_out = dir_str + "/weight_v2.bin";
+    std::string file_name_out = dir_str + "/weight_v3.bin";
     // 2. Ouvrir le fichier en mode ecriture binaire
     // ios::out pour l'ecriture et ios::binary pour le mode binaire
     std::ofstream out(file_name_out, std::ios::out | std::ios::binary);

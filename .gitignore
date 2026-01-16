@@ -91,14 +91,11 @@ xcuserdata/
 build/
 
 # ignorer les dossiers
-Egaroucid_Train_Data/
-stages/
 weights*/
 docs/
 datas/
 datas_norm/
 eval_v*/
-dedups/
 n_occs/
 
 

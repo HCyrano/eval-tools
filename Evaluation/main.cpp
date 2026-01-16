@@ -25,17 +25,15 @@ int main(int argc, const char * argv[]) {
     //affiche les pattern et leur pattern miroir
     gen.display();
 
-
     gen.write_eval();
 
-    
     gen.rawdata_to_stage();
 
     gen.generate_method();
 
 */
  
-    gen.generate_method();
+    gen.write_eval();
 
     return EXIT_SUCCESS;
 }
