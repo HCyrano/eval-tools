@@ -11,7 +11,7 @@ NUM_FILES = 60
 # Plus W est grand, plus le lissage est fort.
 WINDOW_SIZE = 5  
 # **Degré du polynôme (P) :** Généralement 2 ou 3. Ne doit pas être >= W.
-POLYNOMIAL_ORDER = 2
+POLYNOMIAL_ORDER = 3
 
 WEIGHTS_DIR = Path("weights")
 

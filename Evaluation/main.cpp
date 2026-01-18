@@ -33,7 +33,7 @@ int main(int argc, const char * argv[]) {
 
 */
  
-    gen.generate_method();
+    gen.write_eval();
 
     return EXIT_SUCCESS;
 }

@@ -57,7 +57,7 @@ class RXPatternGenerate {
         // symetrie corner 2 bords 5 + X & corner 4/3/2/1
         {  9,  8,  7,  6,  4,  5,  3,  2,  1,  0},                                      // 15
         // hyper diagonale
-        {  9,  8,  7,  3,  4,  5,  6,  2,  1,  0}                                       //16
+        {  9,  8,  7,  3,  4,  5,  6,  2,  1,  0}                                       // 16
     };
 
 
@@ -151,7 +151,7 @@ class RXPatternGenerate {
         // corner 4/3/3/1
         {57, 383697, 177147, 14},
         // corner ALT 4/3/3/1
-        {61, 560884, 177147, 11}
+        {61, 560844, 177147, 11}
         
         // 737991 index
 

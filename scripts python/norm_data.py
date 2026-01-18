@@ -23,10 +23,16 @@ import math
 # eval v 3
 # diag5, diag6, diag7, diag8
 # [edge+X,  edge 6+4], hv2, hv3, hv4
-# [corner 2bords5+X, corner ALT] corner2x5, [corner4/3/3/1, corner ALT]
-index_offset = [243, 729, 2187, 6561, 59049, 59049, 6561, 6561, 6561, 59049, 59049, 59049, 177147, 177147]
-type_rotate  = [  5,   6,    7,    8,    10,    10,    8,    8,    8,    15,    10,     0,     14,     11]
+# [corner 2bords5+X, corner ALT] corner2x5, hyper diag, [corner4/3/3/1, corner ALT]
+#index_offset = [243, 729, 2187, 6561, 59049, 59049, 6561, 6561, 6561, 59049, 59049, 59049, 59049, 177147, 177147]
+#type_rotate  = [  5,   6,    7,    8,    10,    10,    8,    8,    8,    15,    10,     0,    16,     14,     11]
 
+# eval v 4
+# diag5, diag6, diag7, diag8
+# [edge+X,  edge 6+4], hv2, hv3, hv4
+# [corner 2bords5+X, corner ALT] corner2x5, [corner4/3/3/1, corner ALT]
+index_offset = [243, 729, 2187, 6561, 59049, 59049, 6561, 6561, 6561, 59049, 59049, 59049, 59049, 177147, 177147]
+type_rotate  = [  5,   6,    7,    8,    10,    10,    8,    8,    8,    15,    10,     0,    16,     14,     11]
 
 # 🔄 --- Conversion entre Index Global et Index Local/Individuel ---
 #
@@ -87,7 +93,8 @@ rotates = [
              [11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0],
              [15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0],
              [10, 9, 8, 7, 4, 5, 6, 3, 2, 1, 0],
-             [9, 8, 7, 6, 4, 5, 3, 2, 1, 0]
+             [9, 8, 7, 6, 4, 5, 3, 2, 1, 0],
+             [9, 8, 7, 3, 4, 5, 6, 2, 1, 0]
         ]
 
 def index_rotate(index, id_patt):

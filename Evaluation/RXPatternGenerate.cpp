@@ -352,6 +352,9 @@ void RXPatternGenerate::stage_to_data(const unsigned int stage) {
                 RXBBPatterns sBoard;
                 sBoard.build(othellier);
                 
+                unsigned long long filled = sBoard.board.discs[BLACK] | sBoard.board.discs[WHITE];
+
+                
                 oss.str(""); // Vider le contenu
                 oss.clear(); // Réinitialiser les flags
                 int* patt = sBoard.pattern->patt;
@@ -361,7 +364,7 @@ void RXPatternGenerate::stage_to_data(const unsigned int stage) {
                     // 18, 19, 20, 21       edge ALT 6+4
                     // 38, 39, 40, 41       Corner ALT 2 bord 5 + X
                     // 54, 55, 56 et 57     Corner ALT 4/3/3/1
-                    if((id_patt > 17 && id_patt <= 21) || (id_patt > 37 && id_patt <= 41) || id_patt > 53) {
+                    if((id_patt > 17 && id_patt <= 21) || (id_patt > 37 && id_patt <= 41) || id_patt > 57) {
                         continue;
                     }
                     
@@ -375,7 +378,6 @@ void RXPatternGenerate::stage_to_data(const unsigned int stage) {
                     int id_patt_2 = id_patt;
                     unsigned int id_info_2 = id_info;
 
-                    unsigned long long filled = sBoard.board.discs[BLACK] | sBoard.board.discs[WHITE];
 
                     if(id_patt == 14 && ((filled & 0x8142000000000000ULL) == 0)) {         //A1 H1 B2 G2
                         id_patt_2 = 18;
@@ -461,7 +463,7 @@ void RXPatternGenerate::write_eval() {
             std::ostringstream oss;
             oss << std::setw(2) << std::setfill('0') << stage;
             
-//            std::string file_weigths_in = dir_str + "/weights_SG_W5_P2/weight_" + oss.str() + ".txt";
+//            std::string file_weigths_in = dir_str + "/weights_SG_W5_P3/weight_" + oss.str() + ".txt";
             std::string file_weigths_in = dir_str + "/weights/weight_" + oss.str() + ".txt";
             std::string file_n_occs_in = dir_str + "/n_occs/n_occ_" + oss.str() + ".txt";
 
