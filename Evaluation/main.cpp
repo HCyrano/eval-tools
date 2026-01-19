@@ -30,11 +30,13 @@ int main(int argc, const char * argv[]) {
     gen.rawdata_to_stage();
 
     gen.generate_method();
+ 
+    gen.encode_eval();
+
 
 */
  
-    gen.display();
+    gen.encode_eval();
 
-    
     return EXIT_SUCCESS;
 }

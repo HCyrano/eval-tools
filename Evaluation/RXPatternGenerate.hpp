@@ -54,14 +54,15 @@ class RXPatternGenerate {
         { 14, 13, 12, 11, 10,  9,  8,  7,  6,  5,   4,   3,   2,   1,   0},             // 15
         { 15, 14, 13, 12, 11, 10,  9,  8,  7,  6,   5,   4,   3,   2,   1,   0},        // 16
         
-        // symetrie corner 4/3/2/1
+        // symetrie corner 4/3/3/1
         { 10,  9,  8,  7,  4,  5,  6,  3,  2,  1,   0},                                 // 17
         // symetrie corner 2 bords 5 + X & corner 4/3/2/1
         {  9,  8,  7,  6,  4,  5,  3,  2,  1,  0},                                      // 18
         // hyper diagonale
         {  9,  8,  7,  3,  4,  5,  6,  2,  1,  0},                                      // 19
-        { 11, 10,  9,  8,  7,  5,  6,  4,  3,   2 ,  1,   0},                            // 20
-
+        // corner 5/3/3/1/1
+        { 11, 10,  9,  8,  7,  5,  6,  4,  3,  2,   1,   0},                            // 20
+        // corner 4/4/3/2
         { 12, 11, 10,  9,  8,  5,  6,  7,  4,  3,   2 ,  1,   0}                        // 21
     };
 
@@ -69,8 +70,7 @@ class RXPatternGenerate {
     std::vector<std::vector<unsigned int>> pattern_info = {
         
         //[{last index of pattern, offset index global, n_index local, rotate index}
-        
-        /*
+/*
         //diag_5
         {3, 0, 243, 5},
         //diag_6
@@ -90,22 +90,22 @@ class RXPatternGenerate {
         // hv_4
         {33, 140940, 6561, 8},
         // corner 2 bord 5 + X
-        {37, 147501, 59049, 15},
+        {37, 147501, 59049, 18},
         // corner ALT : 2 bord 5 + X
         {41, 206550, 59049, 10},
         // corner 2*5
         {49, 265599, 59049, 0},
         // hyper diag
-        {53, 324648, 59049, 16},
+        {53, 324648, 59049, 19},
         // corner 4/3/3/1
-        {57, 383697, 177147, 14},
+        {57, 383697, 177147, 17},
         // corner ALT 4/3/3/1
         {61, 560844, 177147, 11},
         // edge 4/2/4
         {65, 737991, 59049, 10}
         
         // 797040 index
-         */
+*/
 
         //diag_5
         {3, 0, 243, 5},
@@ -142,6 +142,7 @@ class RXPatternGenerate {
         
         // 7 115 283 index
 
+        
     };
 
 
@@ -168,8 +169,7 @@ class RXPatternGenerate {
         // diag_8
         { 8, { A1, B2, C3, D4, E5, F6, G7, H8}},
         { 8, { A8, B7, C6, D5, E4, F3, G2, H1}},
-        
-        /*
+/*
         // edge + 2x
         { 10, { B2, A1, B1, C1, D1, E1, F1, G1, H1, G2}},
         { 10, { G2, H1, H2, H3, H4, H5, H6, H7, H8, G7}},
@@ -181,8 +181,7 @@ class RXPatternGenerate {
         { 10, { G4, G3, H2, H3, H4, H5, H6, H7, G6, G5}},
         { 10, { E7, F7, G8, F8, E8, D8, C8, B8, C7, D7}},
         { 10, { B5, B6, A7, A6, A5, A4, A3, A2, B3, B4}},
-         */
-        
+*/
         // edge 8+6
         { 14, { D2, C2, B2, A1, B1, C1, D1, E1, F1, G1, H1, G2, F2, E2}},
         { 14, { G4, G3, G2, H1, H2, H3, H4, H5, H6, H7, H8, G7, G6, G5}},
@@ -206,28 +205,25 @@ class RXPatternGenerate {
         { 8, { E1, E2, E3, E4, E5, E6, E7, E8}},
         { 8, { H5, G5, F5, E5, D5, C5, B5, A5}},
         { 8, { D8, D7, D6, D5, D4, D3, D2, D1}},
-        
-        /*
+/*
         // corner 2 bord 5 + X
-        { 15, { A5, A4, A3, A2, A1, B2, B1, C1, D1, E1}},
-        { 15, { D1, E1, F1, G1, H1, G2, H2, H3, H4, H5}},
-        { 15, { H4, H5, H6, H7, H8, G7, G8, F8, E8, D8}},
-        { 15, { E8, D8, C8, B8, A8, B7, A7, A6, A5, A4}},
+        { 18, { A5, A4, A3, A2, A1, B2, B1, C1, D1, E1}},
+        { 18, { D1, E1, F1, G1, H1, G2, H2, H3, H4, H5}},
+        { 18, { H4, H5, H6, H7, H8, G7, G8, F8, E8, D8}},
+        { 18, { E8, D8, C8, B8, A8, B7, A7, A6, A5, A4}},
 
         // corner ALT :2 bord 5 + X
         { 10, { A5, A4, A3, A2, B3, C2, B1, C1, D1, E1}},
         { 10, { D1, E1, F1, G1, F2, G3, H2, H3, H4, H5}},
         { 10, { H4, H5, H6, H7, G6, F7, G8, F8, E8, D8}},
         { 10, { E8, D8, C8, B8, C7, B6, A7, A6, A5, A4}},
-         */
-
+*/
         // corner 5/3/2/1/1
         { 20, { A5, A4, A3, B3, A2, A1, B2, B1, C2, C1, D1, E1}},
         { 20, { D1, E1, F1, F2, G1, H1, G2, H2, G3, H3, H4, H5}},
         { 20, { H4, H5, H6, G6, H7, H8, G7, G8, F7, F8, E8, D8}},
         { 20, { E8, D8, C8, C7, B8, A8, B7, A7, B6, A6, A5, A4}},
 
-        
         // corner 2*5
         { 0, { E2, D2, C2, B2, A2, A1, B1, C1, D1, E1}},
         { 0, { G5, G4, G3, G2, G1, H1, H2, H3, H4, H5}},
@@ -243,28 +239,26 @@ class RXPatternGenerate {
         { 19, { E3, F2, G1, H1, G2, F3, E4, H2, G3, F4}},
         { 19, { F5, G6, H7, H8, G7, F6, E5, G8, F7, E6}},
         { 19, { D6, C7, B8, A8, B7, C6, D5, A7, B6, C5}},
-
-        /*
+/*
         // corner 4/3/3/1
-        { 14, { A4, B3, A3, A2, A1, B2, C3, B1, C1, C2, D1}},
-        { 14, { E1, F2, F1, G1, H1, G2, F3, H2, H3, G3, H4}},
-        { 14, { H5, G6, H6, H7, H8, G7, F6, G8, F8, F7, E8}},
-        { 14, { D8, C7, C8, B8, A8, B7, C6, A7, A6, B6, A5}},
+        { 17, { A4, B3, A3, A2, A1, B2, C3, B1, C1, C2, D1}},
+        { 17, { E1, F2, F1, G1, H1, G2, F3, H2, H3, G3, H4}},
+        { 17, { H5, G6, H6, H7, H8, G7, F6, G8, F8, F7, E8}},
+        { 17, { D8, C7, C8, B8, A8, B7, C6, A7, A6, B6, A5}},
  
         // corner ALT :4/3/3/1
         { 11, { A4, B4, A3, B3, A2, C3, B1, C2, C1, D2, D1}},
         { 11, { E1, E2, F1, F2, G1, F3, H2, G3, H3, G4, H4}},
         { 11, { H5, G5, H6, G6, H7, F6, G8, F7, F8, E7, E8}},
         { 11, { D8, D7, C8, C7, B8, C6, A7, B6, A6, B5, A5}},
-        */
-        
+*/
+ 
         // corner 4/4/3/2
         { 21, { A4, B4, A3, B3, A2, A1, B2, C3, B1, C2, C1, D2, D1}},
         { 21, { E1, E2, F1, F2, G1, H1, G2, F3, H2, G3, H3, G4, H4}},
         { 21, { H5, G5, H6, G6, H7, H8, G7, F6, G8, F7, F8, E7, E8}},
         { 21, { D8, D7, C8, C7, B8, A8, B7, C6, A7, B6, A6, B5, A5}},
 
-        
         //edge 4/2/4
         { 10, { D3, C3, D2, C1, D1, E1, F1, E2, F3, E3}},
         { 10, { F4, F3, G4, H3, H4, H5, H6, G5, F6, F5}},
@@ -274,10 +268,10 @@ class RXPatternGenerate {
 
         /*
         // corner 4/3/2/1
-        { 15, { A4, B3, A3, A2, A1, B2, B1, C1, C2, D1}},
-        { 15, { E1, F2, F1, G1, H1, G2, H2, H3, G3, H4}},
-        { 15, { H5, G6, H6, H7, H8, G7, G8, F8, F7, E8}},
-        { 15, { D8, C7, C8, B8, A8, B7, A7, A6, B6, A5}},
+        { 18, { A4, B3, A3, A2, A1, B2, B1, C1, C2, D1}},
+        { 18, { E1, F2, F1, G1, H1, G2, H2, H3, G3, H4}},
+        { 18, { H5, G6, H6, H7, H8, G7, G8, F8, F7, E8}},
+        { 18, { D8, C7, C8, B8, A8, B7, A7, A6, B6, A5}},
         
         // board 2*(3+2)
         { 10, { B3, B4, A4, A3, A2, B1, C1, D1, D2, C2}},

@@ -643,7 +643,7 @@ void RXPatternGenerate::encode_eval() {
     }
     
     //
-    
+        
     for(int id0 =-1; id0<2; ++id0) {
         for(int id1 =-1; id1<2; ++id1) {
             for(int id2 =-1; id2<2; ++id2) {
@@ -703,7 +703,7 @@ void RXPatternGenerate::encode_eval() {
                                                         } else {
                                                             
                                                             int pattern_11 =
-                                                            id0*pow3[0] + id3*pow3[1] + id2*pow3[2] + id4*pow3[3] + id5*pow3[4] + id6*pow3[5] + id7*pow3[6] + -id8*pow3[7] + idA*pow3[8] + id9*pow3[9] + idC*pow3[10];
+                                                            id0*pow3[0] + id3*pow3[1] + id2*pow3[2] + id4*pow3[3] + id5*pow3[4] + id6*pow3[5] + id7*pow3[6] + id8*pow3[7] + idA*pow3[8] + id9*pow3[9] + idC*pow3[10];
                                                             
                                                             for(unsigned int iStage = 0; iStage<60; ++iStage) {
                                                                 eval_2[iStage][2][pattern_13] = RXEvaluation::eval[iStage][13][pattern_11];
@@ -766,7 +766,7 @@ void RXPatternGenerate::encode_eval() {
         
         for(unsigned int iStage = 0; iStage<60; ++iStage) {
             
-            std::cout << "ecriture stage : " << iStage << std::endl;
+            //std::cout << "ecriture stage : " << iStage << std::endl;
             
             //diag 5 id_patt = 0
             RXEvaluation::eval[iStage][0] -= 243/2;
