@@ -18,7 +18,7 @@ class alignas(16) RXPattern {
         
 public:
     
-    int patt[56];
+    int patt[54];
 
     
     //set Black disc

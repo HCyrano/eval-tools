@@ -620,9 +620,11 @@ void RXPatternGenerate::norm_weight(float* weigths_in, int* n_occs_in, short* we
 };
 
 void RXPatternGenerate::encode_eval() {
+
     //charge l'eval
     RXEvaluation::load();
     
+    //creation new patterns
     short* eval_2[60][3];
     
     for(unsigned int iStage = 0; iStage<60; ++iStage) {
@@ -640,6 +642,8 @@ void RXPatternGenerate::encode_eval() {
         eval_2[iStage][2] += 1594323/2;
     }
     
+    //
+    
     for(int id0 =-1; id0<2; ++id0) {
         for(int id1 =-1; id1<2; ++id1) {
             for(int id2 =-1; id2<2; ++id2) {
@@ -653,6 +657,8 @@ void RXPatternGenerate::encode_eval() {
                                             for(int idA =-1; idA<2; ++idA) {
                                                 for(int idB =-1; idB<2; ++idB) {
                                                     
+                                                    //corner 5/3/2/1/1
+                                                    
                                                     int pattern_12 =
                                                     id0*pow3[0] + id1*pow3[1] + id2*pow3[2] + id3*pow3[3]
                                                     + id4*pow3[4] + id5*pow3[5] + id6*pow3[6] + id7*pow3[7]
@@ -661,19 +667,19 @@ void RXPatternGenerate::encode_eval() {
                                                     if (id5 == 0 && id6 == 0) {
                                                         
                                                         int pattern_10 =
-                                                        id0*pow3[0] + id1*pow3[1] + id2*pow3[2] + id3*pow3[4] + id3*pow3[4] + id8*pow3[5] + id7*pow3[6] + id9*pow3[7] + idA*pow3[8] + idB*pow3[9];
+                                                        id0*pow3[0] + id1*pow3[1] + id2*pow3[2] + id4*pow3[3] + id3*pow3[4] + id8*pow3[5] + id7*pow3[6] + id9*pow3[7] + idA*pow3[8] + idB*pow3[9];
                                                         
                                                         for(unsigned int iStage = 0; iStage<60; ++iStage) {
-                                                            eval_2[iStage][1][pattern_12] = RXEvaluation::eval[iStage][14][pattern_10];
+                                                            eval_2[iStage][1][pattern_12] = RXEvaluation::eval[iStage][10][pattern_10];
                                                         }
                                                         
                                                     } else {
                                                         
                                                         int pattern_10 =
-                                                        id0*pow3[0] + id3*pow3[1] + id2*pow3[2] + id4*pow3[3] + id5*pow3[4] + id6*pow3[5] + id7*pow3[6] + id9*pow3[7] + idA*pow3[8] + id9*pow3[9];
+                                                        id0*pow3[0] + id1*pow3[1] + id2*pow3[2] + id4*pow3[3] + id5*pow3[4] + id6*pow3[5] + id7*pow3[6] + id9*pow3[7] + idA*pow3[8] + idB*pow3[9];
                                                         
                                                         for(unsigned int iStage = 0; iStage<60; ++iStage) {
-                                                            eval_2[iStage][1][pattern_12] = RXEvaluation::eval[iStage][13][pattern_10];
+                                                            eval_2[iStage][1][pattern_12] = RXEvaluation::eval[iStage][9][pattern_10];
                                                         }
                                                         
                                                         
@@ -681,30 +687,34 @@ void RXPatternGenerate::encode_eval() {
                                                     
                                                     for(int idC =-1; idC<2; ++idC) {
                                                         
+                                                        //corner 4/4/3/2
+                                                        
                                                         int pattern_13 = pattern_12 + idC*pow3[12];
                                                         
                                                         if (id5 == 0 && id6 == 0) {
                                                             
-                                                            int pattern_10 =
+                                                            int pattern_11 =
                                                             id0*pow3[0] + id1*pow3[1] + id2*pow3[2] + id3*pow3[3] + id4*pow3[4] + id7*pow3[5] + id8*pow3[6] + id9*pow3[7] + idA*pow3[8] + idB*pow3[9] + idC*pow3[10];
                                                             
                                                             for(unsigned int iStage = 0; iStage<60; ++iStage) {
-                                                                eval_2[iStage][1][pattern_13] = RXEvaluation::eval[iStage][10][pattern_10];
+                                                                eval_2[iStage][2][pattern_13] = RXEvaluation::eval[iStage][14][pattern_11];
                                                             }
                                                             
                                                         } else {
                                                             
-                                                            int pattern_10 =
+                                                            int pattern_11 =
                                                             id0*pow3[0] + id3*pow3[1] + id2*pow3[2] + id4*pow3[3] + id5*pow3[4] + id6*pow3[5] + id7*pow3[6] + -id8*pow3[7] + idA*pow3[8] + id9*pow3[9] + idC*pow3[10];
                                                             
                                                             for(unsigned int iStage = 0; iStage<60; ++iStage) {
-                                                                eval_2[iStage][1][pattern_13] = RXEvaluation::eval[iStage][9][pattern_10];
+                                                                eval_2[iStage][2][pattern_13] = RXEvaluation::eval[iStage][13][pattern_11];
                                                             }
                                                             
                                                             
                                                         }
                                                         
                                                         for(int idD =-1; idD<2; ++idD) {
+                                                            
+                                                            //edge 8+6
                                                             
                                                             int pattern_14 = pattern_13 + idD*pow3[13];
                                                             
@@ -744,102 +754,109 @@ void RXPatternGenerate::encode_eval() {
     }
     
 
-    
+    //ecriture de l'evaluation
     std::string dir_str = "/Users/caussebruno/Documents/developpement/Evaluation";
     
     std::string file_name_out = dir_str + "/eval_v5.bin";
     // 2. Ouvrir le fichier en mode ecriture binaire
     // ios::out pour l'ecriture et ios::binary pour le mode binaire
     std::ofstream out(file_name_out, std::ios::out | std::ios::binary);
-    
-    for(unsigned int iStage = 0; iStage<60; ++iStage) {
+
+    if (out.is_open()) {
         
-        //diag 5 id_patt = 0
-        RXEvaluation::eval[iStage][0] -= 243/2;
-        //diag 6 id_patt = 1
-        RXEvaluation::eval[iStage][1] -= 729/2;
-        //diag 7 id_patt = 2
-        RXEvaluation::eval[iStage][2] -= 2187/2;
-        //diag 8 id_patt = 3
-        RXEvaluation::eval[iStage][3] -= 6561/2;
-
-        //hv_2 id_patt = 6
-        RXEvaluation::eval[iStage][6] -= 6561/2;
-        //hv_3 id_patt = 7
-        RXEvaluation::eval[iStage][7] -= 6561/2;
-        //hv_4 id_patt = 8
-        RXEvaluation::eval[iStage][8] -= 6561/2;
-
-        //corner 2*5 id_patt = 11
-        RXEvaluation::eval[iStage][11] -= 59049/2;
-        //hyper diag id_patt = 12
-        RXEvaluation::eval[iStage][12] -= 59049/2;
-
-        //edge 4/2/4 id_patt = 15
-        RXEvaluation::eval[iStage][15] -= 59049/2;
-
-        //edge 8+6
-        eval_2[iStage][0] -= 4782969/2;
-        
-        //corner 5/3/2/1/1
-        eval_2[iStage][1] -= 531441/2;
-        
-        //corner 4/4/3/2
-        eval_2[iStage][2] -= 1594323/2;
-
-
-        //diag 5
-        out.write(reinterpret_cast<const char*>(RXEvaluation::eval[iStage][0]), sizeof(RXEvaluation::eval[iStage][0]));
-        //diag 6
-        out.write(reinterpret_cast<const char*>(RXEvaluation::eval[iStage][1]), sizeof(RXEvaluation::eval[iStage][1]));
-        //diag 7
-        out.write(reinterpret_cast<const char*>(RXEvaluation::eval[iStage][2]), sizeof(RXEvaluation::eval[iStage][2]));
-        //diag 8
-        out.write(reinterpret_cast<const char*>(RXEvaluation::eval[iStage][3]), sizeof(RXEvaluation::eval[iStage][3]));
-        // edge 8+6
-        out.write(reinterpret_cast<const char*>(eval_2[iStage][0]), sizeof(eval_2[iStage][0]));
-        //hv 2
-        out.write(reinterpret_cast<const char*>(RXEvaluation::eval[iStage][6]), sizeof(RXEvaluation::eval[iStage][6]));
-        //hv 3
-        out.write(reinterpret_cast<const char*>(RXEvaluation::eval[iStage][7]), sizeof(RXEvaluation::eval[iStage][7]));
-        //hv 3
-        out.write(reinterpret_cast<const char*>(RXEvaluation::eval[iStage][8]), sizeof(RXEvaluation::eval[iStage][8]));
-        // corner 5/3/3/1/1
-        out.write(reinterpret_cast<const char*>(eval_2[iStage][1]), sizeof(eval_2[iStage][1]));
-        // corner 2*5
-        out.write(reinterpret_cast<const char*>(RXEvaluation::eval[iStage][11]), sizeof(RXEvaluation::eval[iStage][11]));
-        // hyper diag
-        out.write(reinterpret_cast<const char*>(RXEvaluation::eval[iStage][12]), sizeof(RXEvaluation::eval[iStage][12]));
-        // corner 4/4/3/2
-        out.write(reinterpret_cast<const char*>(eval_2[iStage][2]), sizeof(eval_2[iStage][2]));
-        //edge 4/2/4
-        out.write(reinterpret_cast<const char*>(RXEvaluation::eval[iStage][15]), sizeof(RXEvaluation::eval[iStage][15]));
-        
-        //diag 5 id_patt = 0
-        RXEvaluation::eval[iStage][0] += 243/2;
-        //diag 6 id_patt = 1
-        RXEvaluation::eval[iStage][1] += 729/2;
-        //diag 7 id_patt = 2
-        RXEvaluation::eval[iStage][2] += 2187/2;
-        //diag 8 id_patt = 3
-        RXEvaluation::eval[iStage][3] += 6561/2;
-
-        //hv_2 id_patt = 6
-        RXEvaluation::eval[iStage][6] += 6561/2;
-        //hv_3 id_patt = 7
-        RXEvaluation::eval[iStage][7] += 6561/2;
-        //hv_4 id_patt = 8
-        RXEvaluation::eval[iStage][8] += 6561/2;
-
-        //corner 2*5 id_patt = 11
-        RXEvaluation::eval[iStage][11] += 59049/2;
-        //hyper diag id_patt = 12
-        RXEvaluation::eval[iStage][12] += 59049/2;
-
-        //edge 4/2/4 id_patt = 15
-        RXEvaluation::eval[iStage][15] += 59049/2;
-
-
+        for(unsigned int iStage = 0; iStage<60; ++iStage) {
+            
+            std::cout << "ecriture stage : " << iStage << std::endl;
+            
+            //diag 5 id_patt = 0
+            RXEvaluation::eval[iStage][0] -= 243/2;
+            //diag 6 id_patt = 1
+            RXEvaluation::eval[iStage][1] -= 729/2;
+            //diag 7 id_patt = 2
+            RXEvaluation::eval[iStage][2] -= 2187/2;
+            //diag 8 id_patt = 3
+            RXEvaluation::eval[iStage][3] -= 6561/2;
+            
+            //hv_2 id_patt = 6
+            RXEvaluation::eval[iStage][6] -= 6561/2;
+            //hv_3 id_patt = 7
+            RXEvaluation::eval[iStage][7] -= 6561/2;
+            //hv_4 id_patt = 8
+            RXEvaluation::eval[iStage][8] -= 6561/2;
+            
+            //corner 2*5 id_patt = 11
+            RXEvaluation::eval[iStage][11] -= 59049/2;
+            //hyper diag id_patt = 12
+            RXEvaluation::eval[iStage][12] -= 59049/2;
+            
+            //edge 4/2/4 id_patt = 15
+            RXEvaluation::eval[iStage][15] -= 59049/2;
+            
+            //edge 8+6
+            eval_2[iStage][0] -= 4782969/2;
+            
+            //corner 5/3/2/1/1
+            eval_2[iStage][1] -= 531441/2;
+            
+            //corner 4/4/3/2
+            eval_2[iStage][2] -= 1594323/2;
+            
+            //diag 5
+            out.write(reinterpret_cast<const char*>(RXEvaluation::eval[iStage][0]), 243*sizeof(short));
+            //diag 6
+            out.write(reinterpret_cast<const char*>(RXEvaluation::eval[iStage][1]), 729*sizeof(short));
+            //diag 7
+            out.write(reinterpret_cast<const char*>(RXEvaluation::eval[iStage][2]), 2187*sizeof(short));
+            //diag 8
+            out.write(reinterpret_cast<const char*>(RXEvaluation::eval[iStage][3]), 6561*sizeof(short));
+            // edge 8+6
+            out.write(reinterpret_cast<const char*>(eval_2[iStage][0]), 4782969*sizeof(short));
+            //hv 2
+            out.write(reinterpret_cast<const char*>(RXEvaluation::eval[iStage][6]), 6561*sizeof(short));
+            //hv 3
+            out.write(reinterpret_cast<const char*>(RXEvaluation::eval[iStage][7]), 6561*sizeof(short));
+            //hv 3
+            out.write(reinterpret_cast<const char*>(RXEvaluation::eval[iStage][8]), 6561*sizeof(short));
+            // corner 5/3/2/1/1
+            out.write(reinterpret_cast<const char*>(eval_2[iStage][1]), 531441*sizeof(short));
+            // corner 2*5
+            out.write(reinterpret_cast<const char*>(RXEvaluation::eval[iStage][11]), 59049*sizeof(short));
+            // hyper diag
+            out.write(reinterpret_cast<const char*>(RXEvaluation::eval[iStage][12]), 59049*sizeof(short));
+            // corner 4/4/3/2
+            out.write(reinterpret_cast<const char*>(eval_2[iStage][2]), 1594323*sizeof(short));
+            //edge 4/2/4
+            out.write(reinterpret_cast<const char*>(RXEvaluation::eval[iStage][15]), 59049*sizeof(short));
+            
+            //diag 5 id_patt = 0
+            RXEvaluation::eval[iStage][0] += 243/2;
+            //diag 6 id_patt = 1
+            RXEvaluation::eval[iStage][1] += 729/2;
+            //diag 7 id_patt = 2
+            RXEvaluation::eval[iStage][2] += 2187/2;
+            //diag 8 id_patt = 3
+            RXEvaluation::eval[iStage][3] += 6561/2;
+            
+            //hv_2 id_patt = 6
+            RXEvaluation::eval[iStage][6] += 6561/2;
+            //hv_3 id_patt = 7
+            RXEvaluation::eval[iStage][7] += 6561/2;
+            //hv_4 id_patt = 8
+            RXEvaluation::eval[iStage][8] += 6561/2;
+            
+            //corner 2*5 id_patt = 11
+            RXEvaluation::eval[iStage][11] += 59049/2;
+            //hyper diag id_patt = 12
+            RXEvaluation::eval[iStage][12] += 59049/2;
+            
+            //edge 4/2/4 id_patt = 15
+            RXEvaluation::eval[iStage][15] += 59049/2;
+            
+            delete eval_2[iStage][0];
+            delete eval_2[iStage][1];
+            delete eval_2[iStage][2];
+            
+        }
     }
     
     // 5. Fermeture du fichier
