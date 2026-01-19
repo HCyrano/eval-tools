@@ -60,7 +60,7 @@ except ValueError:
     sys.exit(1)
     
 #nombre total d'index possible
-n_index = 737991 #678942 # 383697
+n_index = 797040 #737991 #678942 # 383697
 
 DATA_DIR = Path("datas_norm")
 
