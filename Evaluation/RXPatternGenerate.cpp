@@ -444,7 +444,7 @@ void RXPatternGenerate::stage_to_data(const unsigned int stage) {
 void RXPatternGenerate::write_eval() {
     
     //nombre d'index globaux
-    const unsigned int n_index = 797040;
+    const unsigned int n_index = 1387470;
     
     std::string dir_str = "/Users/caussebruno/Documents/developpement/Evaluation";
     
@@ -618,6 +618,7 @@ void RXPatternGenerate::norm_weight(float* weigths_in, int* n_occs_in, short* we
     }
 
 };
+
 
 void RXPatternGenerate::encode_eval() {
 
@@ -865,6 +866,7 @@ void RXPatternGenerate::encode_eval() {
 
 
 };
+
 
 
 
