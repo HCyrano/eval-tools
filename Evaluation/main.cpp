@@ -36,7 +36,8 @@ int main(int argc, const char * argv[]) {
 
 */
  
-    gen.display();
+    gen.generate_method();
+
 
     return EXIT_SUCCESS;
 }
