@@ -361,56 +361,35 @@ void RXPatternGenerate::stage_to_data(const unsigned int stage) {
                 for(int id_patt = 0; id_patt<std::size(sBoard.pattern->patt); ++id_patt) {
                     
                     // On saute explicitement les indices Alternatifs
-                    // 18, 19, 20, 21       edge ALT 6+4
-                    // 38, 39, 40, 41       Corner ALT 2 bord 5 + X
-                    // 58, 59, 60 et 61     Corner ALT 4/3/3/1
-                    if((id_patt > 17 && id_patt <= 21) || (id_patt > 37 && id_patt <= 41) || (id_patt > 57 && id_patt <= 61)) {
+                    // 25, 26, 27, 28       edge ALT 6+4
+                    if((id_patt > 24 && id_patt <= 28)) {
                         continue;
                     }
                     
-                    
+                    int id_patt_2 = id_patt;
+
+                    if(id_patt == 21 && ((filled & 0x8142000000000000ULL) == 0)) {         //A1 H1 B2 G2
+                        id_patt_2 = 25;
+                    } else if(id_patt == 22 && ((filled & 0x0102000000000201ULL) == 0)) {  //H1 G2 G7 H8
+                        id_patt_2 = 26;
+                    } else if(id_patt == 23 && ((filled & 0x0000000000004281ULL) == 0)) {  //B7 G7 A8 H8
+                        id_patt_2 = 27;
+                    } else if(id_patt == 24 && ((filled & 0x8040000000004080ULL) == 0)) {  //A1 B2 B7 A8
+                        id_patt_2 = 28;
+                    }
+
                     //find pattern description
                     unsigned int id_info = 0;
                     for(; id_info < std::size(pattern_info); ++id_info)
-                        if(pattern_info[id_info][0] >= id_patt )
+                        if(pattern_info[id_info][0] >= id_patt_2 )
                             break;
-                    
-                    int id_patt_2 = id_patt;
-                    unsigned int id_info_2 = id_info;
-
-
-                    if(id_patt == 14 && ((filled & 0x8142000000000000ULL) == 0)) {         //A1 H1 B2 G2
-                        id_patt_2 = 18;
-                        id_info_2 += 1;
-                    } else if(id_patt == 15 && ((filled & 0x0102000000000201ULL) == 0)) {  //H1 G2 G7 H8
-                        id_patt_2 = 19;
-                        id_info_2 += 1;
-                    } else if(id_patt == 16 && ((filled & 0x0000000000004281ULL) == 0)) {  //B7 G7 A8 H8
-                        id_patt_2 = 20;
-                        id_info_2 += 1;
-                    } else if(id_patt == 17 && ((filled & 0x8040000000004080ULL) == 0)) {  //A1 B2 B7 A8
-                        id_patt_2 = 21;
-                        id_info_2 += 1;
-                    } else if((id_patt == 34 || id_patt == 54) && ((filled & 0x8040000000000000ULL) == 0)) {  //A1 B2
-                        id_patt_2 += 4;
-                        id_info_2 += 1;
-                    } else if((id_patt == 35 || id_patt == 55) && ((filled & 0x0102000000000000ULL) == 0)) {  //H1 G2
-                        id_patt_2 += 4;
-                        id_info_2 += 1;
-                    } else if((id_patt == 36 || id_patt == 56) && ((filled & 0x0000000000000201ULL) == 0)) {  //G7 A8
-                        id_patt_2 += 4;
-                        id_info_2 += 1;
-                    } else if((id_patt == 37 || id_patt == 57) && ((filled & 0x0000000000004080ULL) == 0)) {  //B7 A8
-                        id_patt_2 += 4;
-                        id_info_2 += 1;
-                    }
-
+ 
                     //canonisation de l'index
                     int pattern_ID = index_rotate(patt[id_patt_2], pattern_def[id_patt_2].symID);
                     pattern_ID = std::min(patt[id_patt_2],pattern_ID);
                     //transformation index local => index global
-                    pattern_ID += pattern_info[id_info_2][2]/2;
-                    pattern_ID += pattern_info[id_info_2][1];
+                    pattern_ID += pattern_info[id_info][2]/2;
+                    pattern_ID += pattern_info[id_info][1];
                     
                     oss << pattern_ID << " ";
                     
@@ -444,7 +423,7 @@ void RXPatternGenerate::stage_to_data(const unsigned int stage) {
 void RXPatternGenerate::write_eval() {
     
     //nombre d'index globaux
-    const unsigned int n_index = 1387470;
+    const unsigned int n_index = 560844;
     
     std::string dir_str = "/Users/caussebruno/Documents/developpement/Evaluation";
     
