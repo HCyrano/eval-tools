@@ -6,8 +6,7 @@ from scipy.sparse.linalg import lsmr
 from pathlib import Path
 
 # Constantes en haut
-N_INDEX = 560844  # Nombre total d'indices possibles
-TOLERANCE_UNCHANGED = 1e-15
+N_INDEX = 5107617  # Nombre total d'indices possibles
 
 
 def compter_occurrences_par_index(A_csr):
@@ -39,7 +38,7 @@ def compter_occurrences_par_index(A_csr):
 #recupere le paramettre
 # --- Suggestion pour l'argument
 if len(sys.argv) < 2:
-    print("Usage: python solve.py <stage_number>")
+    print("Usage: python solve_with_warmstart.py <stage_number>")
     sys.exit(1)
 
 try:
@@ -71,31 +70,28 @@ data = []
 
 scores = []
 
-row_offset = 0  # compteur global
+row_count = 0  # compteur global
 for data_in in datas_in:
     print(data_in)
     try:
     
         with open(data_in, "r") as f:
-            for i, line in enumerate(f):
+            for line in f:
                 if not line.strip():
                     continue
-
+            
                 vals = list(map(int, line.split()))
                 *indices, score = vals
                 u, counts = np.unique(indices, return_counts=True)
-                
-                # Décalage des indices de ligne
-                global_i = i + row_offset
-                
-                rows.extend([global_i] * len(u))
+            
+                # Utiliser row_count directement
+                rows.extend([row_count] * len(u))
                 cols.extend(u.tolist())
                 data.extend(counts.tolist())
                 scores.append(score)
             
-            # après chaque fichier, on met à jour le décalage
-            row_offset += i + 1
-        
+                row_count += 1  # Incrémenter APRÈS traitement
+            
     except Exception as e:
         print('cannot open', data_in, e)
 
@@ -130,7 +126,7 @@ print(A_reduite.nnz, "valeurs non nulles")
 print()
 
 
-# save au ft txt identique a weigth
+# sauve au fornat txt
 np.savetxt(n_occ_out, vecteur_occurrences, fmt="%d")
 
 # --- 3. Gestion du Warm Start (x0) ---

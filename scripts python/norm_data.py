@@ -7,11 +7,11 @@ import math
 # a implementer nanuellement en fonctions des patterns choisis
 
 # diag5, diag6, diag7, diag8
-# [edge+2X,  edge 6+4], edge4/2/4, Edge 2*(3/2)
+# [edge+2XC,  edge 6+4]
 # hv2, hv3, hv4
 # corner 4/3/3/1, corner2x5,
-index_offset = [243, 729, 2187, 6561, 59049, 59049, 59049, 59049, 59049, 6561, 6561, 6561, 177147, 59049]
-type_rotate  = [  5,   6,    7,    8,    19,    10,    10,    10,    10,    8,    8,    8,     17,     0]
+index_offset = [243, 729, 2187, 6561, 4782969, 59049, 6561, 6561, 6561, 177147, 59049]
+type_rotate  = [  5,   6,    7,    8,      12,    10,    8,    8,    8,     17,     0]
 
 # 🔄 --- Conversion entre Index Global et Index Local/Individuel ---
 #

@@ -14,29 +14,33 @@
 int main(int argc, const char * argv[]) {
  
 
-    RXPatternGenerate gen;
-    
+    RXPatternGenerate* gen = new RXPatternGenerate();
+
 /*
     //generation des index globaux et du score d'une position stage par stage
     for(int stage = 0; stage<60; ++stage)
-        gen.stage_to_data(stage);
+        gen->stage_to_data(stage);
 
 
     //affiche les pattern et leur pattern miroir
-    gen.display();
+    gen->display();
 
-    gen.write_eval();
+    gen->write_eval();
 
-    gen.rawdata_to_stage();
+    gen->rawdata_to_stage();
 
-    gen.generate_method();
+    gen->generate_method();
  
-    gen.encode_eval();
+    gen->encode_eval();
 
 
 */
  
-    gen.encode_eval();
-    
+    //generation des index globaux et du score d'une position stage par stage
+    for(int stage = 0; stage<60; ++stage)
+        gen->stage_to_data(stage);
+
+    delete gen;
+
     return EXIT_SUCCESS;
 }

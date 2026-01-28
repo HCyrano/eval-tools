@@ -363,21 +363,21 @@ void RXPatternGenerate::stage_to_data(const unsigned int stage) {
                 for(int id_patt = 0; id_patt<std::size(sBoard.pattern->patt); ++id_patt) {
                     
                     // On saute explicitement les indices Alternatifs
-                    // 22, 23, 24, 25       edge ALT 6+4
-                    if((id_patt > 21 && id_patt <= 25)) {
+                    // 18, 19, 20, 21       edge ALT 6+4
+                    if((id_patt > 17 && id_patt <= 21)) {
                         continue;
                     }
                     
                     int id_patt_2 = id_patt;
 
-                    if(id_patt == 18 && ((filled & 0x8142000000000000ULL) == 0)) {         //A1 H1 B2 G2
-                        id_patt_2 = 22;
-                    } else if(id_patt == 19 && ((filled & 0x0102000000000201ULL) == 0)) {  //H1 G2 G7 H8
-                        id_patt_2 = 23;
-                    } else if(id_patt == 20 && ((filled & 0x0000000000004281ULL) == 0)) {  //B7 G7 A8 H8
-                        id_patt_2 = 24;
-                    } else if(id_patt == 21 && ((filled & 0x8040000000004080ULL) == 0)) {  //A1 B2 B7 A8
-                        id_patt_2 = 25;
+                    if(id_patt == 14 && ((filled & 0x8142000000000000ULL) == 0)) {         //A1 H1 B2 G2
+                        id_patt_2 = 18;
+                    } else if(id_patt == 15 && ((filled & 0x0102000000000201ULL) == 0)) {  //H1 G2 G7 H8
+                        id_patt_2 = 19;
+                    } else if(id_patt == 16 && ((filled & 0x0000000000004281ULL) == 0)) {  //B7 G7 A8 H8
+                        id_patt_2 = 20;
+                    } else if(id_patt == 17 && ((filled & 0x8040000000004080ULL) == 0)) {  //A1 B2 B7 A8
+                        id_patt_2 = 21;
                     }
 
                     //find pattern description
@@ -426,11 +426,11 @@ void RXPatternGenerate::stage_to_data(const unsigned int stage) {
 void RXPatternGenerate::write_eval() {
     
     //nombre d'index globaux
-    const unsigned int n_index = 560844;
+    const unsigned int n_index = 856089;
     
     std::string dir_str = "/Users/caussebruno/Documents/developpement/Evaluation";
     
-    std::string file_name_out = dir_str + "/weight_v6.bin";
+    std::string file_name_out = dir_str + "/weight_v7.bin";
     // 2. Ouvrir le fichier en mode ecriture binaire
     // ios::out pour l'ecriture et ios::binary pour le mode binaire
     std::ofstream out(file_name_out, std::ios::out | std::ios::binary);
@@ -449,8 +449,8 @@ void RXPatternGenerate::write_eval() {
             std::string file_weigths_in = dir_str + "/weights/weight_" + oss.str() + ".txt";
             std::string file_n_occs_in = dir_str + "/n_occs/n_occ_" + oss.str() + ".txt";
 
-            float weigths_in[n_index];
-            int n_occs_in[n_index];
+            float* weigths_in = new float[n_index];
+            int* n_occs_in = new int[n_index];
             
             float weigth = 0.0f;
             int n_occ = 0;
@@ -494,7 +494,7 @@ void RXPatternGenerate::write_eval() {
             }
             
             
-            short weigths_out[n_index];
+            short* weigths_out= new short[n_index];
             
 
             for(unsigned int id_patt = 0; id_patt < std::size(pattern_info); ++id_patt)
@@ -505,17 +505,21 @@ void RXPatternGenerate::write_eval() {
             // weigths_out retourne un pointeur vers le premier element
             out.write(
                 reinterpret_cast<const char*>(weigths_out), // Pointeur casté
-                sizeof(weigths_out)                         // Taille en octets
+                sizeof(short)*n_index                         // Taille en octets
             );
 
             if (out.good()) {
                 std::cout << "Ecriture reussie de " << n_index
-                          << " short (" << sizeof(weigths_out) << " octets)." << std::endl;
+                          << " short (" << sizeof(short)*n_index << " octets)." << std::endl;
             } else {
                 std::cerr << "Erreur lors de l'ecriture des donnees." << std::endl;
             }
 
-             
+            // LIBERER LA MEMOIRE à la fin de chaque itération
+            delete[] weigths_in;
+            delete[] n_occs_in;
+            delete[] weigths_out;
+
             std::cout << std::endl;
 
         }
