@@ -36,10 +36,7 @@ int main(int argc, const char * argv[]) {
 
 */
  
-    //generation des index globaux et du score d'une position stage par stage
-    for(int stage = 0; stage<60; ++stage)
-        gen->stage_to_data(stage);
-
+    gen->encode_eval();
     delete gen;
 
     return EXIT_SUCCESS;

@@ -2,7 +2,7 @@ import subprocess
 import time
 
 # Configuration
-SCRIPT_PATH = "scripts python/solve_with_warmstart.py"
+SCRIPT_PATH = "scripts_python/solve_with_warmstart.py"
 TOTAL_STAGES = 60
 
 for i in range(TOTAL_STAGES):

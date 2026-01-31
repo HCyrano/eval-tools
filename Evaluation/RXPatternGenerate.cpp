@@ -364,7 +364,9 @@ void RXPatternGenerate::stage_to_data(const unsigned int stage) {
                     
                     // On saute explicitement les indices Alternatifs
                     // 18, 19, 20, 21       edge ALT 6+4
-                    if((id_patt > 17 && id_patt <= 21)) {
+                    // 54, 55, 56, 57
+                    // 62, 63, 64, 65
+                    if((id_patt > 17 && id_patt <= 21) || (id_patt > 53 && id_patt <= 57) || (id_patt > 61 && id_patt <= 65)) {
                         continue;
                     }
                     
@@ -378,6 +380,14 @@ void RXPatternGenerate::stage_to_data(const unsigned int stage) {
                         id_patt_2 = 20;
                     } else if(id_patt == 17 && ((filled & 0x8040000000004080ULL) == 0)) {  //A1 B2 B7 A8
                         id_patt_2 = 21;
+                    } else if((id_patt == 50 || id_patt == 58) && ((filled & 0x8040000000000000ULL) == 0)) {
+                        id_patt_2 += 4;
+                    } else if((id_patt == 51 || id_patt == 59) && ((filled & 0x0102000000000000ULL) == 0)) {
+                        id_patt_2 += 4;
+                    } else if((id_patt == 52 || id_patt == 60) && ((filled & 0x0000000000000201ULL) == 0)) {
+                        id_patt_2 += 4;
+                    } else if((id_patt == 53 || id_patt == 61) && ((filled & 0x0000000000004080ULL) == 0)) {
+                        id_patt_2 += 4;
                     }
 
                     //find pattern description
@@ -426,7 +436,7 @@ void RXPatternGenerate::stage_to_data(const unsigned int stage) {
 void RXPatternGenerate::write_eval() {
     
     //nombre d'index globaux
-    const unsigned int n_index = 856089;
+    const unsigned int n_index = N_INDEX;
     
     std::string dir_str = "/Users/caussebruno/Documents/developpement/Evaluation";
     
@@ -612,14 +622,18 @@ void RXPatternGenerate::encode_eval() {
     RXEvaluation::load();
     
     //creation new patterns
-    short* eval_2[60][1];
+    short* eval_2[60][2];
     
     for(unsigned int iStage = 0; iStage<60; ++iStage) {
         
+        // corner 5/4/3/2/1
+        eval_2[iStage][0] = new short[14348907];
+        eval_2[iStage][0] += 14348907/2;
+        
         //edge 8+8
-        eval_2[iStage][0] = new short[43046721];
-        eval_2[iStage][0] += 43046721/2;
-                
+        eval_2[iStage][1] = new short[43046721];
+        eval_2[iStage][1] += 43046721/2;
+
     }
     
     //
@@ -639,17 +653,61 @@ void RXPatternGenerate::encode_eval() {
                                                     for(int idC =-1; idC<2; ++idC) {
                                                         for(int idD =-1; idD<2; ++idD) {
                                                             for(int idE =-1; idE<2; ++idE) {
+                                                                
+                                                                int pattern_15 = id0*pow3[0] + id1*pow3[1] + id2*pow3[2] + id3*pow3[3]
+                                                                + id4*pow3[4] + id5*pow3[5] + id6*pow3[6] + id7*pow3[7]
+                                                                + id8*pow3[8] + id9*pow3[9] + idA*pow3[10] + idB*pow3[11]
+                                                                + idC*pow3[12] + idD*pow3[13] + idE*pow3[14];
+                                                                
+                                                                int diag5   = id0*pow3[0] + id1*pow3[1] + id8*pow3[2] + idD*pow3[3] + idE*pow3[4];
+                                                                
+                                                                if(id6 == 0 && id7 == 0) {
+                                                                    
+                                                                    int corner2 = id0*pow3[0] + id2*pow3[1] + id4*pow3[2] + id5*pow3[3] + id3*pow3[4] + idB*pow3[5] + id9*pow3[6] + idA*pow3[7] + idC*pow3[8] + idE*pow3[9];
+                                                                    int corner4 = id2*pow3[0] + id1*pow3[1] + id4*pow3[2] + id3*pow3[3] + id5*pow3[4] + id8*pow3[5] + id9*pow3[6] + idB*pow3[7] + idA*pow3[8] + idD*pow3[9] + idC*pow3[10];
+
+                                                                    for(unsigned int iStage = 0; iStage<60; ++iStage) {
+                                                                        
+                                                                        int score  = RXEvaluation::eval[iStage][0][diag5];
+                                                                        score     += RXEvaluation::eval[iStage][13][corner2];
+                                                                        score     += RXEvaluation::eval[iStage][15][corner4];
+                                                                        
+                                                                        if(-32768 <= score && score <= 32767)
+                                                                            eval_2[iStage][0][pattern_15] = score;
+                                                                        else
+                                                                            std::cout << "erreur capacité short" << std::endl;
+                                                                    }
+
+                                                                } else {
+
+                                                                    int corner1 = id0*pow3[0] + id2*pow3[1] + id4*pow3[2] + id5*pow3[3] + id6*pow3[4] + id7*pow3[5] + id9*pow3[6] + idA*pow3[7] + idC*pow3[8] + idE*pow3[9];
+                                                                    int corner3 = id2*pow3[0] + id3*pow3[1] + id4*pow3[2] + id5*pow3[3] + id6*pow3[4] + id7*pow3[5] + id8*pow3[6] + id9*pow3[7] + idA*pow3[8] + idB*pow3[9] + idC*pow3[10];
+                                                                    
+
+                                                                    for(unsigned int iStage = 0; iStage<60; ++iStage) {
+                                                                        
+                                                                        int score  = RXEvaluation::eval[iStage][0][diag5];
+                                                                        score     += RXEvaluation::eval[iStage][12][corner1];
+                                                                        score     += RXEvaluation::eval[iStage][14][corner3];
+                                                                        
+                                                                        if(-32768 <= score && score <= 32767)
+                                                                            eval_2[iStage][0][pattern_15] = score;
+                                                                        else
+                                                                            std::cout << "erreur capacité short" << std::endl;
+                                                                    }
+
+                                                                }
+                                                                
                                                                 for(int idF =-1; idF<2; ++idF) {
                                                                     
-                                                                    int pattern_16 = id0*pow3[0] + id1*pow3[1] + id2*pow3[2] + id3*pow3[3]
-                                                                    + id4*pow3[4] + id5*pow3[5] + id6*pow3[6] + id7*pow3[7]
-                                                                    + id8*pow3[8] + id9*pow3[9] + idA*pow3[10] + idB*pow3[11]
-                                                                    + idC*pow3[12] + idD*pow3[13] + idE*pow3[14] + idF*pow3[15];
+                                                                    int pattern_16 = pattern_15 + idF*pow3[15];
                                                                     
                                                                     int hv2     = id3*pow3[0] + id2*pow3[1] + id1*pow3[2] + id0*pow3[3] + idF*pow3[4] + idE*pow3[5] + idD*pow3[6] + idC*pow3[7];
-                                                                    int corner  = idF*pow3[0] + id0*pow3[1] + id1*pow3[2] + id2*pow3[3] + id3*pow3[4] + id4*pow3[5] + id5*pow3[6] + id6*pow3[7] + id7*pow3[8] + id8*pow3[9];
-                                                                    int edge4   = id2*pow3[0] + id3*pow3[1] + id4*pow3[2] + id5*pow3[3] + id6*pow3[4] + id9*pow3[5] + idA*pow3[6] + idB*pow3[7] + idC*pow3[8] + idD*pow3[9];
-                                                                    
+                                                                    int edge3   = id2*pow3[0] + id3*pow3[1] + id4*pow3[2] + id5*pow3[3] + id6*pow3[4] + id9*pow3[5] + idA*pow3[6] + idB*pow3[7] + idC*pow3[8] + idD*pow3[9];
+                                                                    int edge4a  = idF*pow3[0] + id0*pow3[1] + id1*pow3[2] + id2*pow3[3] + id3*pow3[4] + id4*pow3[5] + id5*pow3[6] + id6*pow3[7] + id7*pow3[8] + id8*pow3[9];
+                                                                    int edge4b  = id0*pow3[0] + idF*pow3[1] + idE*pow3[2] + idD*pow3[3] + idC*pow3[4] + idB*pow3[5] + idA*pow3[6] + id9*pow3[7] + id8*pow3[8] + id7*pow3[9];
+                                                                    int edge5   = id0*pow3[0] + id1*pow3[1] + id4*pow3[2] + id6*pow3[3] + id7*pow3[4] + id8*pow3[5] + id9*pow3[6] + idB*pow3[7] + idE*pow3[8] + idF*pow3[9];
+
                                                                     if (id2 == 0 && id4 == 0 && idB == 0 && idD == 0) {
                                                                         
                                                                         int edge2 = id0*pow3[0] + id1*pow3[1] + id5*pow3[2] + id6*pow3[3] + id7*pow3[4] + id8*pow3[5] + id9*pow3[6] + idA*pow3[7] + idE*pow3[8] + idF*pow3[9];
@@ -657,12 +715,14 @@ void RXPatternGenerate::encode_eval() {
                                                                         for(unsigned int iStage = 0; iStage<60; ++iStage) {
                                                                             
                                                                             int score  = RXEvaluation::eval[iStage][9][hv2];
-                                                                            score     += RXEvaluation::eval[iStage][13][corner];
-                                                                            score     += RXEvaluation::eval[iStage][8][edge4];
-                                                                            score     += RXEvaluation::eval[iStage][6][edge2];
-                                                                            
+                                                                            score     += RXEvaluation::eval[iStage][6][edge3];
+                                                                            score     += RXEvaluation::eval[iStage][8][edge4a];
+                                                                            score     += RXEvaluation::eval[iStage][8][edge4b];
+                                                                            score     += RXEvaluation::eval[iStage][7][edge5];
+                                                                            score     += RXEvaluation::eval[iStage][5][edge2];
+
                                                                             if(-32768 <= score && score <= 32767)
-                                                                                eval_2[iStage][0][pattern_16] = score;
+                                                                                eval_2[iStage][1][pattern_16] = score;
                                                                             else
                                                                                 std::cout << "erreur capacité short" << std::endl;
 
@@ -675,12 +735,14 @@ void RXPatternGenerate::encode_eval() {
                                                                         for(unsigned int iStage = 0; iStage<60; ++iStage) {
                                                                             
                                                                             int score  = RXEvaluation::eval[iStage][9][hv2];
-                                                                            score     += RXEvaluation::eval[iStage][13][corner];
-                                                                            score     += RXEvaluation::eval[iStage][8][edge4];
-                                                                            score     += RXEvaluation::eval[iStage][5][edge1];
-                                                                            
+                                                                            score     += RXEvaluation::eval[iStage][6][edge3];
+                                                                            score     += RXEvaluation::eval[iStage][8][edge4a];
+                                                                            score     += RXEvaluation::eval[iStage][8][edge4b];
+                                                                            score     += RXEvaluation::eval[iStage][7][edge5];
+                                                                            score     += RXEvaluation::eval[iStage][4][edge1];
+
                                                                             if(-32768 <= score && score <= 32767)
-                                                                                eval_2[iStage][0][pattern_16] = score;
+                                                                                eval_2[iStage][1][pattern_16] = score;
                                                                             else
                                                                                 std::cout << "erreur capacité short" << std::endl;
 
@@ -707,7 +769,7 @@ void RXPatternGenerate::encode_eval() {
     //ecriture de l'evaluation
     std::string dir_str = "/Users/caussebruno/Documents/developpement/Evaluation";
     
-    std::string file_name_out = dir_str + "/eval_v6.1.bin";
+    std::string file_name_out = dir_str + "/eval_v8.1.bin";
     // 2. Ouvrir le fichier en mode ecriture binaire
     // ios::out pour l'ecriture et ios::binary pour le mode binaire
     std::ofstream out(file_name_out, std::ios::out | std::ios::binary);
@@ -718,80 +780,56 @@ void RXPatternGenerate::encode_eval() {
             
             //std::cout << "ecriture stage : " << iStage << std::endl;
             
-            //diag 5 id_patt = 0
-            RXEvaluation::eval[iStage][0] -= 243/2;
             //diag 6 id_patt = 1
             RXEvaluation::eval[iStage][1] -= 729/2;
             //diag 7 id_patt = 2
             RXEvaluation::eval[iStage][2] -= 2187/2;
             //diag 8 id_patt = 3
             RXEvaluation::eval[iStage][3] -= 6561/2;
-            //hyper diag id_patt = 4
-            RXEvaluation::eval[iStage][4] -= 59049/2;
-
-            //edge 4/2/4 id_patt = 7
-            RXEvaluation::eval[iStage][7] -= 59049/2;
 
             //hv_3 id_patt = 10
             RXEvaluation::eval[iStage][10] -= 6561/2;
             //hv_4 id_patt = 11
             RXEvaluation::eval[iStage][11] -= 6561/2;
             
-            //corner 4/3/3/1 id_patt = 12
-            RXEvaluation::eval[iStage][12] -= 177147/2;
-
             
-            //edge 8+8
-            eval_2[iStage][0] -= 43046721/2;
+            eval_2[iStage][0] -= 14348907/2;
+            eval_2[iStage][1] -= 43046721/2;
                         
-            //diag 5
-            out.write(reinterpret_cast<const char*>(RXEvaluation::eval[iStage][0]), 243*sizeof(short));
             //diag 6
             out.write(reinterpret_cast<const char*>(RXEvaluation::eval[iStage][1]), 729*sizeof(short));
             //diag 7
             out.write(reinterpret_cast<const char*>(RXEvaluation::eval[iStage][2]), 2187*sizeof(short));
             //diag 8
             out.write(reinterpret_cast<const char*>(RXEvaluation::eval[iStage][3]), 6561*sizeof(short));
-            // hyper diag
-            out.write(reinterpret_cast<const char*>(RXEvaluation::eval[iStage][4]), 59049*sizeof(short));
 
             // edge 8+8
-            out.write(reinterpret_cast<const char*>(eval_2[iStage][0]), 43046721*sizeof(short));
-            //edge 4/2/4
-            out.write(reinterpret_cast<const char*>(RXEvaluation::eval[iStage][7]), 59049*sizeof(short));
+            out.write(reinterpret_cast<const char*>(eval_2[iStage][1]), 43046721*sizeof(short));
 
             //hv 3
             out.write(reinterpret_cast<const char*>(RXEvaluation::eval[iStage][10]), 6561*sizeof(short));
             //hv 4
             out.write(reinterpret_cast<const char*>(RXEvaluation::eval[iStage][11]), 6561*sizeof(short));
             
-            // corner 4/3/3/1
-            out.write(reinterpret_cast<const char*>(RXEvaluation::eval[iStage][12]), 177147*sizeof(short));
-            
-            //diag 5 id_patt = 0
-            RXEvaluation::eval[iStage][0] += 243/2;
+            // corner 5/4/3/2/1
+            out.write(reinterpret_cast<const char*>(eval_2[iStage][0]), 14348907*sizeof(short));
+
             //diag 6 id_patt = 1
             RXEvaluation::eval[iStage][1] += 729/2;
             //diag 7 id_patt = 2
             RXEvaluation::eval[iStage][2] += 2187/2;
             //diag 8 id_patt = 3
             RXEvaluation::eval[iStage][3] += 6561/2;
-            //hyper diag id_patt = 4
-            RXEvaluation::eval[iStage][4] += 59049/2;
-
-            //edge 4/2/4 id_patt = 7
-            RXEvaluation::eval[iStage][7] += 59049/2;
 
             //hv_3 id_patt = 10
             RXEvaluation::eval[iStage][10] += 6561/2;
             //hv_4 id_patt = 11
             RXEvaluation::eval[iStage][11] += 6561/2;
             
-            //corner 4/3/3/1 id_patt = 12
-            RXEvaluation::eval[iStage][12] += 177147/2;
 
             delete eval_2[iStage][0];
-            
+            delete eval_2[iStage][1];
+
         }
     }
     

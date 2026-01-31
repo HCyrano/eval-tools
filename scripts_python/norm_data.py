@@ -3,15 +3,16 @@ from collections import Counter
 from pathlib import Path
 import math
 
+
 # --- definition des patterns ---
 # a implementer nanuellement en fonctions des patterns choisis
 
 # diag5, diag6, diag7, diag8
-# [edge+2XC,  edge 6+4]
+# [edge+2X,  edge 6+4], Edge 2*(3/2), edge 1/4/1 + 4, edge 2*5
 # hv2, hv3, hv4
-# corner 4/3/3/1, corner2x5,
-index_offset = [243, 729, 2187, 6561, 4782969, 59049, 6561, 6561, 6561, 177147, 59049]
-type_rotate  = [  5,   6,    7,    8,      12,    10,    8,    8,    8,     17,     0]
+# [corner 5/2/1/1/1 et alternatif], [corner 4/3/3/1 et alternatif]
+index_offset = [243, 729, 2187, 6561, 59049, 59049, 59049, 59049, 59049, 6561, 6561, 6561, 59049, 59049, 177147, 177147]
+type_rotate  = [  5,   6,    7,    8,    10,    10,    10,    10,     0,    8,    8,    8,    18,    10,     17,     11]
 
 # 🔄 --- Conversion entre Index Global et Index Local/Individuel ---
 #
@@ -186,12 +187,13 @@ def sommer_occurrences_symetriques(compte: dict) -> dict:
 
 #recupere le paramettre
 # --- Suggestion pour l'argument
-if len(sys.argv) < 2:
-    print("Usage: python norm_data.py <stage_number>")
+if len(sys.argv) < 3:
+    print("Usage: python norm_data.py <stage_number> <n_oocs_min>")
     sys.exit(1)
 
 try:
     stage = int(sys.argv[1])
+    N_OCCS_MIN = int(sys.argv[2])
 except ValueError:
     print("Erreur: Le numéro de stage doit être un entier.")
     sys.exit(1)
@@ -202,8 +204,6 @@ stage_borne_inf = 9
 stage_borne_sup = 60
 stage = max(stage, stage_borne_inf)
 
-# nombre d'occurences minimum (pattern + pattern reverse color)
-occurence_min = 50 # a tester 50
 
 # Construire la liste des fichiers input
 
@@ -242,8 +242,8 @@ compte = Counter(all_indices)
 # 3) somme des occurences du pattern et son pattern inverses
 compte_final = sommer_occurrences_symetriques(compte)
 
-# 3) Déterminer les index à supprimer ( < occurence_min)
-a_supprimer = {idx for idx, occ in compte_final.items() if occ < occurence_min}
+# 3) Déterminer les index à supprimer ( < N_OCCS_MIN)
+a_supprimer = {idx for idx, occ in compte_final.items() if occ < N_OCCS_MIN}
 
 # --- Affichage explicite des statistiques ---
 total_patterns_unique = len(compte_final)
@@ -253,7 +253,7 @@ pourcentage_suppr = (nb_suppr / total_patterns_unique * 100) if total_patterns_u
 print(f"--- Statistiques de normalisation (Stage {stage:02}) ---")
 print(f"Nombre total de patterns uniques : {total_patterns_unique}")
 print(f"Nombre de patterns à supprimer   : {nb_suppr} ({pourcentage_suppr:.2f}%)")
-print(f"Seuil d'occurrence choisi        : {occurence_min}")
+print(f"Seuil d'occurrence choisi        : {N_OCCS_MIN}")
 print(f"Nombre de patterns conservés     : {total_patterns_unique - nb_suppr}")
 print("-" * 48)
 
