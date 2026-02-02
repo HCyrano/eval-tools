@@ -85,6 +85,9 @@ void RXPatternGenerate::display() {
 // Retourne l'indice du motif symétrique par rapport à l'indice du motif donné
 int RXPatternGenerate::index_rotate(int index, int sym_id) {
     
+    if(sym_id == 0) //pas de symetrie
+        return index;
+    
     int id_sym = 0;
     
     int x = index;
@@ -397,7 +400,7 @@ void RXPatternGenerate::stage_to_data(const unsigned int stage) {
                             break;
  
                     //canonisation de l'index
-                    int pattern_ID = index_rotate(patt[id_patt_2], pattern_def[id_patt_2].symID);
+                    int pattern_ID = index_rotate(patt[id_patt_2], pattern_info[id_info][3]);
                     pattern_ID = std::min(patt[id_patt_2],pattern_ID);
                     //transformation index local => index global
                     pattern_ID += pattern_info[id_info][2]/2;
