@@ -140,7 +140,8 @@ void generate_flips_##pos(RXMove& move) const \
     //    static uint64_t calc_legal(const uint64_t P, const uint64_t O);
     inline unsigned long long get_legal_moves() const;
     static unsigned long long get_legal_moves(const unsigned long long discs_player, const unsigned long long discs_opponent);
-    inline uint64x2_t count_legal_moves_all_player(const unsigned long long p, const unsigned long long o);
+    inline uint64x2_t count_legal_moves_all_player() const;
+    static inline uint64x2_t count_legal_moves_all_player(const unsigned long long p, const unsigned long long o);
     
     bool isValid_square(const unsigned int pos) const;
     static bool dir_valid_shl(unsigned long long square, unsigned long long p_discs, unsigned long long o_discs, int shift, unsigned long long mask);
@@ -1049,6 +1050,10 @@ inline uint64x2_t propagate_kogge_stone(const uint64x2_t p_vec, const uint64x2_t
         
         return vshrq_n_u64(g, S);
     }
+}
+
+inline uint64x2_t RXBitBoard::count_legal_moves_all_player() const {
+    return count_legal_moves_all_player(discs[player], discs[player^1]);
 }
 
 inline uint64x2_t RXBitBoard::count_legal_moves_all_player(const unsigned long long p, const unsigned long long o) {

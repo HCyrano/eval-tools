@@ -7,12 +7,13 @@ import math
 # --- definition des patterns ---
 # a implementer nanuellement en fonctions des patterns choisis
 
+# mobility player and opponent
 # diag5, diag6, diag7, diag8
-# [edge+2X,  edge 6+4], Edge 2*(3/2), edge 1/4/1 + 4, edge 2*5
+# [edge+2X,  edge 6+4], Edge 2*(3/2), edge 2*5
 # hv2, hv3, hv4
-# [corner 5/2/1/1/1 et alternatif], [corner 4/3/3/1 et alternatif]
-index_offset = [243, 729, 2187, 6561, 59049, 59049, 59049, 59049, 59049, 6561, 6561, 6561, 59049, 59049, 177147, 177147]
-type_rotate  = [  5,   6,    7,    8,    10,    10,    10,    10,     0,    8,    8,    8,    18,    10,     17,     11]
+# corner 4/3/3/1
+index_offset = [24, 24, 243, 729, 2187, 6561, 59049, 59049, 59049, 59049, 6561, 6561, 6561, 177147]
+type_rotate  = [ 0,  0,   5,   6,    7,    8,    10,    10,    10,     0,    8,    8,    8,     17]
 
 # 🔄 --- Conversion entre Index Global et Index Local/Individuel ---
 #
@@ -38,12 +39,17 @@ def get_local_index(global_index):
             break
         id -= index_offset[i]
         
+    if index_offset < 2: # cas particulier mobility
+        return id
+		        
     return id - ((index_offset[i]-1)//2), i
 
 def get_global_index(local_index, id_offset):
     
     id = local_index
-    id += ((index_offset[id_offset]-1)//2)
+    
+    if id_offset > 1: # cas particulier mobility
+    	id += ((index_offset[id_offset]-1)//2)
         
     for i in range(id_offset):
         id += index_offset[i]
@@ -94,11 +100,14 @@ rotates = [
 
 def index_rotate(index, id_patt):
     
-    id = index
-    rotated_index = 0
-    
     #index du pattern definit son modele de rotation
     id_rot = type_rotate[id_patt]
+
+    if id_rot == 0:
+        return index
+
+    id = index
+    rotated_index = 0
     
     #nb de cases du pattern
     n_squares = len(rotates[id_rot])

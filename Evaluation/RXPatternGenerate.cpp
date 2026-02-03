@@ -10,6 +10,9 @@
 #include <iomanip>
 #include <fstream>
 
+#include "arm_neon.h"
+
+
 
 #include "RXPatternGenerate.hpp"
 #include "RXMove.hpp"
@@ -344,8 +347,14 @@ void RXPatternGenerate::stage_to_data(const unsigned int stage) {
             
             std::string line;
             std::ostringstream oss;
+            
+            int mobility_max = pattern_info[0][2] - 1;
 
             while(std::getline(in, line)) {
+                
+                oss.str(""); // Vider le contenu
+                oss.clear(); // Réinitialiser les flags
+
                 
                 std::stringstream ss;
                 int score;
@@ -357,19 +366,25 @@ void RXPatternGenerate::stage_to_data(const unsigned int stage) {
                 RXBBPatterns sBoard;
                 sBoard.build(othellier);
                 
+                //mobility
+                uint64x2_t mobilities = sBoard.board.count_legal_moves_all_player();
+                int mob_player   = std::min(mobility_max, static_cast<int>(vgetq_lane_u64(mobilities, 0)));
+                oss << mob_player << " ";
+                int mob_opponent = std::min(mobility_max, static_cast<int>(vgetq_lane_u64(mobilities, 1)));
+                oss << (mob_opponent+(pattern_info[1][1])) << " ";
+
+                
                 unsigned long long filled = sBoard.board.discs[BLACK] | sBoard.board.discs[WHITE];
 
                 
-                oss.str(""); // Vider le contenu
-                oss.clear(); // Réinitialiser les flags
                 int* patt = sBoard.pattern->patt;
                 for(int id_patt = 0; id_patt<std::size(sBoard.pattern->patt); ++id_patt) {
                     
                     // On saute explicitement les indices Alternatifs
                     // 18, 19, 20, 21       edge ALT 6+4
-                    // 54, 55, 56, 57
-                    // 62, 63, 64, 65
-                    if((id_patt > 17 && id_patt <= 21) || (id_patt > 53 && id_patt <= 57) || (id_patt > 61 && id_patt <= 65)) {
+                    /// 54, 55, 56, 57
+                    /// 62, 63, 64, 65
+                    if((id_patt > 17 && id_patt <= 21)/* || (id_patt > 53 && id_patt <= 57) || (id_patt > 61 && id_patt <= 65)*/) {
                         continue;
                     }
                     
@@ -383,7 +398,7 @@ void RXPatternGenerate::stage_to_data(const unsigned int stage) {
                         id_patt_2 = 20;
                     } else if(id_patt == 17 && ((filled & 0x8040000000004080ULL) == 0)) {  //A1 B2 B7 A8
                         id_patt_2 = 21;
-                    } else if((id_patt == 50 || id_patt == 58) && ((filled & 0x8040000000000000ULL) == 0)) {
+                    } /*else if((id_patt == 50 || id_patt == 58) && ((filled & 0x8040000000000000ULL) == 0)) {
                         id_patt_2 += 4;
                     } else if((id_patt == 51 || id_patt == 59) && ((filled & 0x0102000000000000ULL) == 0)) {
                         id_patt_2 += 4;
@@ -391,12 +406,12 @@ void RXPatternGenerate::stage_to_data(const unsigned int stage) {
                         id_patt_2 += 4;
                     } else if((id_patt == 53 || id_patt == 61) && ((filled & 0x0000000000004080ULL) == 0)) {
                         id_patt_2 += 4;
-                    }
+                    }*/
 
                     //find pattern description
                     unsigned int id_info = 0;
                     for(; id_info < std::size(pattern_info); ++id_info)
-                        if(pattern_info[id_info][0] >= id_patt_2 )
+                        if(pattern_info[id_info][0] >= (id_patt_2 + 2) ) // add mobilities pattern
                             break;
  
                     //canonisation de l'index
@@ -511,7 +526,15 @@ void RXPatternGenerate::write_eval() {
             
 
             for(unsigned int id_patt = 0; id_patt < std::size(pattern_info); ++id_patt)
-                norm_weight(weigths_in, n_occs_in, weigths_out, pattern_info[id_patt][1], pattern_info[id_patt][2], pattern_info[id_patt][3]);
+                if(id_patt == 0) {
+                    for(int i = 0; i<24; i++)
+                        weigths_out[i] = weigths_in[i]*256; //mobility player
+                } else if(id_patt == 1) {
+                    for(int i = 24; i<48; i++)
+                        weigths_out[i] = weigths_in[i]*256; //mobility opponent
+                } else {
+                    norm_weight(weigths_in, n_occs_in, weigths_out, pattern_info[id_patt][1], pattern_info[id_patt][2], pattern_info[id_patt][3]);
+                }
             
             
             // 4. Ecriture des donnees

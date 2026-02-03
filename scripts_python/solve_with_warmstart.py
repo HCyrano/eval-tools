@@ -6,7 +6,7 @@ from scipy.sparse.linalg import lsmr
 from pathlib import Path
 
 # Constantes en haut
-N_INDEX = 797040  # Nombre total d'indices possibles
+N_INDEX = 442794  # Nombre total d'indices possibles
 
 
 def compter_occurrences_par_index(A_csr):
