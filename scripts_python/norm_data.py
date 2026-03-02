@@ -9,11 +9,13 @@ import math
 
 # mobility player and opponent
 # diag5, diag6, diag7, diag8
-# [edge+2X,  edge 6+4], Edge 2*(3/2), edge 2*5
+# edge+2X, Edge 2*(3/2), edge 2*5
 # hv2, hv3, hv4
-# corner 4/3/3/1
-index_offset = [24, 24, 243, 729, 2187, 6561, 59049, 59049, 59049, 59049, 6561, 6561, 6561, 177147]
-type_rotate  = [ 0,  0,   5,   6,    7,    8,    10,    10,    10,     0,    8,    8,    8,     17]
+# [corner 2*5+X, cornar alt], [corner 4/3/3/1, corner alt]
+index_offset = [24, 24, 243, 729, 2187, 6561, 59049, 59049, 59049, 6561, 6561, 6561, 59049, 59049 177147, 177147]
+type_rotate  = [ 0,  0,   5,   6,    7,    8,    10,    10,    0,     8,    8,    8,    18,    10,    17,     11]
+
+# ATTENTION : verifier "cas particulier mobility"
 
 # 🔄 --- Conversion entre Index Global et Index Local/Individuel ---
 #
@@ -197,7 +199,7 @@ def sommer_occurrences_symetriques(compte: dict) -> dict:
 #recupere le paramettre
 # --- Suggestion pour l'argument
 if len(sys.argv) < 3:
-    print("Usage: python norm_data.py <stage_number> <n_oocs_min>")
+    print("Usage: python norm_data.py <stage_number> <n_occs_min>")
     sys.exit(1)
 
 try:
@@ -247,6 +249,12 @@ for filename_in in filenames_in:
             
 # 2) Compter les occurrences
 compte = Counter(all_indices)
+
+# cas particulier mobility
+# S'assurer que chaque indice de 0 à 47 (mobility) > 0 a au moins 50 occurrences pour ne pas etre supprimé
+for i in range(48):
+    if compte[i] != 0:
+    	compte[i] = max(compte[i], N_OCCS_MIN)
 
 # 3) somme des occurences du pattern et son pattern inverses
 compte_final = sommer_occurrences_symetriques(compte)

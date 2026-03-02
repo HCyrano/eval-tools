@@ -16,7 +16,7 @@ void RXEvaluation::load() {
     
     //create tables
     
-    std::ifstream from("/Users/caussebruno/Documents/developpement/Roxane/build/weight_v8.bin", std::ios::binary);
+    std::ifstream from("/Users/caussebruno/Documents/developpement/Roxane/build/weight_v9.bin", std::ios::binary);
     if(from) {
         
         //chargement des donnees & decalage des tables
