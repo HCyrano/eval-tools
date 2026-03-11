@@ -5,7 +5,7 @@ from scipy.sparse.linalg import lsmr
 from pathlib import Path
 
 # --- Configuration ---
-N_INDEX = 442794  # Nombre total d'indices possibles
+N_INDEX = 678990  # Nombre total d'indices possibles
 TRAIN_RATIO = 0.80 # 80% pour l'entraînement, 20% pour la validation
 
 def compter_occurrences_par_index(A_csr):

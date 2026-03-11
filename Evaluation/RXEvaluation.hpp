@@ -15,74 +15,42 @@
 #include "RXConstantes.hpp"
 #include "RXPattern.hpp"
 
+static constexpr unsigned int RANK = 8;
+
+
+struct Vec_8 {
+    short data[RANK];
+    
+    short& operator[](int i){return data[i];}
+};
+
 class alignas(64) RXEvaluation {
+    
+    static constexpr unsigned int sizes[15] = {24, 24, 243, 729, 2187, 6561, 59049, 59049, 59049, 6561, 6561, 6561, 177147};
+
     
     public :
     
     static void load();
+    static void unload();
+    
     static std::string get_version() {
-            return "J1 2026-02-03";
+            return "K 2026-03-03";
         }
 
     
-    alignas(64) static inline short* eval[60][14];
+    alignas(64) static inline short* eval_w[60][13] = {};
+    alignas(64) static inline int eval_w0[60];
+    alignas(64) static inline Vec_8* eval_V[13] = {};
 
 
-    ~RXEvaluation() {
-        
 
-        for(unsigned int iStage = 0; iStage<60; iStage++) {
- 
-            delete[] eval[iStage][0];
-
-            delete[] eval[iStage][1];
-
-            eval[iStage][2] -= 243/2;
-            delete[] eval[iStage][2];
-            
-            eval[iStage][3] -= 729/2;
-            delete[] eval[iStage][3];
-
-            eval[iStage][4] -= 2187/2;
-            delete[] eval[iStage][4];
-            
-            eval[iStage][5] -= 6561/2;
-            delete[] eval[iStage][5];
-
-            eval[iStage][6] -= 59049/2;
-            delete[] eval[iStage][6];
-            
-            eval[iStage][7] -= 59049/2;
-            delete[] eval[iStage][7];
-            
-            eval[iStage][8] -= 59049/2;
-            delete[] eval[iStage][8];
-            
-            eval[iStage][9] -= 59049/2;
-            delete[] eval[iStage][9];
-            
-            eval[iStage][10] -= 6561/2;
-            delete[] eval[iStage][10];
-
-            eval[iStage][11] -= 6561/2;
-            delete[] eval[iStage][11];
-
-            eval[iStage][12] -= 6561/2;
-            delete[] eval[iStage][12];
-
-            eval[iStage][13] -= 177147/2;
-            delete[] eval[iStage][13];
-
-
-        }
-
-    };
 
 
         
 };
 
 
-
-
 #endif
+
+

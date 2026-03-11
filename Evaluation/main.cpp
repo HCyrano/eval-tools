@@ -23,9 +23,9 @@ int main(int argc, const char * argv[]) {
 
 
     //affiche les pattern et leur pattern miroir
-    gen->display();
 
     gen->write_eval();
+    gen->write_FM();
 
     gen->rawdata_to_stage();
 
@@ -36,9 +36,7 @@ int main(int argc, const char * argv[]) {
 
 */
  
-    //generation des index globaux et du score d'une position stage par stage
-    for(int stage = 0; stage<60; ++stage)
-        gen->stage_to_data(stage);
+    gen->write_FM();
 
     delete gen;
 

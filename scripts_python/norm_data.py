@@ -9,11 +9,11 @@ import math
 
 # mobility player and opponent
 # diag5, diag6, diag7, diag8
-# edge+2X, Edge 2*(3/2), edge 2*5
+# edge+2X, edge 2*(3+XF), edge 2*5
 # hv2, hv3, hv4
-# [corner 2*5+X, cornar alt], [corner 4/3/3/1, corner alt]
-index_offset = [24, 24, 243, 729, 2187, 6561, 59049, 59049, 59049, 6561, 6561, 6561, 59049, 59049 177147, 177147]
-type_rotate  = [ 0,  0,   5,   6,    7,    8,    10,    10,    0,     8,    8,    8,    18,    10,    17,     11]
+# corner 4/3/3/1
+index_offset = [24, 24, 243, 729, 2187, 6561, 59049, 59049, 59049, 6561, 6561, 6561, 177147]
+type_rotate  = [ 0,  0,   5,   6,    7,    8,    10,    10,     0,    8,    8,    8,     17]
 
 # ATTENTION : verifier "cas particulier mobility"
 
@@ -28,7 +28,7 @@ type_rotate  = [ 0,  0,   5,   6,    7,    8,    10,    10,    0,     8,    8,  
 # L'index local ('local_index') est la position séquentielle relative à son pattern spécifique,
 # une fois que les décalages (offsets) des patterns ont été retirés.
 # et l'offset relatifs egalement
-#
+2]2#
 # La conversion entre ces deux formes est cruciale pour l'adressage interne
 # et les calculs de symétrie, qui opèrent sur l'index local.
 
@@ -41,7 +41,7 @@ def get_local_index(global_index):
             break
         id -= index_offset[i]
         
-    if index_offset < 2: # cas particulier mobility
+    if i < 2: # cas particulier mobility
         return id
 		        
     return id - ((index_offset[i]-1)//2), i

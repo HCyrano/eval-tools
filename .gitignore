@@ -97,6 +97,7 @@ datas/
 datas_norm/
 eval_v*/
 n_occs/
+models_fm*/
 
 
 # ignorer le dossier OptimizationProfiles

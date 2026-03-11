@@ -1,0 +1,94 @@
+# 1ere passe
+# vecteurs latents globaux
+
+import numpy as np
+import pickle
+from scipy.sparse import vstack, csr_matrix
+from fastfm import als
+from pathlib import Path
+
+# --- Configuration ---
+N_INDEX = 619941
+STAGES = range(0, 61) # Adaptez selon vos fichiers data_XX.txt
+DATA_DIR = Path("datas_norm")
+GLOBAL_MODEL_PATH = Path("models_fm/global_latent_model.pkl")
+
+def load_all_data():
+    all_A = []
+    all_scores = []
+    for stage in STAGES:
+        path = DATA_DIR / f"data_{stage:02}.txt"
+        if not path.exists(): continue
+        
+        print(f"Chargement de {path}...")
+        rows, cols, data, s_list = [], [], [], []
+        row_count = 0
+        with open(path, "r") as f:
+            for line in f:
+                vals = list(map(int, line.split()))
+                *indices, score = vals
+                u, counts = np.unique(indices, return_counts=True)
+                rows.extend([row_count] * len(u))
+                cols.extend(u.tolist())
+                data.extend(counts.tolist())
+                s_list.append(score)
+                row_count += 1
+        
+        all_A.append(csr_matrix((data, (rows, cols)), shape=(len(s_list), N_INDEX)))
+        all_scores.append(np.array(s_list))
+    
+    return vstack(all_A), np.concatenate(all_scores)
+
+# --- Exécution ---
+print("Étape 1 : Chargement de TOUTES les données...")
+A_global, scores_global = load_all_data()
+
+print(f"Entraînement FM Global sur {A_global.shape[0]} échantillons...")
+fm_global = als.FMRegression(n_iter=50, rank=8, l2_reg_V=0.1)
+fm_global.fit(A_global, scores_global)
+
+# On ne garde que les vecteurs latents (V) pour la suite
+with open(GLOBAL_MODEL_PATH, "wb") as f:
+    pickle.dump(fm_global, f)
+print(f"Modèle global sauvegardé dans {GLOBAL_MODEL_PATH}")
+
+# 2eme passe
+# poids locaux
+
+# ... (Gardez vos imports et fonctions de métriques) ...
+
+# 1. Charger le modèle global au début
+GLOBAL_MODEL_PATH = Path("models_fm/global_latent_model.pkl")
+with open(GLOBAL_MODEL_PATH, "rb") as f:
+    fm_global = pickle.dump(f)
+
+# --- Après le chargement de A_train et scores_train ---
+
+# 2. Calculer la contribution des interactions du modèle global (Termes de second ordre)
+# Pour isoler les interactions, on utilise le modèle global mais on ignore ses propres poids linéaires
+def get_interaction_contribution(model, X):
+    # FastFM ne permet pas facilement d'isoler le second ordre en une méthode.
+    # On prédit le score total et on soustrait la partie linéaire (w0 + w*X)
+    total_pred = model.predict(X)
+    linear_part = model.w0_ + X.dot(model.w_)
+    return total_pred - linear_part
+
+print("Calcul des résidus basés sur les vecteurs latents globaux...")
+interaction_train = get_interaction_contribution(fm_global, A_train)
+# On entraîne les poids locaux sur le score dont on a retiré les interactions globales
+target_linear_train = scores_train - interaction_train
+
+# 3. Entraînement des poids linéaires locaux
+# On utilise rank=0 pour n'entraîner QUE la partie linéaire (w_i)
+fm_local = als.FMRegression(
+    n_iter=50, 
+    rank=0, # IMPORTANT: On ne veut pas de nouveaux vecteurs latents ici
+    l2_reg_w=0.1
+)
+
+fm_local.fit(A_train, target_linear_train)
+
+# --- Sauvegarde ---
+# Le fichier final pour eval.c devra combiner :
+# - fm_local.w_ (Poids pour ce stage)
+# - fm_global.V_ (Vecteurs latents identiques pour tous les stages)
