@@ -12,106 +12,104 @@
 #include "RXEvaluation.hpp"
 
 
+static void check_read(const std::ifstream& stream, const char* filename, unsigned int pattern, unsigned int stage = 0) {
+    if (!stream) {
+        std::cerr << "CRITICAL ERROR: Lecture échouée dans " << filename
+                  << " (pattern=" << pattern << ", stage=" << stage << ")" << std::endl;
+        std::exit(EXIT_FAILURE);
+    }
+}
+
+
 void RXEvaluation::load() {
-    
-    
-    //create tables
-    
-    std::ifstream from("/Users/caussebruno/Documents/developpement/Roxane/build/weight_v10.bin", std::ios::binary);
-    if(from) {
-        
-        //chargement des donnees & decalage des tables
-        for(unsigned int iStage = 0; iStage<60; iStage++) {
-            
-            for(unsigned int id_patt = 0; id_patt < 15; ++id_patt) {
-                
-                eval_w[iStage][id_patt] = new short[sizes[id_patt]];
-                from.read(reinterpret_cast<char*> (eval_w[iStage][id_patt]), sizeof(short)*sizes[id_patt]);
-                
-                if(id_patt == 0 || id_patt == 1)
-                    continue;
-                
-                eval_w[iStage][id_patt] += sizes[id_patt]/2;
-            }
+
+    // --- weight_v11.bin ---
+    std::ifstream from_w("/Users/caussebruno/Documents/developpement/Roxane/build/weight_v11.bin", std::ios::binary);
+    if (!from_w) {
+        std::cerr << "CRITICAL ERROR: Impossible de charger weight_v11.bin" << std::endl;
+        std::exit(EXIT_FAILURE);
+    }
+
+    for (unsigned int iStage = 0; iStage < 60; iStage++) {
+        for (unsigned int id_patt = 0; id_patt < N_PATTERNS; ++id_patt) {
+
+            eval_w[iStage][id_patt] = new short[sizes[id_patt]];
+            from_w.read(reinterpret_cast<char*>(eval_w[iStage][id_patt]), sizeof(short) * sizes[id_patt]);
+            check_read(from_w, "weight_v11.bin", id_patt, iStage);
+
+            if (id_patt > 1)
+                eval_w[iStage][id_patt] += sizes[id_patt] / 2;
         }
-                
-    } else {
-        std::cout << "erreur chargement eval" << std::endl;
-    }
-    
-    from.close();
-    
-    
-    std::ifstream from_0("/Users/caussebruno/Documents/developpement/Roxane/build/fm_w0.bin");
-    if(from_0) {
-        
-        for(unsigned int iStage = 0; iStage<60; iStage++)
-            if (!(from_0 >> eval_w0[iStage])) {
-                std::cerr << "Erreur : Lecture interrompue à l'index " << iStage << ". Le fichier contient moins de 60 entiers." << std::endl;
-                break;
-            }
-    } else {
-        std::cout << "erreur chargement fm_0" << std::endl;
     }
 
-    from_0.close();
+    from_w.close();
 
-    
-    std::ifstream from_fm("/Users/caussebruno/Documents/developpement/Roxane/build/fm_V.bin", std::ios::binary);
-    if(from_fm) {
-        
-        for(unsigned int id_patt = 0; id_patt < 15; ++id_patt) {
-            
-            eval_V[id_patt] = new Vec_8[sizes[id_patt]];
-            from_fm.read(reinterpret_cast<char*> (eval_V[id_patt]), sizeof(Vec_8)*sizes[id_patt]);
-            
-            if(id_patt > 1)
-                eval_V[id_patt] += sizes[id_patt]/2;
+#ifdef FACT_MACH
+    // --- fm_w0.txt ---
+    std::ifstream from_w0("/Users/caussebruno/Documents/developpement/Roxane/build/fm_w0_v11.txt");
+    if (!from_w0) {
+        std::cerr << "CRITICAL ERROR: Impossible de charger fm_w0_v11.txt" << std::endl;
+        std::exit(EXIT_FAILURE);
+    }
+
+    for (unsigned int iStage = 0; iStage < 60; iStage++) {
+        if (!(from_w0 >> eval_w0[iStage])) {
+            std::cerr << "CRITICAL ERROR: fm_w0.txt contient moins de 60 entiers (arrêt à l'index "
+                      << iStage << ")" << std::endl;
+            std::exit(EXIT_FAILURE);
         }
-                
-    } else {
-        std::cout << "erreur chargement eval_V" << std::endl;
     }
 
-    from_fm.close();
+    from_w0.close();
 
 
+    // --- fm_V.bin ---
+    std::ifstream from_V("/Users/caussebruno/Documents/developpement/Roxane/build/fm_V_v11.bin", std::ios::binary);
+    if (!from_V) {
+        std::cerr << "CRITICAL ERROR: Impossible de charger fm_V_v11.bin" << std::endl;
+        std::exit(EXIT_FAILURE);
+    }
+
+    for (unsigned int id_patt = 0; id_patt < N_PATTERNS; ++id_patt) {
+
+        eval_V[id_patt] = new Vec_short[sizes[id_patt]];
+        // Lecture donnée par donnée pour ignorer le padding
+        for (unsigned int i = 0; i < sizes[id_patt]; ++i) {
+            from_V.read(reinterpret_cast<char*>(eval_V[id_patt][i].data), sizeof(short) * RANK);
+        }
+        check_read(from_V, "fm_V.bin", id_patt);
+
+        if (id_patt > 1)
+            eval_V[id_patt] += sizes[id_patt] / 2;
+    }
+
+    from_V.close();
+#endif
     
-};
+    
+}
+
 
 void RXEvaluation::unload() {
-    
-    //delete tables
 
-    for(unsigned int iStage = 0; iStage<60; iStage++) {
-        
-        for(unsigned int id_patt = 0; id_patt < 15; ++id_patt) {
-            
-            if(id_patt > 1)
-                eval_w[iStage][id_patt] -= sizes[id_patt]/2;
+    for (unsigned int iStage = 0; iStage < 60; iStage++) {
+        for (unsigned int id_patt = 0; id_patt < N_PATTERNS; ++id_patt) {
+
+            if (id_patt > 1)
+                eval_w[iStage][id_patt] -= sizes[id_patt] / 2;
             delete[] eval_w[iStage][id_patt];
             eval_w[iStage][id_patt] = nullptr;
-
-            
         }
     }
-    
-    for(unsigned int id_patt = 0; id_patt < 15; ++id_patt) {
-        
-        if(id_patt > 1)
-            eval_V[id_patt] -= sizes[id_patt]/2;
+
+#ifdef FACT_MACH
+    for (unsigned int id_patt = 0; id_patt < N_PATTERNS; ++id_patt) {
+
+        if (id_patt > 1)
+            eval_V[id_patt] -= sizes[id_patt] / 2;
         delete[] eval_V[id_patt];
         eval_V[id_patt] = nullptr;
-        
     }
-
-
-};
-
-
-
-
-
-
-
-
+#endif
+    
+}

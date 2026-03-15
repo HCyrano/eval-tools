@@ -140,9 +140,11 @@ void generate_flips_##pos(RXMove& move) const \
     //    static uint64_t calc_legal(const uint64_t P, const uint64_t O);
     inline unsigned long long get_legal_moves() const;
     static unsigned long long get_legal_moves(const unsigned long long discs_player, const unsigned long long discs_opponent);
-    inline uint64x2_t count_legal_moves_all_player() const;
-    static inline uint64x2_t count_legal_moves_all_player(const unsigned long long p, const unsigned long long o);
-    
+    inline uint64x2_t dual_legal_moves() const;
+    static inline uint64x2_t dual_legal_moves(const unsigned long long p, const unsigned long long o);
+    inline uint64x2_t dual_count_legal_moves() const;
+    static inline uint64x2_t dual_count_legal_moves(const unsigned long long p, const unsigned long long o);
+
     bool isValid_square(const unsigned int pos) const;
     static bool dir_valid_shl(unsigned long long square, unsigned long long p_discs, unsigned long long o_discs, int shift, unsigned long long mask);
     static bool dir_valid_shr(unsigned long long square, unsigned long long p_discs, unsigned long long o_discs, int shift, unsigned long long mask);
@@ -1052,11 +1054,27 @@ inline uint64x2_t propagate_kogge_stone(const uint64x2_t p_vec, const uint64x2_t
     }
 }
 
-inline uint64x2_t RXBitBoard::count_legal_moves_all_player() const {
-    return count_legal_moves_all_player(discs[player], discs[player^1]);
+inline uint64x2_t RXBitBoard::dual_count_legal_moves() const {
+    return dual_count_legal_moves(discs[player], discs[player^1]);
 }
 
-inline uint64x2_t RXBitBoard::count_legal_moves_all_player(const unsigned long long p, const unsigned long long o) {
+inline uint64x2_t RXBitBoard::dual_count_legal_moves(const unsigned long long p, const unsigned long long o) {
+    
+    uint64x2_t legals = RXBitBoard::dual_legal_moves( p, o);
+    
+    // --- POPCOUNT NEON ---
+    // 1. Compte les bits par octets
+    uint8x16_t cnt8 = vcntq_u8(vreinterpretq_u8_u64(legals));
+    // 2. Sommes horizontales successives (8->16, 16->32, 32->64)
+    uint16x8_t sum16 = vpaddlq_u8(cnt8);
+    uint32x4_t sum32 = vpaddlq_u16(sum16);
+    uint64x2_t mobility = vpaddlq_u32(sum32);
+    
+    return mobility;
+}
+
+
+inline uint64x2_t RXBitBoard::dual_legal_moves(const unsigned long long p, const unsigned long long o) {
     // Préparation des registres 128 bits
     // Lane 0: P vs O | Lane 1: O vs P
     uint64x2_t p_vec = {p, o};

@@ -10,6 +10,7 @@
 #include <iomanip>
 #include <fstream>
 #include <cstring> // Pour std::memcpy
+#include <cmath>
 
 
 #include "arm_neon.h"
@@ -338,8 +339,10 @@ void RXPatternGenerate::stage_to_data(const unsigned int stage) {
     std::cout << "stage " << oss.str() << std::endl;
     
 //    std::string file_name_in = dir_str + "/database/Edax_Egrcd_Roxane/stages/stage_" + oss.str() + ".txt";
+//    std::string file_name_out = dir_str + "/Evaluation/datas/data_" + oss.str() + ".txt";
+
     std::string file_name_in = dir_str + "/database/Edax_Egrcd_Roxane/stages_WS/stage_" + oss.str() + ".txt";
-    std::string file_name_out = dir_str + "/Evaluation/datas/data_" + oss.str() + ".txt";
+    std::string file_name_out = dir_str + "/Evaluation/datas/data_WS" + oss.str() + ".txt";
     
     std::ofstream ofs(file_name_out.c_str());
     
@@ -370,7 +373,7 @@ void RXPatternGenerate::stage_to_data(const unsigned int stage) {
                 sBoard.build(othellier);
                 
                 //mobility
-                uint64x2_t mobilities = sBoard.board.count_legal_moves_all_player();
+                uint64x2_t mobilities = sBoard.board.dual_count_legal_moves();
                 int mob_player   = std::min(mobility_max, static_cast<int>(vgetq_lane_u64(mobilities, 0)));
                 oss << mob_player << " ";
                 int mob_opponent = std::min(mobility_max, static_cast<int>(vgetq_lane_u64(mobilities, 1)));
@@ -450,6 +453,75 @@ void RXPatternGenerate::stage_to_data(const unsigned int stage) {
 
 }
 
+void RXPatternGenerate::RSME(const unsigned int stage) {
+    
+    std::string dir_str = "/Users/caussebruno/Documents/developpement/";
+    
+    std::ostringstream oss;
+    oss << std::setw(2) << std::setfill('0') << stage;
+    
+    std::cout << "stage " << oss.str() << std::endl;
+    
+    std::string file_name_in = dir_str + "/database/Edax_Egrcd_Roxane/stages/stage_" + oss.str() + "_test.txt";
+
+
+    std::ifstream in(file_name_in.c_str());
+    if(in) {
+        
+        std::string line;
+        std::ostringstream oss;
+        
+        // Accumulateurs RMSE
+        double sum_sq_err = 0.0;
+        long   n_positions = 0;
+        
+        while(std::getline(in, line)) {
+            
+            oss.str(""); // Vider le contenu
+            oss.clear(); // Réinitialiser les flags
+            
+            
+            std::stringstream ss;
+            int score;
+            ss << line.substr(line.find(" ")+1);
+            ss >> score;
+            
+            std::string othellier = line.substr(0, 65) + 'X';
+            
+            RXBBPatterns sBoard;
+            sBoard.build(othellier);
+            
+            std::cout << sBoard << std::endl;
+            std::cout << "score = " << score << std::endl;
+            
+            int eval = sBoard.get_score();
+            
+//             Calcul du RMSE
+            double err = static_cast<double>(eval - score);
+            sum_sq_err += err * err;
+            ++n_positions;
+            
+            
+        }
+        
+        // Affichage RMSE du stage
+        if(n_positions > 0) {
+            double rmse = std::sqrt(sum_sq_err / static_cast<double>(n_positions));
+            std::cout << "  stage " << oss.str()
+            << "  n=" << n_positions
+            << "  RMSE=" << std::fixed << std::setprecision(4) << rmse
+            << std::endl;
+        } else {
+            std::cout << "  stage " << oss.str() << "  aucune position" << std::endl;
+        }
+        
+        in.close();
+    }
+
+    
+    std::cout << std::endl;
+
+}
 
 /**
  * @brief Écrit les poids d'évaluation des stages dans un fichier binaire normalisé.
@@ -771,75 +843,6 @@ void RXPatternGenerate::norm_fm(short* fm_in, unsigned int id_start,
         processed_index[p_sym_inv] = true;
     }
 }
-//void RXPatternGenerate::norm_fm(short* fm_in, unsigned int id_start, unsigned int n_index_local, unsigned int id_rot) {
-//    
-//    unsigned int offset_local    = n_index_local / 2;
-//    std::vector<bool> processed_index(n_index_local, false);
-//
-//    // Helper : copie le vecteur latent de src vers dst (layout AoS)
-//    auto copy_latent = [&](unsigned int dst_global, unsigned int src_global) {
-//        for (unsigned int r = 0; r < RANK; r++) {
-//            fm_in[dst_global * RANK + r] = fm_in[src_global * RANK + r];
-//        }
-//    };
-//
-//    for (unsigned int i = 0; i < n_index_local; i++) {
-//                                        
-//        if (processed_index[i]) continue;
-//
-//        int p_idx     = i;
-//        int p_inv     = (n_index_local - 1) - p_idx;
-//        int p_sym_idx = index_rotate(p_idx - (int)offset_local, id_rot) + offset_local;
-//        int p_sym_inv = index_rotate(p_inv - (int)offset_local, id_rot) + offset_local;
-//
-//        if (p_sym_idx < 0 || p_sym_idx >= (int)n_index_local ||
-//            p_sym_inv < 0 || p_sym_inv >= (int)n_index_local) continue;
-//        
-//
-//        unsigned int src = id_start + p_idx;
-//        unsigned int dst_inv     = id_start + p_inv;
-//        unsigned int dst_sym     = id_start + p_sym_idx;
-//        unsigned int src_sym_inv = id_start + p_sym_inv;
-//
-//        if(id_start == 186915) { // hv2
-//              
-//            if(i == 188019-id_start) {
-//                
-//                std::cout << src << " : " << dst_sym << std::endl;
-//                std::cout << src_sym_inv << " : " << dst_inv << std::endl;
-//
-//                std::cout << std::endl;
-//
-//            }
-//            
-//        }
-//
-//        copy_latent(dst_sym, src);
-//        copy_latent(dst_inv, src_sym_inv);
-//
-//        if(id_start == 186915) { // diag 5
-//
-//            if(i == 188019-id_start) {
-//                                
-//                for (unsigned int r = 0; r < RANK; r++) {
-//                    std::cout << fm_in[r + RANK * dst_sym] << " = " << fm_in[r + RANK * src] << std::endl;
-//                }
-//                
-//                std::cout << std::endl;
-//
-//                for (unsigned int r = 0; r < RANK; r++) {
-//                    std::cout << fm_in[r + RANK * dst_inv] << " = " << fm_in[r + RANK * src_sym_inv] << std::endl;
-//                }
-//
-//            }
-//        }
-//
-//        processed_index[p_idx]     = true;
-//        processed_index[p_inv]     = true;
-//        processed_index[p_sym_idx] = true;
-//        processed_index[p_sym_inv] = true;
-//    }
-//}
 
 
 void RXPatternGenerate::encode_eval() {

@@ -1,26 +1,19 @@
 """
-train_FM_Adam.py  —  FM global pour Roxane (moteur Othello)
-=============================================================
-Architecture :
-  score = w[stage]·x + w0[stage] + inter_FM(x, V)
-           ↑                ↑              ↑
-    figé (chargé       appris (1       partagé tous
-    depuis weights/)   scalaire/stage)    les stages
+train_FM_Graph_fast.py  —  FM global pour Roxane (moteur Othello)
+=================================================================
+Identique a train_FM_Graph.py avec une seule optimisation :
+  adam_step et fm_predict compiles avec numba @njit -> gain ~3x a 5x
 
-- w[stage] : chargés depuis weights/weight_{stage:02}.txt, jamais modifiés
-- w0[stage]: 60 scalaires appris (biais par stage)
-- V        : matrice (rank × N_INDEX) partagée, apprise sur tous les stages
+Prerequis :
+  pip install numba
 
-- Mode --preload : charge tous les stages en RAM
-- lr avec décroissance exponentielle
-- Early stopping si plus de convergence
-
-Export en virgule fixe ×256 (int16), cohérent avec les tables eval C++.
+Premier lancement : ~30s de compilation JIT (cache=True -> 1 seule fois)
+Lancements suivants : demarrage immediat depuis le cache.
 
 Usage :
-  python train_FM_Adam.py --epochs 20 --rank 8 --preload
-  python train_FM_Adaml.py --epochs 20 --resume --preload
-  python train_FM_Adam.py --epochs 3 --stages 30-39    # test streaming
+  python train_FM_Graph_fast.py --epochs 20 --rank 16 --preload
+  python train_FM_Graph_fast.py --epochs 20 --resume --preload
+  python train_FM_Graph_fast.py --epochs 3 --stages 30-39
 """
 
 import argparse
@@ -31,13 +24,14 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 from pathlib import Path
 from time import time
+from numba import njit
 
 # =============================================================================
 # Config
 # =============================================================================
 
-N_INDEX    = 383745
-N_STAGES   = 60
+N_INDEX  = 383745
+N_STAGES = 60
 
 DATA_DIR    = Path("datas")
 WEIGHTS_DIR = Path("weights")
@@ -67,14 +61,11 @@ def fmt_time(seconds):
 
 
 # =============================================================================
-# Chargement des poids linéaires par stage (figés)
+# Chargement des poids lineaires par stage (figes)
 # =============================================================================
 
 def charger_weights(stages):
-    """Charge les poids linéaires w[stage] depuis weights/weight_{stage:02}.txt.
-    Retourne un dict {stage: np.array(N_INDEX, float32)}.
-    Les stages sans fichier reçoivent un vecteur nul avec avertissement."""
-    print(f"\nChargement des poids linéaires depuis {WEIGHTS_DIR}/...")
+    print(f"\nChargement des poids lineaires depuis {WEIGHTS_DIR}/...")
     w_by_stage = {}
     manquants  = []
     for stage in stages:
@@ -87,23 +78,15 @@ def charger_weights(stages):
             w_by_stage[stage] = np.zeros(N_INDEX, dtype=np.float32)
             manquants.append(stage)
     if manquants:
-        print(f"  ⚠️  Fichiers manquants (vecteur nul) : stages {manquants}")
+        print(f"  Fichiers manquants (vecteur nul) : stages {manquants}")
     return w_by_stage
 
 
 # =============================================================================
-# Chargement des données
+# Chargement des donnees
 # =============================================================================
 
 def charger_stage(stage):
-    """Charge les données d'un stage.
-    Chaque ligne : indices... score  (nombre variable d'indices, score en dernier)
-    Retourne (indices_mat, counts_mat, scores) où :
-      - indices_mat : (n, K)  indices uniques par ligne (paddé avec 0, neutralisé par counts=0)
-      - counts_mat  : (n, K)  comptages correspondants
-      - scores      : (n,)
-    K = nombre max d'index uniques par ligne.
-    """
     path = DATA_DIR / f"data_{stage:02}.txt"
     if not path.exists():
         return None, None, None
@@ -115,8 +98,8 @@ def charger_stage(stage):
             if not line:
                 continue
             vals    = list(map(int, line.split()))
-            idx_raw = vals[:-1]   # tout sauf le dernier = indices
-            score   = vals[-1]    # dernier = score
+            idx_raw = vals[:-1]
+            score   = vals[-1]
             u, c    = np.unique(idx_raw, return_counts=True)
             indices_list.append(u.astype(np.int32))
             counts_list.append(c.astype(np.float32))
@@ -125,7 +108,6 @@ def charger_stage(stage):
     if not indices_list:
         return None, None, None
 
-    # Padding à longueur fixe K
     K = max(len(u) for u in indices_list)
     n = len(scores_list)
     indices_mat = np.zeros((n, K), dtype=np.int32)
@@ -140,18 +122,13 @@ def charger_stage(stage):
 
 
 # =============================================================================
-# Préchargement
+# Prechargement
 # =============================================================================
 
 def preload_all(stages):
-    """Charge tous les stages en RAM.
-    Retourne (all_indices, all_counts, all_scores, all_stage_ids).
-    Aligne tous les stages sur le K global (max des K par stage).
-    """
-    print(f"\nPréchargement de {len(stages)} stages en RAM...")
+    print(f"\nPrechargement de {len(stages)} stages en RAM...")
     t0 = time()
 
-    # Premier pass
     data_by_stage = {}
     K_global = 0
     for stage in stages:
@@ -163,7 +140,6 @@ def preload_all(stages):
         K_global = max(K_global, idx.shape[1])
         print(f"  stage {stage:02d} : {len(sc):>9,} lignes  K={idx.shape[1]}  ({fmt_time(time()-t_s)})")
 
-    # Second pass : aligner sur K_global
     all_indices, all_counts, all_scores, all_stage_ids = [], [], [], []
     for stage, (idx, cnt, sc) in data_by_stage.items():
         n, K = idx.shape
@@ -186,91 +162,176 @@ def preload_all(stages):
     mem_go = (all_indices.nbytes + all_counts.nbytes +
               all_scores.nbytes + all_stage_ids.nbytes) / 1e9
     print(f"Total : {len(all_scores):,} lignes  K_global={K_global}  "
-          f"—  {mem_go:.2f} Go  ({fmt_time(time()-t0)})")
+          f"  {mem_go:.2f} Go  ({fmt_time(time()-t0)})")
     return all_indices, all_counts, all_scores, all_stage_ids
 
 
 # =============================================================================
-# Prédiction FM  (avec comptages)
+# Prediction FM — compile numba (cache=True : compilee une seule fois)
 # =============================================================================
 
+@njit(cache=True)
 def fm_predict(indices_mat, counts_mat, w_stage, w0_stage, V):
     """
-    score = w0_stage + sum(counts * w_stage[indices]) + inter_FM(V, indices, counts)
     indices_mat : (n, K)  int32
-    counts_mat  : (n, K)  float32  — comptages (0 pour le padding)
+    counts_mat  : (n, K)  float32
     w_stage     : (N_INDEX,) float32
-    w0_stage    : float
+    w0_stage    : float32
     V           : (rank, N_INDEX) float32
     """
-    linear   = w0_stage + (counts_mat * w_stage[indices_mat]).sum(axis=1)
-    V_vals   = V[:, indices_mat].transpose(1, 2, 0)              # (n, K, rank)
-    cV       = counts_mat[:, :, np.newaxis] * V_vals              # (n, K, rank)
-    sum_cV   = cV.sum(axis=1)                                     # (n, rank)
-    sum_c2V2 = (counts_mat[:, :, np.newaxis] ** 2 * V_vals ** 2).sum(axis=1)
-    inter    = 0.5 * ((sum_cV ** 2) - sum_c2V2).sum(axis=1)
-    return (linear + inter).astype(np.float32)
+    n    = indices_mat.shape[0]
+    K    = indices_mat.shape[1]
+    rank = V.shape[0]
+    out  = np.empty(n, dtype=np.float32)
+
+    for i in range(n):
+        # Partie lineaire
+        lin = w0_stage
+        for k in range(K):
+            lin += counts_mat[i, k] * w_stage[indices_mat[i, k]]
+
+        # Partie FM
+        inter = np.float32(0.0)
+        for r in range(rank):
+            s1 = np.float32(0.0)
+            s2 = np.float32(0.0)
+            for k in range(K):
+                v  = V[r, indices_mat[i, k]] * counts_mat[i, k]
+                s1 += v
+                s2 += v * v
+            inter += s1 * s1 - s2
+        out[i] = lin + np.float32(0.5) * inter
+
+    return out
 
 
 # =============================================================================
-# Step Adam  (gradient sur w0_stage et V uniquement, w_stage figé)
+# Step Adam — compile numba
+# Identique a l'original, traduit en style numba-compatible (pas de np.unique)
 # =============================================================================
 
+@njit(cache=True)
 def adam_step(indices_b, counts_b, scores_b, w_stage, w0_stage, V,
               m_V, v_V, m_w0, v_w0, lr, l2_V, t,
               beta1=0.9, beta2=0.999, eps=1e-8):
     """
     indices_b : (b, K) int32
     counts_b  : (b, K) float32
-    m_V, v_V  : moments Adam pour V  (rank, N_INDEX)
-    m_w0, v_w0: moments Adam pour w0 (scalaires)
-    t         : pas global (pour bias correction)
-    Met à jour w0_stage et V. w_stage jamais modifié.
+    V         : (rank, N_INDEX) float32  — modifie en place
+    m_V, v_V  : (rank, N_INDEX) float32  — modifie en place
     """
-    b    = len(scores_b)
+    b    = indices_b.shape[0]
+    K    = indices_b.shape[1]
     rank = V.shape[0]
 
+    # --- Forward + erreur ---
     yhat = fm_predict(indices_b, counts_b, w_stage, w0_stage, V)
-    err  = yhat - scores_b                                        # (b,)
+    err  = yhat - scores_b   # (b,)
 
     # --- Gradient w0 ---
-    g_w0   = err.mean()
-    m_w0   = beta1 * m_w0 + (1 - beta1) * g_w0
-    v_w0   = beta2 * v_w0 + (1 - beta2) * g_w0 ** 2
-    m_w0_h = m_w0 / (1 - beta1 ** t)
-    v_w0_h = v_w0 / (1 - beta2 ** t)
+    g_w0 = np.float32(0.0)
+    for i in range(b):
+        g_w0 += err[i]
+    g_w0 /= b
+
+    m_w0   = beta1 * m_w0 + (1.0 - beta1) * g_w0
+    v_w0   = beta2 * v_w0 + (1.0 - beta2) * g_w0 * g_w0
+    m_w0_h = m_w0 / (1.0 - beta1 ** t)
+    v_w0_h = v_w0 / (1.0 - beta2 ** t)
     w0_stage -= lr * m_w0_h / (np.sqrt(v_w0_h) + eps)
 
-    # --- Gradient V ---
-    V_vals   = V[:, indices_b].transpose(1, 2, 0)                # (b, K, rank)
-    cV       = counts_b[:, :, np.newaxis] * V_vals                # (b, K, rank)
-    sum_cV   = cV.sum(axis=1)                                     # (b, rank)
-    h        = counts_b[:, :, np.newaxis] * (sum_cV[:, np.newaxis, :] - cV)
-    weighted = err[:, np.newaxis, np.newaxis] * h / b
+    # --- Gradient V : accumulation sparse ---
+    # On collecte les indices uniques du batch
+    flat_len = b * K
+    flat_idx = np.empty(flat_len, dtype=np.int32)
+    for i in range(b):
+        for k in range(K):
+            flat_idx[i * K + k] = indices_b[i, k]
 
-    # --- Accumulation sur indices uniques uniquement (×5 moins de travail) ---
-    flat_idx = indices_b.ravel()                        # (b*K,)
-    flat_w   = weighted.reshape(-1, rank)               # (b*K, rank)
+    # Tri pour trouver les uniques (equivalent np.unique sans return_inverse)
+    flat_sorted = np.sort(flat_idx)
+    n_uniq = 1
+    for i in range(1, flat_len):
+        if flat_sorted[i] != flat_sorted[i - 1]:
+            n_uniq += 1
 
-    uniq, inv = np.unique(flat_idx, return_inverse=True)
-    grad_small = np.zeros((rank, len(uniq)), dtype=np.float32)
-    np.add.at(grad_small, (slice(None), inv), flat_w.T)
+    uniq = np.empty(n_uniq, dtype=np.int32)
+    uniq[0] = flat_sorted[0]
+    ui = 1
+    for i in range(1, flat_len):
+        if flat_sorted[i] != flat_sorted[i - 1]:
+            uniq[ui] = flat_sorted[i]
+            ui += 1
 
-    # Gradient clipping (norme sur les colonnes actives seulement)
-    grad_norm = np.linalg.norm(grad_small)
+    # grad_small : (rank, n_uniq)
+    grad_small = np.zeros((rank, n_uniq), dtype=np.float32)
+
+    # Calcul sum_cV par sample
+    sum_cV = np.zeros((b, rank), dtype=np.float32)
+    for i in range(b):
+        for k in range(K):
+            c = counts_b[i, k]
+            if c == 0.0:
+                continue
+            idx = indices_b[i, k]
+            for r in range(rank):
+                sum_cV[i, r] += c * V[r, idx]
+
+    # Accumulation du gradient dans grad_small
+    for i in range(b):
+        e_i = err[i] / b
+        for k in range(K):
+            c = counts_b[i, k]
+            if c == 0.0:
+                continue
+            idx = indices_b[i, k]
+            # Position de idx dans uniq (recherche binaire)
+            lo, hi = 0, n_uniq - 1
+            while lo < hi:
+                mid = (lo + hi) // 2
+                if uniq[mid] < idx:
+                    lo = mid + 1
+                else:
+                    hi = mid
+            ui2 = lo
+            for r in range(rank):
+                h_ik = c * (sum_cV[i, r] - c * V[r, idx])
+                grad_small[r, ui2] += e_i * h_ik
+
+    # Gradient clipping
+    grad_norm = np.float32(0.0)
+    for r in range(rank):
+        for j in range(n_uniq):
+            grad_norm += grad_small[r, j] * grad_small[r, j]
+    grad_norm = np.sqrt(grad_norm)
     if grad_norm > 10.0:
-        grad_small *= 10.0 / grad_norm
+        scale = np.float32(10.0) / grad_norm
+        for r in range(rank):
+            for j in range(n_uniq):
+                grad_small[r, j] *= scale
 
-    # Mise à jour Adam pour V — uniquement sur les colonnes actives (uniq)
-    g = grad_small                                      # (rank, len(uniq))
-    m_V[:, uniq] = beta1 * m_V[:, uniq] + (1 - beta1) * g
-    v_V[:, uniq] = beta2 * v_V[:, uniq] + (1 - beta2) * g ** 2
-    m_h = m_V[:, uniq] / (1 - beta1 ** t)
-    v_h = v_V[:, uniq] / (1 - beta2 ** t)
-    V[:, uniq] -= lr * (m_h / (np.sqrt(v_h) + eps) + l2_V * V[:, uniq])
-    np.clip(V[:, uniq], -10, 10, out=V[:, uniq])
+    # Mise a jour Adam sur les colonnes actives uniquement
+    bc1 = np.float32(1.0) - np.float32(beta1) ** t
+    bc2 = np.float32(1.0) - np.float32(beta2) ** t
+    for j in range(n_uniq):
+        col = uniq[j]
+        for r in range(rank):
+            g = grad_small[r, j]
+            m_V[r, col] = beta1 * m_V[r, col] + (1.0 - beta1) * g
+            v_V[r, col] = beta2 * v_V[r, col] + (1.0 - beta2) * g * g
+            m_h = m_V[r, col] / bc1
+            v_h = v_V[r, col] / bc2
+            V[r, col] -= lr * (m_h / (np.sqrt(v_h) + eps) + l2_V * V[r, col])
+            if V[r, col] >  10.0: V[r, col] =  np.float32(10.0)
+            if V[r, col] < -10.0: V[r, col] = np.float32(-10.0)
 
-    return w0_stage, V, m_V, v_V, m_w0, v_w0, float(np.mean(err ** 2))
+    # MSE
+    mse = np.float32(0.0)
+    for i in range(b):
+        mse += err[i] * err[i]
+    mse /= b
+
+    return w0_stage, m_w0, v_w0, mse
 
 
 # =============================================================================
@@ -286,18 +347,40 @@ def export_fixed_point(w0_vec, V, stages):
     with open(FM_W0_TXT, "w") as f:
         for s in range(N_STAGES):
             f.write(f"{w0_ints.get(s, 0)}\n")
-            
-    # AoS : pour chaque index global, les RANK composantes sont contiguës
+
     V_aos = to_int16(V).T  # (N_INDEX, rank)
     V_aos.tofile(FM_V_BIN)
-    
+
     rank    = V.shape[0]
-    size_mb = (V.size * 2) / 1024**2
-    print(f"  Export int16 ×256 :")
+    size_mb = (V.size * 2) / 1024 ** 2
+    print(f"  Export int16 x256 :")
     print(f"    {FM_W0_TXT}  ({N_STAGES} lignes, une par stage)")
-    print(f"    {FM_V_BIN}   ({rank}×{N_INDEX} int16, {size_mb:.1f} Mo)")
+    print(f"    {FM_V_BIN}   ({rank}x{N_INDEX} int16, {size_mb:.1f} Mo)")
     V_err = np.max(np.abs(V - to_int16(V).astype(np.float32) / SCALE))
     print(f"    Erreur quant. max V : {V_err:.6f}")
+
+
+# =============================================================================
+# Warmup JIT (compile une fois avant la boucle)
+# =============================================================================
+
+def warmup_jit(rank):
+    """Declenche la compilation numba avec un mini-batch factice."""
+    print("  Compilation JIT numba (cache=True, une seule fois)...")
+    t0 = time()
+    b_dummy  = np.zeros((4, 5),  dtype=np.int32)
+    c_dummy  = np.zeros((4, 5),  dtype=np.float32)
+    s_dummy  = np.zeros(4,       dtype=np.float32)
+    w_dummy  = np.zeros(N_INDEX, dtype=np.float32)
+    V_dummy  = np.zeros((rank, N_INDEX), dtype=np.float32)
+    mV_dummy = np.zeros_like(V_dummy)
+    vV_dummy = np.zeros_like(V_dummy)
+    fm_predict(b_dummy, c_dummy, w_dummy, np.float32(0.0), V_dummy)
+    adam_step(b_dummy, c_dummy, s_dummy, w_dummy, np.float32(0.0),
+              V_dummy, mV_dummy, vV_dummy,
+              np.float32(0.0), np.float32(0.0),
+              np.float32(0.001), np.float32(0.001), np.int64(1))
+    print(f"  JIT pret en {fmt_time(time()-t0)}")
 
 
 # =============================================================================
@@ -306,21 +389,21 @@ def export_fixed_point(w0_vec, V, stages):
 
 def parse_args():
     p = argparse.ArgumentParser()
-    p.add_argument("--epochs",          type=int,   default=20)
-    p.add_argument("--rank",            type=int,   default=8)
-    p.add_argument("--lr",              type=float, default=0.001)
-    p.add_argument("--lr_decay",        type=float, default=1.0,
-                   help="Multiplicateur lr par époque")
-    p.add_argument("--l2_V",            type=float, default=0.001)
-    p.add_argument("--batch",           type=int,   default=4096)
-    p.add_argument("--stages",          type=str,   default=f"0-{N_STAGES-1}")
-    p.add_argument("--resume",          action="store_true")
-    p.add_argument("--seed",            type=int,   default=42)
-    p.add_argument("--preload",         action="store_true")
-    p.add_argument("--early_stopping",  type=int,   default=5,
-                   help="Arrêt si pas d'amélioration sur N époques consécutives")
-    p.add_argument("--min_delta",       type=float, default=0.0001,
-                   help="Gain minimum considéré comme amélioration")
+    p.add_argument("--epochs",         type=int,   default=20)
+    p.add_argument("--rank",           type=int,   default=8)
+    p.add_argument("--lr",             type=float, default=0.001)
+    p.add_argument("--lr_decay",       type=float, default=1.0,
+                   help="Multiplicateur lr par epoque")
+    p.add_argument("--l2_V",           type=float, default=0.001)
+    p.add_argument("--batch",          type=int,   default=4096)
+    p.add_argument("--stages",         type=str,   default=f"0-{N_STAGES-1}")
+    p.add_argument("--resume",         action="store_true")
+    p.add_argument("--seed",           type=int,   default=42)
+    p.add_argument("--preload",        action="store_true")
+    p.add_argument("--early_stopping", type=int,   default=5,
+                   help="Arret si pas d'amelioration sur N epoques consecutives")
+    p.add_argument("--min_delta",      type=float, default=0.0001,
+                   help="Gain minimum considere comme amelioration")
     return p.parse_args()
 
 
@@ -338,32 +421,36 @@ def main():
     stages   = [s for s in parse_stages(args.stages)
                 if (DATA_DIR / f"data_{s:02}.txt").exists()]
 
+    if not stages:
+        print("Aucun fichier data trouve. Lance depuis le repertoire Evaluation/")
+        return
+
     print(f"Stages : {len(stages)}  ({stages[0]}..{stages[-1]})")
     print(f"rank={args.rank}  lr={args.lr}  decay={args.lr_decay}  "
           f"l2_V={args.l2_V}  batch={args.batch}  "
           f"preload={'oui' if args.preload else 'non'}")
     print(f"early_stopping={args.early_stopping}  min_delta={args.min_delta}")
 
-    # --- Chargement des poids linéaires figés ---
+    # --- Chargement des poids lineaires figes ---
     w_by_stage = charger_weights(stages)
 
-    # --- Préchargement données ---
+    # --- Prechargement donnees ---
     if args.preload:
         all_indices, all_counts, all_scores, all_stage_ids = preload_all(stages)
         n_total = len(all_scores)
 
-    # --- Baseline (poids linéaires seuls, avant init V) ---
+    # --- Baseline ---
     if not (args.resume and CHECKPOINT.exists()):
-        print("\nRMSE baseline (poids linéaires seuls)...")
+        print("\nRMSE baseline (poids lineaires seuls)...")
         total_mse_base = 0.0
         total_n_base   = 0
         for stage in stages:
-            indices_mat, counts_mat, scores = charger_stage(stage)
-            if indices_mat is None:
+            idx, cnt, sc = charger_stage(stage)
+            if idx is None:
                 continue
-            yhat = (counts_mat * w_by_stage[stage][indices_mat]).sum(axis=1)
-            total_mse_base += np.sum((yhat - scores) ** 2)
-            total_n_base   += len(scores)
+            yhat = (cnt * w_by_stage[stage][idx]).sum(axis=1)
+            total_mse_base += np.sum((yhat - sc) ** 2)
+            total_n_base   += len(sc)
         print(f"  RMSE baseline : {np.sqrt(total_mse_base / total_n_base):.6f}\n")
 
     # --- Init ou reprise ---
@@ -382,20 +469,15 @@ def main():
         v_V         = ckpt.get("v_V",  np.zeros_like(V))
         m_w0        = ckpt.get("m_w0", np.zeros(N_STAGES, dtype=np.float32))
         v_w0        = ckpt.get("v_w0", np.zeros(N_STAGES, dtype=np.float32))
-        print(f"  Époque {start_epoch}, RMSE={best_rmse:.6f}, "
+        print(f"  Epoque {start_epoch}, RMSE={best_rmse:.6f}, "
               f"no_improve={no_improve}, lr={lr:.6f}, adam_t={adam_t}")
     else:
         print("\nInitialisation...")
         w0_vec = np.zeros(N_STAGES, dtype=np.float32)
         V      = np.zeros((args.rank, N_INDEX), dtype=np.float32)
-        print("  Calcul des colonnes actives globales...")
         active_cols = np.unique(
             np.concatenate([np.where(w_by_stage[s] != 0)[0] for s in stages]))
-        
-        # Essai recommandé
-        std_init = 0.01
-        V[:, active_cols] = rng.normal(0, std_init, (args.rank, len(active_cols))).astype(np.float32)
-        
+        V[:, active_cols] = rng.normal(0, 0.01, (args.rank, len(active_cols))).astype(np.float32)
         print(f"  Colonnes actives : {len(active_cols):,} / {N_INDEX}  "
               f"({100*len(active_cols)/N_INDEX:.1f}%)")
         m_V         = np.zeros_like(V)
@@ -408,14 +490,20 @@ def main():
         no_improve  = 0
         lr          = args.lr
 
-    # --- Boucle epochs ---
+    # --- Warmup JIT (compile numba avant la boucle) ---
+    print("\nInitialisation JIT...")
+    warmup_jit(args.rank)
+
+    # =========================================================================
+    # Boucle epochs — identique a l'original
+    # =========================================================================
     for epoch in range(start_epoch, args.epochs):
         t_epoch   = time()
         total_mse = 0.0
         total_n   = 0
 
         print(f"\n{'='*60}")
-        print(f"Époque {epoch+1}/{args.epochs}  lr={lr:.6f}")
+        print(f"Epoque {epoch+1}/{args.epochs}  lr={lr:.6f}")
         print(f"{'='*60}")
 
         if args.preload:
@@ -424,27 +512,31 @@ def main():
             log_every = max(1, n_batches // 10)
 
             for bi, start in enumerate(range(0, n_total, args.batch)):
-                batch      = perm[start:start + args.batch]
-                indices_b  = all_indices[batch]
-                counts_b   = all_counts[batch]
-                scores_b   = all_scores[batch]
-                stage_ids  = all_stage_ids[batch]
+                batch     = perm[start:start + args.batch]
+                indices_b = all_indices[batch]
+                counts_b  = all_counts[batch]
+                scores_b  = all_scores[batch]
+                stage_ids = all_stage_ids[batch]
 
                 for stage in np.unique(stage_ids):
                     mask     = stage_ids == stage
                     idx_s    = indices_b[mask]
                     cnt_s    = counts_b[mask]
                     scores_s = scores_b[mask]
-                    (w0_vec[stage], V, m_V, v_V,
-                     m_w0[stage], v_w0[stage], mse) = adam_step(
+
+                    w0_new, m_w0_new, v_w0_new, mse = adam_step(
                         idx_s, cnt_s, scores_s,
-                        w_by_stage[stage], w0_vec[stage],
-                        V, m_V, v_V, m_w0[stage], v_w0[stage],
-                        lr, args.l2_V, adam_t
+                        w_by_stage[stage], np.float32(w0_vec[stage]),
+                        V, m_V, v_V,
+                        np.float32(m_w0[stage]), np.float32(v_w0[stage]),
+                        np.float32(lr), np.float32(args.l2_V), np.int64(adam_t)
                     )
-                    adam_t    += 1
-                    total_mse += mse * mask.sum()
-                    total_n   += mask.sum()
+                    w0_vec[stage]  = w0_new
+                    m_w0[stage]    = m_w0_new
+                    v_w0[stage]    = v_w0_new
+                    adam_t        += 1
+                    total_mse     += mse * mask.sum()
+                    total_n       += mask.sum()
 
                 if (bi + 1) % log_every == 0 or bi == n_batches - 1:
                     rmse      = np.sqrt(total_mse / total_n)
@@ -453,7 +545,7 @@ def main():
                     t_remain  = t_elapsed / pct * (1 - pct) if pct > 0 else 0
                     print(f"  [{bi+1:5d}/{n_batches}  {pct*100:5.1f}%]  "
                           f"RMSE : {rmse:.6f}  "
-                          f"écoulé:{fmt_time(t_elapsed)}  "
+                          f"ecoulé:{fmt_time(t_elapsed)}  "
                           f"restant:~{fmt_time(t_remain)}")
         else:
             order    = rng.permutation(len(stages))
@@ -461,30 +553,33 @@ def main():
             for si, sidx in enumerate(order):
                 t_stage = time()
                 stage   = stages[sidx]
-                indices_mat, counts_mat, scores = charger_stage(stage)
-                if indices_mat is None:
+                idx, cnt, sc = charger_stage(stage)
+                if idx is None:
                     continue
-                n    = len(scores)
+                n    = len(sc)
                 perm = rng.permutation(n)
                 for start in range(0, n, args.batch):
                     batch = perm[start:start + args.batch]
-                    (w0_vec[stage], V, m_V, v_V,
-                     m_w0[stage], v_w0[stage], mse) = adam_step(
-                        indices_mat[batch], counts_mat[batch], scores[batch],
-                        w_by_stage[stage], w0_vec[stage],
-                        V, m_V, v_V, m_w0[stage], v_w0[stage],
-                        lr, args.l2_V, adam_t
+                    w0_new, m_w0_new, v_w0_new, mse = adam_step(
+                        idx[batch], cnt[batch], sc[batch],
+                        w_by_stage[stage], np.float32(w0_vec[stage]),
+                        V, m_V, v_V,
+                        np.float32(m_w0[stage]), np.float32(v_w0[stage]),
+                        np.float32(lr), np.float32(args.l2_V), np.int64(adam_t)
                     )
-                    adam_t    += 1
-                    total_mse += mse * len(batch)
-                    total_n   += len(batch)
+                    w0_vec[stage]  = w0_new
+                    m_w0[stage]    = m_w0_new
+                    v_w0[stage]    = v_w0_new
+                    adam_t        += 1
+                    total_mse     += mse * len(batch)
+                    total_n       += len(batch)
                 t_stages.append(time() - t_stage)
                 if (si + 1) % 10 == 0 or si == len(order) - 1:
                     rmse      = np.sqrt(total_mse / total_n)
                     t_elapsed = time() - t_epoch
                     t_remain  = np.mean(t_stages) * (len(stages) - si - 1)
                     print(f"  [{si+1:3d}/{len(stages)}]  RMSE : {rmse:.6f}  "
-                          f"écoulé:{fmt_time(t_elapsed)}  "
+                          f"ecoulé:{fmt_time(t_elapsed)}  "
                           f"restant:~{fmt_time(t_remain)}  "
                           f"({fmt_time(np.mean(t_stages))}/stage)")
 
@@ -495,7 +590,7 @@ def main():
         if rmse_epoch < best_rmse - args.min_delta:
             best_rmse  = rmse_epoch
             no_improve = 0
-            marker     = "  ✓ nouveau meilleur"
+            marker     = "  nouveau meilleur"
             with open(MODEL_PKL, "wb") as f:
                 pickle.dump({"w0_vec": w0_vec, "V": V, "rank": args.rank,
                              "rmse": best_rmse, "epoch": epoch,
@@ -503,11 +598,11 @@ def main():
             export_fixed_point(w0_vec, V, stages)
         else:
             no_improve += 1
-            marker     = f"  [sans amélioration : {no_improve}/{args.early_stopping}]"
+            marker     = f"  [sans amelioration : {no_improve}/{args.early_stopping}]"
 
         t_remain_total = t_epoch_dur * (args.epochs - epoch - 1)
-        print(f"\n→ RMSE époque {epoch+1} : {rmse_epoch:.6f}  "
-              f"durée : {fmt_time(t_epoch_dur)}  "
+        print(f"\n-> RMSE epoque {epoch+1} : {rmse_epoch:.6f}  "
+              f"duree : {fmt_time(t_epoch_dur)}  "
               f"restant total : ~{fmt_time(t_remain_total)}"
               f"{marker}")
 
@@ -520,11 +615,11 @@ def main():
                          "m_V": m_V, "v_V": v_V,
                          "m_w0": m_w0, "v_w0": v_w0,
                          "stages": stages}, f)
-        print(f"  Checkpoint sauvegardé.")
+        print(f"  Checkpoint sauvegarde.")
 
         if no_improve >= args.early_stopping:
-            print(f"\n*** Early stopping à époque {epoch+1} "
-                  f"({args.early_stopping} époques sans gain > {args.min_delta}) ***")
+            print(f"\n*** Early stopping a epoque {epoch+1} "
+                  f"({args.early_stopping} epoques sans gain > {args.min_delta}) ***")
             break
 
     # --- w0 appris ---
@@ -532,53 +627,51 @@ def main():
     for s in stages:
         print(f"  stage {s:02d} : w0={w0_vec[s]:.4f}")
 
-    # --- Évaluation finale ---
+    # --- Evaluation finale ---
     print(f"\n{'='*60}")
-    print("Évaluation finale (tous les stages)")
+    print("Evaluation finale (tous les stages)")
     print(f"{'='*60}")
-    stages_plot   = []
-    rmse_fm_plot  = []
-    rmse_lin_plot = []
+    stages_plot, rmse_fm_plot, rmse_lin_plot = [], [], []
     for stage in sorted(stages):
         t0 = time()
-        indices_mat, counts_mat, scores = charger_stage(stage)
-        if indices_mat is None:
+        idx, cnt, sc = charger_stage(stage)
+        if idx is None:
             continue
-        yhat     = fm_predict(indices_mat, counts_mat, w_by_stage[stage], w0_vec[stage], V)
-        rmse     = float(np.sqrt(np.mean((yhat - scores) ** 2)))
-        mae      = float(np.mean(np.abs(yhat - scores)))
-        # Baseline = poids linéaires seuls (sans w0, sans FM)
-        yhat_lin = (counts_mat * w_by_stage[stage][indices_mat]).sum(axis=1)
-        rmse_lin = float(np.sqrt(np.mean((yhat_lin - scores) ** 2)))
+        yhat     = fm_predict(idx, cnt, w_by_stage[stage], np.float32(w0_vec[stage]), V)
+        rmse     = float(np.sqrt(np.mean((yhat - sc) ** 2)))
+        mae      = float(np.mean(np.abs(yhat - sc)))
+        yhat_lin = (cnt * w_by_stage[stage][idx]).sum(axis=1)
+        rmse_lin = float(np.sqrt(np.mean((yhat_lin - sc) ** 2)))
         print(f"  Stage {stage:02d}  RMSE={rmse:.4f}  MAE={mae:.4f}  "
-              f"(baseline linéaire={rmse_lin:.4f}  gain={rmse_lin-rmse:+.4f})  "
+              f"(baseline lineaire={rmse_lin:.4f}  gain={rmse_lin-rmse:+.4f})  "
               f"({fmt_time(time()-t0)})")
         stages_plot.append(stage)
         rmse_fm_plot.append(rmse)
         rmse_lin_plot.append(rmse_lin)
 
-    # --- Graphe RMSE baseline vs FM par stage ---
     png_path = MODELS_DIR / "rmse_baseline_vs_fm.png"
     x     = np.arange(len(stages_plot))
     width = 0.35
     fig, ax = plt.subplots(figsize=(max(10, len(stages_plot) * 0.4), 5))
-    bars1 = ax.bar(x - width/2, rmse_lin_plot, width, label="Baseline (linéaire)", color="#7fb3d3")
-    bars2 = ax.bar(x + width/2, rmse_fm_plot,  width, label="FM",                  color="#e67e22")
+    ax.bar(x - width/2, rmse_lin_plot, width, label="Baseline (lineaire)", color="#7fb3d3")
+    ax.bar(x + width/2, rmse_fm_plot,  width, label="FM",                  color="#e67e22")
     ax.set_xlabel("Stage")
     ax.set_ylabel("RMSE")
     baseline_mean = float(np.mean(rmse_lin_plot))
-    ax.set_title(f"RMSE Baseline vs FM par stage  (baseline={baseline_mean:.4f}  meilleur FM={best_rmse:.4f})")
+    ax.set_title(f"RMSE Baseline vs FM par stage  "
+                 f"(baseline={baseline_mean:.4f}  meilleur FM={best_rmse:.4f})")
     ax.set_xticks(x)
-    ax.set_xticklabels([str(s) for s in stages_plot], rotation=90 if len(stages_plot) > 20 else 0)
+    ax.set_xticklabels([str(s) for s in stages_plot],
+                       rotation=90 if len(stages_plot) > 20 else 0)
     ax.legend()
     ax.grid(axis="y", alpha=0.3)
     fig.tight_layout()
     fig.savefig(png_path, dpi=120)
     plt.close(fig)
-    print(f"\n  Graphe sauvegardé : {png_path}")
-        
+    print(f"\n  Graphe sauvegarde : {png_path}")
+
     print(f"\nMeilleur RMSE : {best_rmse:.6f}")
-    print(f"[OK] Terminé en {fmt_time(time()-t_global)}")
+    print(f"[OK] Termine en {fmt_time(time()-t_global)}")
 
 
 if __name__ == "__main__":

@@ -44,20 +44,6 @@ RXBBPatterns::~RXBBPatterns() {
 }
 
 
-RXBBPatterns& RXBBPatterns::operator=(const RXBBPatterns& src) {
-
-	if(this != &src) {
-	
-		board = src.board;
-	
-		*pattern = *(src.pattern); //copy
-
-		
-	}
-	
-	return *this;
-}
-
 void RXBBPatterns::reset() {
     
     board.reset();

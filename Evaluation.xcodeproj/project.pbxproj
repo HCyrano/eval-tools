@@ -49,6 +49,7 @@
 		37186BF32EBE173F0041EA59 /* RXPatternGenerate.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = RXPatternGenerate.hpp; sourceTree = "<group>"; };
 		3725DD852EBB66C40054D555 /* Evaluation */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Evaluation; sourceTree = BUILT_PRODUCTS_DIR; };
 		3742EBCC2EBE365000496265 /* RXPatternGenerate.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = RXPatternGenerate.cpp; sourceTree = "<group>"; };
+		376806462F67268800580A6F /* RXSetting.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = RXSetting.hpp; sourceTree = "<group>"; };
 		378D2BD62ED8626500BD85CF /* RXEvaluation.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = RXEvaluation.hpp; sourceTree = "<group>"; };
 		378D2BD72ED8626500BD85CF /* RXEvaluation.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = RXEvaluation.cpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -67,6 +68,7 @@
 		37186BEA2EBE09CC0041EA59 /* Evaluation */ = {
 			isa = PBXGroup;
 			children = (
+				376806462F67268800580A6F /* RXSetting.hpp */,
 				37186BF32EBE173F0041EA59 /* RXPatternGenerate.hpp */,
 				3742EBCC2EBE365000496265 /* RXPatternGenerate.cpp */,
 				37186BDC2EBE09CC0041EA59 /* main.cpp */,

@@ -15,10 +15,13 @@
 
 
 class alignas(16) RXPattern {
+    
+    static constexpr unsigned int N_PATTERNS = 46;
+
         
 public:
     
-    int patt[46];
+    int patt[N_PATTERNS];
 
     
     //set Black disc
@@ -71,7 +74,7 @@ public:
 
 inline void RXPattern::clear() {
     
-    for(int i = 0; i< std::size(patt); ++i)
+    for(int i = 0; i< N_PATTERNS; ++i)
         patt[i] = 0;
     
 }
