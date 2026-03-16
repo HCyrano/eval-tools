@@ -66,9 +66,7 @@ public:
     
     void clear();
     
-    /* DEBUG */
-    friend std::ostream& operator<<(std::ostream& os, RXPattern& pattern);
-
+ 
     
 };
 

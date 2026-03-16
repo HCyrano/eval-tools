@@ -462,7 +462,7 @@ void RXPatternGenerate::RSME(const unsigned int stage) {
     
     std::cout << "stage " << oss.str() << std::endl;
     
-    std::string file_name_in = dir_str + "/database/Edax_Egrcd_Roxane/stages/stage_" + oss.str() + "_test.txt";
+    std::string file_name_in = dir_str + "/database/Edax_Egrcd_Roxane/stages/stage_" + oss.str() + ".txt";
 
 
     std::ifstream in(file_name_in.c_str());
@@ -490,13 +490,10 @@ void RXPatternGenerate::RSME(const unsigned int stage) {
             
             RXBBPatterns sBoard;
             sBoard.build(othellier);
-            
-            std::cout << sBoard << std::endl;
-            std::cout << "score = " << score << std::endl;
-            
+                        
             int eval = sBoard.get_score();
             
-//             Calcul du RMSE
+            // Calcul du RMSE
             double err = static_cast<double>(eval - score);
             sum_sq_err += err * err;
             ++n_positions;

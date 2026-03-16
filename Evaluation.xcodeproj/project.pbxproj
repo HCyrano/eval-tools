@@ -14,7 +14,6 @@
 		37186BEF2EBE09CC0041EA59 /* RXBBPatterns.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 37186BE12EBE09CC0041EA59 /* RXBBPatterns.cpp */; };
 		37186BF02EBE09CC0041EA59 /* RXBitBoard.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 37186BE32EBE09CC0041EA59 /* RXBitBoard.cpp */; };
 		37186BF12EBE09CC0041EA59 /* RXMove.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 37186BE62EBE09CC0041EA59 /* RXMove.cpp */; };
-		37186BF22EBE09CC0041EA59 /* RXPattern.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 37186BE82EBE09CC0041EA59 /* RXPattern.cpp */; };
 		3742EBCD2EBE365100496265 /* RXPatternGenerate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3742EBCC2EBE365000496265 /* RXPatternGenerate.cpp */; };
 		378D2BD82ED8626500BD85CF /* RXEvaluation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 378D2BD72ED8626500BD85CF /* RXEvaluation.cpp */; };
 /* End PBXBuildFile section */
@@ -44,7 +43,6 @@
 		37186BE52EBE09CC0041EA59 /* RXMove.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = RXMove.hpp; sourceTree = "<group>"; };
 		37186BE62EBE09CC0041EA59 /* RXMove.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = RXMove.cpp; sourceTree = "<group>"; };
 		37186BE72EBE09CC0041EA59 /* RXPattern.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = RXPattern.hpp; sourceTree = "<group>"; };
-		37186BE82EBE09CC0041EA59 /* RXPattern.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = RXPattern.cpp; sourceTree = "<group>"; };
 		37186BE92EBE09CC0041EA59 /* RXTools.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = RXTools.hpp; sourceTree = "<group>"; };
 		37186BF32EBE173F0041EA59 /* RXPatternGenerate.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = RXPatternGenerate.hpp; sourceTree = "<group>"; };
 		3725DD852EBB66C40054D555 /* Evaluation */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Evaluation; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -79,7 +77,6 @@
 				37186BE52EBE09CC0041EA59 /* RXMove.hpp */,
 				37186BE62EBE09CC0041EA59 /* RXMove.cpp */,
 				37186BE72EBE09CC0041EA59 /* RXPattern.hpp */,
-				37186BE82EBE09CC0041EA59 /* RXPattern.cpp */,
 				37186BE22EBE09CC0041EA59 /* RXBitBoard.hpp */,
 				37186BE32EBE09CC0041EA59 /* RXBitBoard.cpp */,
 				37186BDD2EBE09CC0041EA59 /* RXBBCountFlips_NEON_Edax.cpp */,
@@ -175,7 +172,6 @@
 				37186BEF2EBE09CC0041EA59 /* RXBBPatterns.cpp in Sources */,
 				37186BF02EBE09CC0041EA59 /* RXBitBoard.cpp in Sources */,
 				37186BF12EBE09CC0041EA59 /* RXMove.cpp in Sources */,
-				37186BF22EBE09CC0041EA59 /* RXPattern.cpp in Sources */,
 				378D2BD82ED8626500BD85CF /* RXEvaluation.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
