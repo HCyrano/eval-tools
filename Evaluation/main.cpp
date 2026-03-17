@@ -36,15 +36,15 @@ int main(int argc, const char * argv[]) {
 
 */
     
-//    RXEvaluation::load();
+    RXEvaluation::load();
  
     RXPatternGenerate* gen = new RXPatternGenerate();
 
-    gen->write_FM();
+    gen->RMSE(25);
 
     delete gen;
 
-//    RXEvaluation::unload();
+    RXEvaluation::unload();
 
     return EXIT_SUCCESS;
 }

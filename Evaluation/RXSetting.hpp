@@ -11,6 +11,6 @@
 
 //factorisation machine
 //#define RANK8
-//#define FACT_MACH
+#define FACT_MACH
 
 #endif

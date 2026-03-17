@@ -453,15 +453,13 @@ void RXPatternGenerate::stage_to_data(const unsigned int stage) {
 
 }
 
-void RXPatternGenerate::RSME(const unsigned int stage) {
+void RXPatternGenerate::RMSE(const unsigned int stage) {
     
     std::string dir_str = "/Users/caussebruno/Documents/developpement/";
     
     std::ostringstream oss;
     oss << std::setw(2) << std::setfill('0') << stage;
-    
-    std::cout << "stage " << oss.str() << std::endl;
-    
+        
     std::string file_name_in = dir_str + "/database/Edax_Egrcd_Roxane/stages/stage_" + oss.str() + ".txt";
 
 
@@ -469,18 +467,13 @@ void RXPatternGenerate::RSME(const unsigned int stage) {
     if(in) {
         
         std::string line;
-        std::ostringstream oss;
         
         // Accumulateurs RMSE
         double sum_sq_err = 0.0;
         long   n_positions = 0;
         
         while(std::getline(in, line)) {
-            
-            oss.str(""); // Vider le contenu
-            oss.clear(); // Réinitialiser les flags
-            
-            
+                        
             std::stringstream ss;
             int score;
             ss << line.substr(line.find(" ")+1);
@@ -490,8 +483,13 @@ void RXPatternGenerate::RSME(const unsigned int stage) {
             
             RXBBPatterns sBoard;
             sBoard.build(othellier);
-                        
+
+#ifdef FACT_MACH
+            int eval = sBoard.get_score(true);
+#else
             int eval = sBoard.get_score();
+#endif
+
             
             // Calcul du RMSE
             double err = static_cast<double>(eval - score);
@@ -504,9 +502,12 @@ void RXPatternGenerate::RSME(const unsigned int stage) {
         // Affichage RMSE du stage
         if(n_positions > 0) {
             double rmse = std::sqrt(sum_sq_err / static_cast<double>(n_positions));
-            std::cout << "  stage " << oss.str()
-            << "  n=" << n_positions
-            << "  RMSE=" << std::fixed << std::setprecision(4) << rmse
+            std::cout << "stage " << oss.str()
+#ifdef FACT_MACH
+            << "  RMSE FM= " << std::fixed << std::setprecision(4) << rmse
+#else
+            << "  RMSE= " << std::fixed << std::setprecision(4) << rmse
+#endif
             << std::endl;
         } else {
             std::cout << "  stage " << oss.str() << "  aucune position" << std::endl;

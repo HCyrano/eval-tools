@@ -1097,15 +1097,8 @@ inline uint64x2_t RXBitBoard::dual_legal_moves(const unsigned long long p, const
     uint64x2_t occupied = vdupq_n_u64(p | o);
     legals = vbicq_u64(legals, occupied);
     
-    // --- POPCOUNT NEON ---
-    // 1. Compte les bits par octets
-    uint8x16_t cnt8 = vcntq_u8(vreinterpretq_u8_u64(legals));
-    // 2. Sommes horizontales successives (8->16, 16->32, 32->64)
-    uint16x8_t sum16 = vpaddlq_u8(cnt8);
-    uint32x4_t sum32 = vpaddlq_u16(sum16);
-    uint64x2_t mobility = vpaddlq_u32(sum32);
     
-    return mobility;
+    return legals;
 }
 
 

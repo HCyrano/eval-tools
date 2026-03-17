@@ -404,7 +404,7 @@ class RXPatternGenerate {
     void rawdata_to_stage();
     void stage_to_data(const unsigned int stage);
     
-    void RSME(const unsigned int stage);
+    void RMSE(const unsigned int stage);
 
     void write_eval();
     void norm_weight(float* weigths_in, int* n_occs_in, short* weigths_out, unsigned int id_start, unsigned int n_index_local, unsigned int id_rot);
