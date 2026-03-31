@@ -94,6 +94,7 @@ build/
 weights*/
 docs/
 datas/
+datas_WS/
 datas_norm/
 eval_v*/
 n_occs/

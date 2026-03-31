@@ -8,12 +8,12 @@ import math
 # a implementer nanuellement en fonctions des patterns choisis
 
 # mobility player and opponent
-# diag5, diag6, diag7, diag8
-# edge+2X, edge 2*(3+XF), edge 2*5
+# diag4, diag5, diag6, diag7, diag8
+# edge+2X, edge 6+4, edge 2*5
 # hv2, hv3, hv4
-# corner 4/3/3/1
-index_offset = [24, 24, 243, 729, 2187, 6561, 59049, 59049, 59049, 6561, 6561, 6561, 177147]
-type_rotate  = [ 0,  0,   5,   6,    7,    8,    10,    10,     0,    8,    8,    8,     17]
+# corner9
+index_offset = [24, 24, 81, 243, 729, 2187, 6561, 59049, 59049, 59049, 6561, 6561, 6561, 19683]
+type_rotate  = [ 0,  0,  4,   5,   6,    7,    8,    10,    10,     0,    8,    8,    8,    23]
 
 # ATTENTION : verifier "cas particulier mobility"
 
@@ -28,7 +28,7 @@ type_rotate  = [ 0,  0,   5,   6,    7,    8,    10,    10,     0,    8,    8,  
 # L'index local ('local_index') est la position séquentielle relative à son pattern spécifique,
 # une fois que les décalages (offsets) des patterns ont été retirés.
 # et l'offset relatifs egalement
-2]2#
+#
 # La conversion entre ces deux formes est cruciale pour l'adressage interne
 # et les calculs de symétrie, qui opèrent sur l'index local.
 
@@ -97,7 +97,9 @@ rotates = [
         # corner 4/4/3/2 ou corner 5/3/3/1/1
         [ 12, 11, 10,  9,  8,  5,  6,  7,  4,  3,   2,   1,   0],                       # 21
         #  corner 5/4/3/2/1
-        [ 14, 13, 12, 11, 10,  9,  6,  7,  8,  5,   4,   3,   2,   1,   0]              # 22
+        [ 14, 13, 12, 11, 10,  9,  6,  7,  8,  5,   4,   3,   2,   1,   0],             # 22
+        # corner9
+        [  8,  7,  6,  3,  4,  5,  2,  1,  0]                                           # 23
         ]
 
 def index_rotate(index, id_patt):
@@ -218,7 +220,7 @@ stage = max(stage, stage_borne_inf)
 
 # Construire la liste des fichiers input
 
-DATA_DIR = Path("datas")
+DATA_DIR = Path("datas_WS")
 DATA_NORM_DIR = Path("datas_norm")
 
 # Créer le répertoire de sortie s'il n'existe pas

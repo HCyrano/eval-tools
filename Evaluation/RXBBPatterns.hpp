@@ -191,7 +191,7 @@ inline int acc_score(const int   stage,
     // -------------------------------------------------------------------------
 #ifdef FACT_MACH
 
-    if (useFM && (stage > 10 && stage < 55)) {
+    if (useFM && (stage > 9 && stage < 55)) {
 
         eval += RXEvaluation::eval_w0[stage];
 

@@ -338,11 +338,11 @@ void RXPatternGenerate::stage_to_data(const unsigned int stage) {
     
     std::cout << "stage " << oss.str() << std::endl;
     
-//    std::string file_name_in = dir_str + "/database/Edax_Egrcd_Roxane/stages/stage_" + oss.str() + ".txt";
-//    std::string file_name_out = dir_str + "/Evaluation/datas/data_" + oss.str() + ".txt";
+    std::string file_name_in = dir_str + "/database/Edax_Egrcd_Roxane/stages/stage_" + oss.str() + ".txt";
+    std::string file_name_out = dir_str + "/Evaluation/datas/data_" + oss.str() + ".txt";
 
-    std::string file_name_in = dir_str + "/database/Edax_Egrcd_Roxane/stages_WS/stage_" + oss.str() + ".txt";
-    std::string file_name_out = dir_str + "/Evaluation/datas/data_WS" + oss.str() + ".txt";
+//    std::string file_name_in = dir_str + "/database/Edax_Egrcd_Roxane/stages_WS/stage_" + oss.str() + ".txt";
+//    std::string file_name_out = dir_str + "/Evaluation/datas_WS/data_" + oss.str() + ".txt";
     
     std::ofstream ofs(file_name_out.c_str());
     
@@ -394,29 +394,28 @@ void RXPatternGenerate::stage_to_data(const unsigned int stage) {
                     
                     // On saute explicitement les indices Alternatifs
                     // 18, 19, 20, 21
-                    // 46, 47, 48, 49
-                    if((id_patt > 17 && id_patt <= 21) || (id_patt > 49 && id_patt <= 53)) {
+                    if((id_patt > 21 && id_patt <= 25)) {
                         continue;
                     }
                     
                     int id_patt_2 = id_patt;
 
-                    if(id_patt == 14 && ((filled & 0x8142000000000000ULL) == 0)) {         //A1 H1 B2 G2
+                    if(id_patt == 18 && ((filled & 0x8142000000000000ULL) == 0)) {         //A1 H1 B2 G2
                         id_patt_2 += 4;
-                    } else if(id_patt == 15 && ((filled & 0x0102000000000201ULL) == 0)) {  //H1 G2 G7 H8
+                    } else if(id_patt == 19 && ((filled & 0x0102000000000201ULL) == 0)) {  //H1 G2 G7 H8
                         id_patt_2 += 4;
-                    } else if(id_patt == 16 && ((filled & 0x0000000000004281ULL) == 0)) {  //B7 G7 A8 H8
+                    } else if(id_patt == 20 && ((filled & 0x0000000000004281ULL) == 0)) {  //B7 G7 A8 H8
                         id_patt_2 += 4;
-                    } else if(id_patt == 17 && ((filled & 0x8040000000004080ULL) == 0)) {  //A1 B2 B7 A8
+                    } else if(id_patt == 21 && ((filled & 0x8040000000004080ULL) == 0)) {  //A1 B2 B7 A8
                         id_patt_2 += 4;
-                    } else if((id_patt == 46) && ((filled & 0x8040000000000000ULL) == 0)) {
-                        id_patt_2 += 4;
-                    } else if((id_patt == 47) && ((filled & 0x0102000000000000ULL) == 0)) {
-                        id_patt_2 += 4;
-                    } else if((id_patt == 48) && ((filled & 0x0000000000000201ULL) == 0)) {
-                        id_patt_2 += 4;
-                    } else if((id_patt == 49) && ((filled & 0x0000000000004080ULL) == 0)) {
-                        id_patt_2 += 4;
+//                    } else if((id_patt == 46) && ((filled & 0x8040000000000000ULL) == 0)) {
+//                        id_patt_2 += 4;
+//                    } else if((id_patt == 47) && ((filled & 0x0102000000000000ULL) == 0)) {
+//                        id_patt_2 += 4;
+//                    } else if((id_patt == 48) && ((filled & 0x0000000000000201ULL) == 0)) {
+//                        id_patt_2 += 4;
+//                    } else if((id_patt == 49) && ((filled & 0x0000000000004080ULL) == 0)) {
+//                        id_patt_2 += 4;
                     }
 
                     //find pattern description
@@ -536,7 +535,7 @@ void RXPatternGenerate::write_eval() {
     
     std::string dir_str = "/Users/caussebruno/Documents/developpement/Evaluation";
     
-    std::string file_name_out = dir_str + "/weight_v10.bin";
+    std::string file_name_out = dir_str + "/weight_v12.bin";
     // 2. Ouvrir le fichier en mode ecriture binaire
     // ios::out pour l'ecriture et ios::binary pour le mode binaire
     std::ofstream out(file_name_out, std::ios::out | std::ios::binary);

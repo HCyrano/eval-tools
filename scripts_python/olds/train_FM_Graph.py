@@ -307,7 +307,7 @@ def export_fixed_point(w0_vec, V, stages):
 def parse_args():
     p = argparse.ArgumentParser()
     p.add_argument("--epochs",          type=int,   default=20)
-    p.add_argument("--rank",            type=int,   default=8)
+    p.add_argument("--rank",            type=int,   default=16)
     p.add_argument("--lr",              type=float, default=0.001)
     p.add_argument("--lr_decay",        type=float, default=1.0,
                    help="Multiplicateur lr par époque")

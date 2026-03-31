@@ -31,7 +31,6 @@ from numba import njit
 # =============================================================================
 
 N_INDEX  = 383745
-PAD_IDX = N_INDEX  # hors du tableau
 N_STAGES = 60
 
 DATA_DIR    = Path("datas")
@@ -111,7 +110,7 @@ def charger_stage(stage):
 
     K = max(len(u) for u in indices_list)
     n = len(scores_list)
-    indices_mat = np.full((n, K), PAD_IDX, dtype=np.int32)
+    indices_mat = np.zeros((n, K), dtype=np.int32)
     counts_mat  = np.zeros((n, K), dtype=np.float32)
     for i, (u, c) in enumerate(zip(indices_list, counts_list)):
         indices_mat[i, :len(u)] = u
@@ -145,7 +144,7 @@ def preload_all(stages):
     for stage, (idx, cnt, sc) in data_by_stage.items():
         n, K = idx.shape
         if K < K_global:
-            idx_pad = np.full((n, K_global), PAD_IDX, dtype=np.int32)
+            idx_pad = np.zeros((n, K_global), dtype=np.int32)
             cnt_pad = np.zeros((n, K_global), dtype=np.float32)
             idx_pad[:, :K] = idx
             cnt_pad[:, :K] = cnt
@@ -189,8 +188,6 @@ def fm_predict(indices_mat, counts_mat, w_stage, w0_stage, V):
         # Partie lineaire
         lin = w0_stage
         for k in range(K):
-            if indices_mat[i, k] == PAD_IDX:
-                continue
             lin += counts_mat[i, k] * w_stage[indices_mat[i, k]]
 
         # Partie FM
@@ -474,8 +471,7 @@ def main():
             idx, cnt, sc = charger_stage(stage)
             if idx is None:
                 continue
-            mask_valid = idx < N_INDEX          # True pour les vrais indices, False pour PAD_IDX
-            yhat = (cnt * np.where(mask_valid, w_by_stage[stage][np.minimum(idx, N_INDEX-1)], 0.0)).sum(axis=1)
+            yhat = (cnt * w_by_stage[stage][idx]).sum(axis=1)
             total_mse_base += np.sum((yhat - sc) ** 2)
             total_n_base   += len(sc)
         print(f"  RMSE baseline : {np.sqrt(total_mse_base / total_n_base):.6f}\n")
@@ -693,7 +689,7 @@ def main():
         yhat     = fm_predict(idx, cnt, w_by_stage[stage], np.float32(w0_vec[stage]), V)
         rmse     = float(np.sqrt(np.mean((yhat - sc) ** 2)))
         mae      = float(np.mean(np.abs(yhat - sc)))
-        yhat_lin = (cnt * np.where(idx < N_INDEX, w_by_stage[stage][np.minimum(idx, N_INDEX-1)], 0.0)).sum(axis=1)
+        yhat_lin = (cnt * w_by_stage[stage][idx]).sum(axis=1)
         rmse_lin = float(np.sqrt(np.mean((yhat_lin - sc) ** 2)))
 
         # RMSE val par stage (si preload + val disponible)

@@ -5,7 +5,7 @@ from scipy.sparse.linalg import lsmr
 from pathlib import Path
 
 # --- Configuration ---
-N_INDEX = 383745  
+N_INDEX = 226362  
 TRAIN_RATIO = 0.80 #utilisé pour les stages: [9; 60[
 
 def compter_occurrences_par_index(A_csr):
