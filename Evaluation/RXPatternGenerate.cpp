@@ -338,11 +338,11 @@ void RXPatternGenerate::stage_to_data(const unsigned int stage) {
     
     std::cout << "stage " << oss.str() << std::endl;
     
-    std::string file_name_in  = dir_str + "/database/Edax_Egrcd_Roxane/stages/stage_" + oss.str() + ".txt";
-    std::string file_name_out = dir_str + "/Evaluation/datas/data_" + oss.str() + ".txt";
+//    std::string file_name_in  = dir_str + "/database/Edax_Egrcd_Roxane/stages/stage_" + oss.str() + ".txt";
+//    std::string file_name_out = dir_str + "/Evaluation/datas/data_" + oss.str() + "b.txt";
 
-//    std::string file_name_in  = dir_str + "/database/Edax_Egrcd_Roxane/stages_WS/stage_" + oss.str() + ".txt";
-//    std::string file_name_out = dir_str + "/Evaluation/datas_WS/data_" + oss.str() + ".txt";
+    std::string file_name_in  = dir_str + "/database/Edax_Egrcd_Roxane/stages_WS/stage_" + oss.str() + ".txt";
+    std::string file_name_out = dir_str + "/Evaluation/datas_WS/data_" + oss.str() + ".txt";
     
     std::ofstream ofs(file_name_out.c_str());
     
@@ -427,6 +427,7 @@ void RXPatternGenerate::stage_to_data(const unsigned int stage) {
                     //canonisation de l'index
                     int pattern_ID = index_rotate(patt[id_patt_2], pattern_info[id_info][3]);
                     pattern_ID = std::min(patt[id_patt_2],pattern_ID);
+                    
                     //transformation index local => index global
                     pattern_ID += pattern_info[id_info][2]/2;
                     pattern_ID += pattern_info[id_info][1];
@@ -505,7 +506,7 @@ void RXPatternGenerate::RMSE(const unsigned int stage) {
 #ifdef FACT_MACH
             << "  RMSE FM= " << std::fixed << std::setprecision(4) << rmse
 #else
-            << "  RMSE= " << std::fixed << std::setprecision(4) << rmse
+            << "  RMSE= " << std::fixed << std::setprecision(4) << rmse << " nb positions = " << n_positions
 #endif
             << std::endl;
         } else {
@@ -519,6 +520,78 @@ void RXPatternGenerate::RMSE(const unsigned int stage) {
 //    std::cout << std::endl;
 
 }
+
+//void RXPatternGenerate::test() {
+//    
+//            
+//    RXBBPatterns sBoard;
+//    sBoard.build("-O-OOX----OOOX-XXXOXOOXXXXXOXXOXXXXOXXO-XXOXOOXO-OXXXX-O--XXX--O X");
+//    
+//    std::cout << sBoard << std::endl;
+//
+//    //mobility
+//    uint64x2_t mobilities = sBoard.board.dual_count_legal_moves();
+//    int mob_player   = std::min(23, static_cast<int>(vgetq_lane_u64(mobilities, 0)));
+//    std::cout << mob_player << " ";
+//    int mob_opponent = std::min(23, static_cast<int>(vgetq_lane_u64(mobilities, 1)));
+//    std::cout << (mob_opponent+(pattern_info[1][1])) << " ";
+//    
+//    const unsigned long long filled = sBoard.board.discs[sBoard.board.player] | sBoard.board.discs[sBoard.board.player^1];
+//    
+//    int* patt = sBoard.pattern->patt;
+//    for(int id_patt = 0; id_patt<std::size(sBoard.pattern->patt); ++id_patt) {
+//        
+//        //ici ce sont les indices reels de patterns il faut les decaler de 2 pour inclure les mobilités
+//        
+//        // On saute explicitement les indices Alternatifs
+//        // 18, 19, 20, 21
+//        if((id_patt > 17 && id_patt <= 21) /* || (id_patt > 45 && id_patt <= 49)*/) {
+//            continue;
+//        }
+//        
+//        int id_patt_2 = id_patt;
+//
+//        if(id_patt == 14 && ((filled & 0x8142000000000000ULL) == 0)) {         //A1 H1 B2 G2
+//            id_patt_2 += 4;
+//        } else if(id_patt == 15 && ((filled & 0x0102000000000201ULL) == 0)) {  //H1 G2 G7 H8
+//            id_patt_2 += 4;
+//        } else if(id_patt == 16 && ((filled & 0x0000000000004281ULL) == 0)) {  //B7 G7 A8 H8
+//            id_patt_2 += 4;
+//        } else if(id_patt == 17 && ((filled & 0x8040000000004080ULL) == 0)) {  //A1 B2 B7 A8
+//            id_patt_2 += 4;
+///*                    } else if((id_patt == 42) && ((filled & 0x8040000000000000ULL) == 0)) {
+//            id_patt_2 += 4;
+//        } else if((id_patt == 43) && ((filled & 0x0102000000000000ULL) == 0)) {
+//            id_patt_2 += 4;
+//        } else if((id_patt == 44) && ((filled & 0x0000000000000201ULL) == 0)) {
+//            id_patt_2 += 4;
+//        } else if((id_patt == 45) && ((filled & 0x0000000000004080ULL) == 0)) {
+//            id_patt_2 += 4;
+//*/                    }
+//
+//        //find pattern description
+//        unsigned int id_info = 0;
+//        for(; id_info < std::size(pattern_info); ++id_info)
+//            if(pattern_info[id_info][0] >= (id_patt_2 + 2) ) // add mobilities pattern
+//                break;
+//
+//        //canonisation de l'index
+//        int pattern_ID = index_rotate(patt[id_patt_2], pattern_info[id_info][3]);
+//        pattern_ID = std::min(patt[id_patt_2],pattern_ID);
+//        
+//        //transformation index local => index global
+//        pattern_ID += pattern_info[id_info][2]/2;
+//        pattern_ID += pattern_info[id_info][1];
+//        
+//        std::cout << pattern_ID << " ";
+//        
+//    }
+//    
+//    
+//    std::cout << std::endl;
+//        
+//}
+
 
 /**
  * @brief Écrit les poids d'évaluation des stages dans un fichier binaire normalisé.
@@ -608,6 +681,12 @@ void RXPatternGenerate::write_eval() {
                         weigths_out[i] = weigths_in[i]*256; //mobility opponent
                 } else {
                     norm_weight(weigths_in, n_occs_in, weigths_out, pattern_info[id_patt][1], pattern_info[id_patt][2], pattern_info[id_patt][3]);
+                    if (stage == 46 && id_patt == 2) {
+                        for(int i = 48; i < 291; ++i) {
+                            std::cout << weigths_out[i]/256.0f << std::endl;
+                        }
+                    }
+
                 }
             
             

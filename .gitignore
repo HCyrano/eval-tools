@@ -99,6 +99,11 @@ datas_norm/
 eval_v*/
 n_occs/
 models_fm*/
+scripts_python/olds/
+scripts_python/__pycache__/
+scripts_python/en etude/
+weight*
+
 
 
 # ignorer le dossier OptimizationProfiles

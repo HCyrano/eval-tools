@@ -26,7 +26,7 @@ void RXEvaluation::load() {
     // --- weight_v11.bin ---
     std::ifstream from_w("/Users/caussebruno/Documents/developpement/Evaluation/weight_v11.bin", std::ios::binary);
     if (!from_w) {
-        std::cerr << "CRITICAL ERROR: Impossible de charger weight_v12.bin" << std::endl;
+        std::cerr << "CRITICAL ERROR: Impossible de charger weight_v11.bin" << std::endl;
         std::exit(EXIT_FAILURE);
     }
 
@@ -35,7 +35,7 @@ void RXEvaluation::load() {
 
             eval_w[iStage][id_patt] = new short[sizes[id_patt]];
             from_w.read(reinterpret_cast<char*>(eval_w[iStage][id_patt]), sizeof(short) * sizes[id_patt]);
-            check_read(from_w, "weight_v12.bin", id_patt, iStage);
+            check_read(from_w, "weight_v11.bin", id_patt, iStage);
 
             if (id_patt > 1)
                 eval_w[iStage][id_patt] += sizes[id_patt] / 2;
@@ -43,6 +43,32 @@ void RXEvaluation::load() {
     }
 
     from_w.close();
+
+//    std::string file_name_out = "/Users/caussebruno/Documents/developpement/Evaluation/weigh_46.txt";
+//    std::ofstream ofs(file_name_out.c_str());
+//    
+//    if(ofs) {
+//        
+//        for (unsigned int id_patt = 0; id_patt < N_PATTERNS; ++id_patt) {
+//            if(id_patt == 0) {
+//                for(int i = 0; i<24; ++i) {
+//                    ofs << std::fixed << std::setprecision(6) << eval_w[46][id_patt][i]/256.0f << std::endl;
+//                }
+//            } else if(id_patt == 1){
+//                for(int i = 0; i<24; ++i) {
+//                    ofs << std::fixed << std::setprecision(6) << eval_w[46][id_patt][i]/256.0f << std::endl;
+//                }
+//            } else {
+//                int n_index = sizes[id_patt];
+//                for(int i = -n_index/2; i<=n_index/2; ++i) {
+//                    ofs << std::fixed << std::setprecision(6) << eval_w[46][id_patt][i]/256.0f << std::endl;
+//                }
+//            }
+//        }
+//    }
+//    
+//    ofs.close();
+    
 
 #ifdef FACT_MACH
     // --- fm_w0.txt ---

@@ -143,10 +143,11 @@ inline int acc_score(const int   stage,
     const short* __restrict const edge1  = tab_eval[6];
     const short* __restrict const edge2  = tab_eval[7];
     const short* __restrict const edge3  = tab_eval[8];
-    const short* __restrict const hv2    = tab_eval[9];
-    const short* __restrict const hv3    = tab_eval[10];
-    const short* __restrict const hv4    = tab_eval[11];
-    const short* __restrict const corner = tab_eval[12];
+    const short* __restrict const edge4  = tab_eval[9];
+    const short* __restrict const hv2    = tab_eval[10];
+    const short* __restrict const hv3    = tab_eval[11];
+    const short* __restrict const hv4    = tab_eval[12];
+    const short* __restrict const corner = tab_eval[13];
     
     const unsigned long long maskA = filled & 0x8142000000000000ULL;
     const unsigned long long maskB = filled & 0x0102000000000201ULL;
@@ -174,7 +175,7 @@ inline int acc_score(const int   stage,
     const int cp34 = color*p[34], cp35 = color*p[35], cp36 = color*p[36], cp37 = color*p[37];
     const int cp38 = color*p[38], cp39 = color*p[39], cp40 = color*p[40], cp41 = color*p[41];
     const int cp42 = color*p[42], cp43 = color*p[43], cp44 = color*p[44], cp45 = color*p[45];
-//    const int cp46 = color*p[46], cp47 = color*p[47], cp48 = color*p[48], cp49 = color*p[49];
+    const int cp46 = color*p[46], cp47 = color*p[47], cp48 = color*p[48], cp49 = color*p[49];
 
     const int cpA = maskA ? cp14 : cp18;
     const int cpB = maskB ? cp15 : cp19;
@@ -185,6 +186,70 @@ inline int acc_score(const int   stage,
     // -------------------------------------------------------------------------
     // Linear Evaluation: Standard weight accumulation for mobility and patterns
     // -------------------------------------------------------------------------
+    
+    //listing des poinds pour le calcul de l'evaluation
+    
+    
+//    std::cout << "mob P  = " << mob_P[mob_player] << std::endl;
+//    std::cout << "mob 0  = " << mob_O[mob_opponent] << std::endl;
+//
+//    std::cout << "diag5a = " << diag5[cp0] << std::endl;
+//    std::cout << "diag5b = " << diag5[cp1] << std::endl;
+//    std::cout << "diag5c = " << diag5[cp2] << std::endl;
+//    std::cout << "diag5d = " << diag5[cp3] << std::endl;
+//
+//    std::cout << "diag6a = " << diag6[cp4] << std::endl;
+//    std::cout << "diag6b = " << diag6[cp5] << std::endl;
+//    std::cout << "diag6c = " << diag6[cp6] << std::endl;
+//    std::cout << "diag6d = " << diag6[cp7] << std::endl;
+//
+//    std::cout << "diag7a = " << diag7[cp8] << std::endl;
+//    std::cout << "diag7b = " << diag7[cp9] << std::endl;
+//    std::cout << "diag7c = " << diag7[cp10] << std::endl;
+//    std::cout << "diag7d = " << diag7[cp11] << std::endl;
+//
+//    std::cout << "diag8a = " << diag8[cp12] << std::endl;
+//    std::cout << "diag8b = " << diag8[cp13] << std::endl;
+//
+//    std::cout << "edge_a = " << edgeA[cpA] << std::endl;
+//    std::cout << "edge_b = " << edgeB[cpB] << std::endl;
+//    std::cout << "edge_c = " << edgeC[cpC] << std::endl;
+//    std::cout << "edge_c = " << edgeD[cpD] << std::endl;
+//
+//    std::cout << "edge3a = " << edge3[cp22] << std::endl;
+//    std::cout << "edge3b = " << edge3[cp23] << std::endl;
+//    std::cout << "edge3c = " << edge3[cp24] << std::endl;
+//    std::cout << "edge3c = " << edge3[cp25] << std::endl;
+//
+//    std::cout << "edge4a = " << edge4[cp26] << std::endl;
+//    std::cout << "edge4b = " << edge4[cp27] << std::endl;
+//    std::cout << "edge4c = " << edge4[cp28] << std::endl;
+//    std::cout << "edge4d = " << edge4[cp29] << std::endl;
+//    std::cout << "edge4e = " << edge4[cp30] << std::endl;
+//    std::cout << "edge4f = " << edge4[cp31] << std::endl;
+//    std::cout << "edge4g = " << edge4[cp32] << std::endl;
+//    std::cout << "edge4h = " << edge4[cp33] << std::endl;
+//
+//    std::cout << "hv2__a = " << hv2[cp34] << std::endl;
+//    std::cout << "hv2__b = " << hv2[cp35] << std::endl;
+//    std::cout << "hv2__c = " << hv2[cp36] << std::endl;
+//    std::cout << "hv2__c = " << hv2[cp37] << std::endl;
+//
+//    std::cout << "hv3__a = " << hv3[cp38] << std::endl;
+//    std::cout << "hv3__b = " << hv3[cp39] << std::endl;
+//    std::cout << "hv3__c = " << hv3[cp40] << std::endl;
+//    std::cout << "hv3__c = " << hv3[cp41] << std::endl;
+//
+//    std::cout << "hv4__a = " << hv4[cp42] << std::endl;
+//    std::cout << "hv4__b = " << hv4[cp43] << std::endl;
+//    std::cout << "hv4__c = " << hv4[cp44] << std::endl;
+//    std::cout << "hv4__d = " << hv4[cp45] << std::endl;
+//
+//    std::cout << "cornera = " << corner[cp46] << std::endl;
+//    std::cout << "cornerb = " << corner[cp47] << std::endl;
+//    std::cout << "cornerc = " << corner[cp48] << std::endl;
+//    std::cout << "cornerd = " << corner[cp49] << std::endl;
+
     int
     eval  = mob_P[mob_player];
     eval += mob_O[mob_opponent];
@@ -196,19 +261,23 @@ inline int acc_score(const int   stage,
 
     eval += edgeA[cpA] + edgeB[cpB] + edgeC[cpC] + edgeD[cpD];
     
-    eval += edge3[cp22] + edge3[cp23] + edge3[cp24] + edge3[cp25]
-          + edge3[cp26] + edge3[cp27] + edge3[cp28] + edge3[cp29];
+    eval += edge3[cp22] + edge3[cp23] + edge3[cp24] + edge3[cp25];
 
-    eval += hv2[cp30] + hv2[cp31] + hv2[cp32] + hv2[cp33];
-    eval += hv3[cp34] + hv3[cp35] + hv3[cp36] + hv3[cp37];
-    eval += hv4[cp38] + hv4[cp39] + hv4[cp40] + hv4[cp41];
+    
+    eval += edge4[cp26] + edge4[cp27] + edge4[cp28] + edge4[cp29]
+          + edge4[cp30] + edge4[cp31] + edge4[cp32] + edge4[cp33];
 
-    eval += corner[cp42] + corner[cp43] + corner[cp44] + corner[cp45];
+    eval += hv2[cp34] + hv2[cp35] + hv2[cp36] + hv2[cp37];
+    eval += hv3[cp38] + hv3[cp39] + hv3[cp40] + hv3[cp41];
+    eval += hv4[cp42] + hv4[cp43] + hv4[cp44] + hv4[cp45];
 
+    eval += corner[cp46] + corner[cp47] + corner[cp48] + corner[cp49];
+
+#ifdef FACT_MACH
+    
     // -------------------------------------------------------------------------
     // FM Correction: Captures non-linear interactions between features
     // -------------------------------------------------------------------------
-#ifdef FACT_MACH
 
     if (useFM && (stage > 9 && stage < 55)) {
 

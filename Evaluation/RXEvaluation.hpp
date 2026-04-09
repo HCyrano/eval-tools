@@ -38,11 +38,8 @@ class alignas(64) RXEvaluation {
 //    static constexpr unsigned int N_PATTERNS = 13;
 //    static constexpr unsigned int sizes[N_PATTERNS] = {24, 24, 243, 729, 2187, 6561, 4782969, 59049, 59049, 6561, 6561, 6561, 177147};
     
-//    static constexpr unsigned int N_PATTERNS = 14;
-//    static constexpr unsigned int sizes[N_PATTERNS] = {24, 24, 243, 729, 2187, 6561, 59049, 59049, 59049, 59049, 6561, 6561, 6561, 177147};
-
-    static constexpr unsigned int N_PATTERNS = 13;
-    static constexpr unsigned int sizes[N_PATTERNS] = {24, 24, 243, 729, 2187, 6561, 59049, 59049, 59049, 6561, 6561, 6561, 177147};
+    static constexpr unsigned int N_PATTERNS = 14;
+    static constexpr unsigned int sizes[N_PATTERNS] = {24, 24, 243, 729, 2187, 6561, 59049, 59049, 59049, 59049, 6561, 6561, 6561, 177147};
 
     
     public :
