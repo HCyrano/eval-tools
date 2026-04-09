@@ -31,6 +31,7 @@ from numba import njit
 # =============================================================================
 
 N_INDEX  = 383745
+PAD_IDX = N_INDEX  # hors du tableau
 N_STAGES = 60
 
 DATA_DIR    = Path("datas")
@@ -110,7 +111,7 @@ def charger_stage(stage):
 
     K = max(len(u) for u in indices_list)
     n = len(scores_list)
-    indices_mat = np.zeros((n, K), dtype=np.int32)
+    indices_mat = np.full((n, K), PAD_IDX, dtype=np.int32)
     counts_mat  = np.zeros((n, K), dtype=np.float32)
     for i, (u, c) in enumerate(zip(indices_list, counts_list)):
         indices_mat[i, :len(u)] = u
@@ -144,7 +145,7 @@ def preload_all(stages):
     for stage, (idx, cnt, sc) in data_by_stage.items():
         n, K = idx.shape
         if K < K_global:
-            idx_pad = np.zeros((n, K_global), dtype=np.int32)
+            idx_pad = np.full((n, K_global), PAD_IDX, dtype=np.int32)
             cnt_pad = np.zeros((n, K_global), dtype=np.float32)
             idx_pad[:, :K] = idx
             cnt_pad[:, :K] = cnt
@@ -188,6 +189,8 @@ def fm_predict(indices_mat, counts_mat, w_stage, w0_stage, V):
         # Partie lineaire
         lin = w0_stage
         for k in range(K):
+            if indices_mat[i, k] == PAD_IDX:
+                continue
             lin += counts_mat[i, k] * w_stage[indices_mat[i, k]]
 
         # Partie FM
@@ -404,6 +407,8 @@ def parse_args():
                    help="Arret si pas d'amelioration sur N epoques consecutives")
     p.add_argument("--min_delta",      type=float, default=0.0001,
                    help="Gain minimum considere comme amelioration")
+    p.add_argument("--val_split",      type=float, default=0.1,
+                   help="Fraction des donnees reservee a la validation (defaut: 0.1)")
     return p.parse_args()
 
 
@@ -429,7 +434,8 @@ def main():
     print(f"rank={args.rank}  lr={args.lr}  decay={args.lr_decay}  "
           f"l2_V={args.l2_V}  batch={args.batch}  "
           f"preload={'oui' if args.preload else 'non'}")
-    print(f"early_stopping={args.early_stopping}  min_delta={args.min_delta}")
+    print(f"early_stopping={args.early_stopping}  min_delta={args.min_delta}  "
+          f"val_split={args.val_split:.0%}")
 
     # --- Chargement des poids lineaires figes ---
     w_by_stage = charger_weights(stages)
@@ -438,6 +444,26 @@ def main():
     if args.preload:
         all_indices, all_counts, all_scores, all_stage_ids = preload_all(stages)
         n_total = len(all_scores)
+
+        # --- Split train / val (90/10) reproductible ---
+        val_n   = int(n_total * args.val_split)
+        perm_tv = rng.permutation(n_total)
+        val_idx   = perm_tv[:val_n]
+        train_idx = perm_tv[val_n:]
+
+        val_indices   = all_indices[val_idx]
+        val_counts    = all_counts[val_idx]
+        val_scores    = all_scores[val_idx]
+        val_stage_ids = all_stage_ids[val_idx]
+
+        all_indices   = all_indices[train_idx]
+        all_counts    = all_counts[train_idx]
+        all_scores    = all_scores[train_idx]
+        all_stage_ids = all_stage_ids[train_idx]
+        n_total       = len(all_scores)
+
+        print(f"Split : {n_total:,} train  /  {val_n:,} val  "
+              f"({100*(1-args.val_split):.0f}/{100*args.val_split:.0f})")
 
     # --- Baseline ---
     if not (args.resume and CHECKPOINT.exists()):
@@ -448,7 +474,8 @@ def main():
             idx, cnt, sc = charger_stage(stage)
             if idx is None:
                 continue
-            yhat = (cnt * w_by_stage[stage][idx]).sum(axis=1)
+            mask_valid = idx < N_INDEX          # True pour les vrais indices, False pour PAD_IDX
+            yhat = (cnt * np.where(mask_valid, w_by_stage[stage][np.minimum(idx, N_INDEX-1)], 0.0)).sum(axis=1)
             total_mse_base += np.sum((yhat - sc) ** 2)
             total_n_base   += len(sc)
         print(f"  RMSE baseline : {np.sqrt(total_mse_base / total_n_base):.6f}\n")
@@ -584,11 +611,32 @@ def main():
                           f"({fmt_time(np.mean(t_stages))}/stage)")
 
         t_epoch_dur = time() - t_epoch
-        rmse_epoch  = np.sqrt(total_mse / total_n)
+        rmse_train  = np.sqrt(total_mse / total_n)
+
+        # --- RMSE validation ---
+        if args.preload and val_n > 0:
+            val_mse   = 0.0
+            val_total = 0
+            for stage in np.unique(val_stage_ids):
+                mask     = val_stage_ids == stage
+                idx_v    = val_indices[mask]
+                cnt_v    = val_counts[mask]
+                sc_v     = val_scores[mask]
+                yhat_v   = fm_predict(idx_v, cnt_v, w_by_stage[stage],
+                                      np.float32(w0_vec[stage]), V)
+                val_mse   += np.sum((yhat_v - sc_v) ** 2)
+                val_total += mask.sum()
+            rmse_val = float(np.sqrt(val_mse / val_total))
+            rmse_ref = rmse_val          # early stopping sur val
+            val_str  = f"  RMSE_val={rmse_val:.6f}"
+        else:
+            rmse_val = None
+            rmse_ref = rmse_train        # fallback si pas de preload
+            val_str  = ""
 
         # --- Early stopping ---
-        if rmse_epoch < best_rmse - args.min_delta:
-            best_rmse  = rmse_epoch
+        if rmse_ref < best_rmse - args.min_delta:
+            best_rmse  = rmse_ref
             no_improve = 0
             marker     = "  nouveau meilleur"
             with open(MODEL_PKL, "wb") as f:
@@ -601,9 +649,9 @@ def main():
             marker     = f"  [sans amelioration : {no_improve}/{args.early_stopping}]"
 
         t_remain_total = t_epoch_dur * (args.epochs - epoch - 1)
-        print(f"\n-> RMSE epoque {epoch+1} : {rmse_epoch:.6f}  "
-              f"duree : {fmt_time(t_epoch_dur)}  "
-              f"restant total : ~{fmt_time(t_remain_total)}"
+        print(f"\n-> Epoque {epoch+1}  RMSE_train={rmse_train:.6f}{val_str}  "
+              f"duree:{fmt_time(t_epoch_dur)}  "
+              f"restant:~{fmt_time(t_remain_total)}"
               f"{marker}")
 
         lr *= args.lr_decay
@@ -614,7 +662,8 @@ def main():
                          "adam_t": adam_t,
                          "m_V": m_V, "v_V": v_V,
                          "m_w0": m_w0, "v_w0": v_w0,
-                         "stages": stages}, f)
+                         "stages": stages,
+                         "rmse_val": rmse_val}, f)
         print(f"  Checkpoint sauvegarde.")
 
         if no_improve >= args.early_stopping:
@@ -632,29 +681,50 @@ def main():
     print("Evaluation finale (tous les stages)")
     print(f"{'='*60}")
     stages_plot, rmse_fm_plot, rmse_lin_plot = [], [], []
+    rmse_val_plot = []
+
     for stage in sorted(stages):
         t0 = time()
         idx, cnt, sc = charger_stage(stage)
         if idx is None:
             continue
+
+        # RMSE globale (comme avant) — sur toutes les donnees du stage
         yhat     = fm_predict(idx, cnt, w_by_stage[stage], np.float32(w0_vec[stage]), V)
         rmse     = float(np.sqrt(np.mean((yhat - sc) ** 2)))
         mae      = float(np.mean(np.abs(yhat - sc)))
-        yhat_lin = (cnt * w_by_stage[stage][idx]).sum(axis=1)
+        yhat_lin = (cnt * np.where(idx < N_INDEX, w_by_stage[stage][np.minimum(idx, N_INDEX-1)], 0.0)).sum(axis=1)
         rmse_lin = float(np.sqrt(np.mean((yhat_lin - sc) ** 2)))
-        print(f"  Stage {stage:02d}  RMSE={rmse:.4f}  MAE={mae:.4f}  "
-              f"(baseline lineaire={rmse_lin:.4f}  gain={rmse_lin-rmse:+.4f})  "
+
+        # RMSE val par stage (si preload + val disponible)
+        if args.preload and val_n > 0:
+            mask_v = val_stage_ids == stage
+            if mask_v.sum() > 0:
+                yhat_v   = fm_predict(val_indices[mask_v], val_counts[mask_v],
+                                      w_by_stage[stage], np.float32(w0_vec[stage]), V)
+                rmse_v   = float(np.sqrt(np.mean((yhat_v - val_scores[mask_v]) ** 2)))
+            else:
+                rmse_v = float("nan")
+        else:
+            rmse_v = float("nan")
+
+        print(f"  Stage {stage:02d}  RMSE={rmse:.4f}  RMSE_val={rmse_v:.4f}  MAE={mae:.4f}  "
+              f"(baseline={rmse_lin:.4f}  gain={rmse_lin-rmse:+.4f})  "
               f"({fmt_time(time()-t0)})")
         stages_plot.append(stage)
         rmse_fm_plot.append(rmse)
         rmse_lin_plot.append(rmse_lin)
+        rmse_val_plot.append(rmse_v)
 
+    # --- Graphe ---
     png_path = MODELS_DIR / "rmse_baseline_vs_fm.png"
-    x     = np.arange(len(stages_plot))
-    width = 0.35
-    fig, ax = plt.subplots(figsize=(max(10, len(stages_plot) * 0.4), 5))
-    ax.bar(x - width/2, rmse_lin_plot, width, label="Baseline (lineaire)", color="#7fb3d3")
-    ax.bar(x + width/2, rmse_fm_plot,  width, label="FM",                  color="#e67e22")
+    x        = np.arange(len(stages_plot))
+    width    = 0.25
+    fig, ax  = plt.subplots(figsize=(max(10, len(stages_plot) * 0.4), 5))
+    ax.bar(x - width, rmse_lin_plot,  width, label="Baseline (lineaire)", color="#7fb3d3")
+    ax.bar(x,         rmse_fm_plot,   width, label="FM (train+val)",      color="#e67e22")
+    rmse_val_clean = [v if not np.isnan(v) else 0 for v in rmse_val_plot]
+    ax.bar(x + width, rmse_val_clean, width, label="FM (val seule)",      color="#2ecc71")
     ax.set_xlabel("Stage")
     ax.set_ylabel("RMSE")
     baseline_mean = float(np.mean(rmse_lin_plot))
@@ -670,7 +740,7 @@ def main():
     plt.close(fig)
     print(f"\n  Graphe sauvegarde : {png_path}")
 
-    print(f"\nMeilleur RMSE : {best_rmse:.6f}")
+    print(f"\nMeilleur RMSE (val) : {best_rmse:.6f}")
     print(f"[OK] Termine en {fmt_time(time()-t_global)}")
 
 

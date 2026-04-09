@@ -35,9 +35,14 @@ struct alignas(4*RANK) Vec_short {
 
 class alignas(64) RXEvaluation {
     
+//    static constexpr unsigned int N_PATTERNS = 13;
+//    static constexpr unsigned int sizes[N_PATTERNS] = {24, 24, 243, 729, 2187, 6561, 4782969, 59049, 59049, 6561, 6561, 6561, 177147};
+    
+//    static constexpr unsigned int N_PATTERNS = 14;
+//    static constexpr unsigned int sizes[N_PATTERNS] = {24, 24, 243, 729, 2187, 6561, 59049, 59049, 59049, 59049, 6561, 6561, 6561, 177147};
+
     static constexpr unsigned int N_PATTERNS = 13;
     static constexpr unsigned int sizes[N_PATTERNS] = {24, 24, 243, 729, 2187, 6561, 59049, 59049, 59049, 6561, 6561, 6561, 177147};
-    
 
     
     public :
@@ -46,11 +51,13 @@ class alignas(64) RXEvaluation {
     static void unload();
     
     static std::string get_version() {
-            return "FM16 2026-03-13";
+//            return "FM16 2026-03-13";
+            return "L 2026-04-08";
         }
 
     
     alignas(64) static inline short* eval_w[60][N_PATTERNS] = {};
+    
 #ifdef FACT_MACH
     alignas(64) static inline int eval_w0[60];
     alignas(64) static inline Vec_short* eval_V[N_PATTERNS] = {};

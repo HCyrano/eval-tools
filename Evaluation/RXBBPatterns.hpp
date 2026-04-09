@@ -131,6 +131,7 @@ inline int acc_score(const int   stage,
                           const int   mob_player,
                           const int   mob_opponent,
                           const auto& tab_eval,
+                          const unsigned long long filled,
                           const bool useFM = true)
 {
     const short* __restrict const mob_P  = tab_eval[0];
@@ -146,6 +147,17 @@ inline int acc_score(const int   stage,
     const short* __restrict const hv3    = tab_eval[10];
     const short* __restrict const hv4    = tab_eval[11];
     const short* __restrict const corner = tab_eval[12];
+    
+    const unsigned long long maskA = filled & 0x8142000000000000ULL;
+    const unsigned long long maskB = filled & 0x0102000000000201ULL;
+    const unsigned long long maskC = filled & 0x0000000000004281ULL;
+    const unsigned long long maskD = filled & 0x8040000000004080ULL;
+    
+    const short* __restrict const edgeA = maskA? edge1 : edge2;
+    const short* __restrict const edgeB = maskB? edge1 : edge2;
+    const short* __restrict const edgeC = maskC? edge1 : edge2;
+    const short* __restrict const edgeD = maskD? edge1 : edge2;
+
 
     // -------------------------------------------------------------------------
     // Precomputed indices (Calculated once, reused by both linear and FM stages)
@@ -162,6 +174,13 @@ inline int acc_score(const int   stage,
     const int cp34 = color*p[34], cp35 = color*p[35], cp36 = color*p[36], cp37 = color*p[37];
     const int cp38 = color*p[38], cp39 = color*p[39], cp40 = color*p[40], cp41 = color*p[41];
     const int cp42 = color*p[42], cp43 = color*p[43], cp44 = color*p[44], cp45 = color*p[45];
+//    const int cp46 = color*p[46], cp47 = color*p[47], cp48 = color*p[48], cp49 = color*p[49];
+
+    const int cpA = maskA ? cp14 : cp18;
+    const int cpB = maskB ? cp15 : cp19;
+    const int cpC = maskC ? cp16 : cp20;
+    const int cpD = maskD ? cp17 : cp21;
+
 
     // -------------------------------------------------------------------------
     // Linear Evaluation: Standard weight accumulation for mobility and patterns
@@ -175,8 +194,8 @@ inline int acc_score(const int   stage,
     eval += diag7[cp8]  + diag7[cp9]  + diag7[cp10] + diag7[cp11];
     eval += diag8[cp12] + diag8[cp13];
 
-    eval += edge1[cp14] + edge1[cp15] + edge1[cp16] + edge1[cp17];
-    eval += edge2[cp18] + edge2[cp19] + edge2[cp20] + edge2[cp21];
+    eval += edgeA[cpA] + edgeB[cpB] + edgeC[cpC] + edgeD[cpD];
+    
     eval += edge3[cp22] + edge3[cp23] + edge3[cp24] + edge3[cp25]
           + edge3[cp26] + edge3[cp27] + edge3[cp28] + edge3[cp29];
 
@@ -398,6 +417,9 @@ inline int RXBBPatterns::get_score(const bool useFM) const
 {
     const int stage = 60 - board.n_empty;
     const int color = 1 - 2 * board.player;
+    
+    const unsigned long long filled = board.discs[board.player] | board.discs[board.player^1];
+
 
     uint64x2_t mob  = board.dual_count_legal_moves();
     const int mob_p = std::min(23, (int)vgetq_lane_u64(mob, 0));
@@ -406,6 +428,7 @@ inline int RXBBPatterns::get_score(const bool useFM) const
     return acc_score(stage, color, pattern->patt,
                           mob_p, mob_o,
                           RXEvaluation::eval_w[stage],
+                          filled,
                           useFM);
 }
 
@@ -421,6 +444,8 @@ inline int RXBBPatterns::get_score(const RXMove& move, const bool useFM) const
     const unsigned long long discs_player   = board.discs[board.player ^ 1] ^ move.flipped;
     const unsigned long long discs_opponent = (board.discs[board.player] ^ move.flipped) | move.square;
 
+    const unsigned long long filled = discs_player | discs_opponent;
+
     uint64x2_t mob  = RXBitBoard::dual_count_legal_moves(discs_player, discs_opponent);
     const int mob_p = std::min(23, (int)vgetq_lane_u64(mob, 0));
     const int mob_o = std::min(23, (int)vgetq_lane_u64(mob, 1));
@@ -428,6 +453,7 @@ inline int RXBBPatterns::get_score(const RXMove& move, const bool useFM) const
     return acc_score(stage, color, move.pattern->patt,
                           mob_p, mob_o,
                           RXEvaluation::eval_w[stage],
+                          filled,
                           useFM);
 }
 

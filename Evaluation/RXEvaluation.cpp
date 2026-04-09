@@ -24,9 +24,9 @@ static void check_read(const std::ifstream& stream, const char* filename, unsign
 void RXEvaluation::load() {
 
     // --- weight_v11.bin ---
-    std::ifstream from_w("/Users/caussebruno/Documents/developpement/Roxane/build/weight_v11.bin", std::ios::binary);
+    std::ifstream from_w("/Users/caussebruno/Documents/developpement/Evaluation/weight_v11.bin", std::ios::binary);
     if (!from_w) {
-        std::cerr << "CRITICAL ERROR: Impossible de charger weight_v11.bin" << std::endl;
+        std::cerr << "CRITICAL ERROR: Impossible de charger weight_v12.bin" << std::endl;
         std::exit(EXIT_FAILURE);
     }
 
@@ -35,7 +35,7 @@ void RXEvaluation::load() {
 
             eval_w[iStage][id_patt] = new short[sizes[id_patt]];
             from_w.read(reinterpret_cast<char*>(eval_w[iStage][id_patt]), sizeof(short) * sizes[id_patt]);
-            check_read(from_w, "weight_v11.bin", id_patt, iStage);
+            check_read(from_w, "weight_v12.bin", id_patt, iStage);
 
             if (id_patt > 1)
                 eval_w[iStage][id_patt] += sizes[id_patt] / 2;
@@ -46,7 +46,7 @@ void RXEvaluation::load() {
 
 #ifdef FACT_MACH
     // --- fm_w0.txt ---
-    std::ifstream from_w0("/Users/caussebruno/Documents/developpement/Roxane/build/fm_w0_v11.txt");
+    std::ifstream from_w0("/Users/caussebruno/Documents/developpement/Evaluation/fm_w0_v11.txt");
     if (!from_w0) {
         std::cerr << "CRITICAL ERROR: Impossible de charger fm_w0_v11.txt" << std::endl;
         std::exit(EXIT_FAILURE);
@@ -64,7 +64,7 @@ void RXEvaluation::load() {
 
 
     // --- fm_V.bin ---
-    std::ifstream from_V("/Users/caussebruno/Documents/developpement/Roxane/build/fm_V_v11.bin", std::ios::binary);
+    std::ifstream from_V("/Users/caussebruno/Documents/developpement/Evaluation/fm_V_v11.bin", std::ios::binary);
     if (!from_V) {
         std::cerr << "CRITICAL ERROR: Impossible de charger fm_V_v11.bin" << std::endl;
         std::exit(EXIT_FAILURE);

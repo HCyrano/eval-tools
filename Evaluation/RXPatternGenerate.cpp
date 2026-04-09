@@ -338,10 +338,10 @@ void RXPatternGenerate::stage_to_data(const unsigned int stage) {
     
     std::cout << "stage " << oss.str() << std::endl;
     
-    std::string file_name_in = dir_str + "/database/Edax_Egrcd_Roxane/stages/stage_" + oss.str() + ".txt";
+    std::string file_name_in  = dir_str + "/database/Edax_Egrcd_Roxane/stages/stage_" + oss.str() + ".txt";
     std::string file_name_out = dir_str + "/Evaluation/datas/data_" + oss.str() + ".txt";
 
-//    std::string file_name_in = dir_str + "/database/Edax_Egrcd_Roxane/stages_WS/stage_" + oss.str() + ".txt";
+//    std::string file_name_in  = dir_str + "/database/Edax_Egrcd_Roxane/stages_WS/stage_" + oss.str() + ".txt";
 //    std::string file_name_out = dir_str + "/Evaluation/datas_WS/data_" + oss.str() + ".txt";
     
     std::ofstream ofs(file_name_out.c_str());
@@ -394,29 +394,29 @@ void RXPatternGenerate::stage_to_data(const unsigned int stage) {
                     
                     // On saute explicitement les indices Alternatifs
                     // 18, 19, 20, 21
-                    if((id_patt > 21 && id_patt <= 25)) {
+                    if((id_patt > 17 && id_patt <= 21) /* || (id_patt > 45 && id_patt <= 49)*/) {
                         continue;
                     }
                     
                     int id_patt_2 = id_patt;
 
-                    if(id_patt == 18 && ((filled & 0x8142000000000000ULL) == 0)) {         //A1 H1 B2 G2
+                    if(id_patt == 14 && ((filled & 0x8142000000000000ULL) == 0)) {         //A1 H1 B2 G2
                         id_patt_2 += 4;
-                    } else if(id_patt == 19 && ((filled & 0x0102000000000201ULL) == 0)) {  //H1 G2 G7 H8
+                    } else if(id_patt == 15 && ((filled & 0x0102000000000201ULL) == 0)) {  //H1 G2 G7 H8
                         id_patt_2 += 4;
-                    } else if(id_patt == 20 && ((filled & 0x0000000000004281ULL) == 0)) {  //B7 G7 A8 H8
+                    } else if(id_patt == 16 && ((filled & 0x0000000000004281ULL) == 0)) {  //B7 G7 A8 H8
                         id_patt_2 += 4;
-                    } else if(id_patt == 21 && ((filled & 0x8040000000004080ULL) == 0)) {  //A1 B2 B7 A8
+                    } else if(id_patt == 17 && ((filled & 0x8040000000004080ULL) == 0)) {  //A1 B2 B7 A8
                         id_patt_2 += 4;
-//                    } else if((id_patt == 46) && ((filled & 0x8040000000000000ULL) == 0)) {
-//                        id_patt_2 += 4;
-//                    } else if((id_patt == 47) && ((filled & 0x0102000000000000ULL) == 0)) {
-//                        id_patt_2 += 4;
-//                    } else if((id_patt == 48) && ((filled & 0x0000000000000201ULL) == 0)) {
-//                        id_patt_2 += 4;
-//                    } else if((id_patt == 49) && ((filled & 0x0000000000004080ULL) == 0)) {
-//                        id_patt_2 += 4;
-                    }
+/*                    } else if((id_patt == 42) && ((filled & 0x8040000000000000ULL) == 0)) {
+                        id_patt_2 += 4;
+                    } else if((id_patt == 43) && ((filled & 0x0102000000000000ULL) == 0)) {
+                        id_patt_2 += 4;
+                    } else if((id_patt == 44) && ((filled & 0x0000000000000201ULL) == 0)) {
+                        id_patt_2 += 4;
+                    } else if((id_patt == 45) && ((filled & 0x0000000000004080ULL) == 0)) {
+                        id_patt_2 += 4;
+*/                    }
 
                     //find pattern description
                     unsigned int id_info = 0;
@@ -516,7 +516,7 @@ void RXPatternGenerate::RMSE(const unsigned int stage) {
     }
 
     
-    std::cout << std::endl;
+//    std::cout << std::endl;
 
 }
 
@@ -530,12 +530,9 @@ void RXPatternGenerate::RMSE(const unsigned int stage) {
 
 void RXPatternGenerate::write_eval() {
     
-    //nombre d'index globaux
-    const unsigned int n_index = N_INDEX;
-    
     std::string dir_str = "/Users/caussebruno/Documents/developpement/Evaluation";
     
-    std::string file_name_out = dir_str + "/weight_v12.bin";
+    std::string file_name_out = dir_str + "/weight_v11.bin";
     // 2. Ouvrir le fichier en mode ecriture binaire
     // ios::out pour l'ecriture et ios::binary pour le mode binaire
     std::ofstream out(file_name_out, std::ios::out | std::ios::binary);
@@ -554,8 +551,8 @@ void RXPatternGenerate::write_eval() {
             std::string file_weigths_in = dir_str + "/weights/weight_" + oss.str() + ".txt";
             std::string file_n_occs_in = dir_str + "/n_occs/n_occ_" + oss.str() + ".txt";
 
-            float* weigths_in = new float[n_index];
-            int* n_occs_in = new int[n_index];
+            float* weigths_in = new float[N_INDEX];
+            int* n_occs_in = new int[N_INDEX];
             
             float weigth = 0.0f;
             int n_occ = 0;
@@ -599,7 +596,7 @@ void RXPatternGenerate::write_eval() {
             }
             
             
-            short* weigths_out= new short[n_index];
+            short* weigths_out= new short[N_INDEX];
             
 
             for(unsigned int id_patt = 0; id_patt < std::size(pattern_info); ++id_patt)
@@ -618,12 +615,12 @@ void RXPatternGenerate::write_eval() {
             // weigths_out retourne un pointeur vers le premier element
             out.write(
                 reinterpret_cast<const char*>(weigths_out), // Pointeur casté
-                sizeof(short)*n_index                       // Taille en octets
+                sizeof(short)*N_INDEX                       // Taille en octets
             );
 
             if (out.good()) {
-                std::cout << "Ecriture reussie de " << n_index
-                          << " short (" << sizeof(short)*n_index << " octets)." << std::endl;
+                std::cout << "Ecriture reussie de " << N_INDEX
+                          << " short (" << sizeof(short)*N_INDEX << " octets)." << std::endl;
             } else {
                 std::cerr << "Erreur lors de l'ecriture des donnees." << std::endl;
             }
@@ -725,7 +722,7 @@ void RXPatternGenerate::write_FM() {
     
     std::string dir_str = "/Users/caussebruno/Documents/developpement/Evaluation" ;
     
-    std::string file_name_out = dir_str + "/fm_V_v11.bin";
+    std::string file_name_out = dir_str + "/fm_V_v12.bin";
     // 2. Ouvrir le fichier en mode ecriture binaire
     // ios::out pour l'ecriture et ios::binary pour le mode binaire
     std::ofstream out(file_name_out, std::ios::out | std::ios::binary);
@@ -853,8 +850,8 @@ void RXPatternGenerate::encode_eval() {
     for(unsigned int iStage = 0; iStage<60; ++iStage) {
         
         //corner 13
-        eval_2[iStage][0] = new short[1594323];
-        eval_2[iStage][0] += 1594323/2;
+//        eval_2[iStage][0] = new short[1594323];
+//        eval_2[iStage][0] += 1594323/2;
         
         //edge 8+6
         eval_2[iStage][1] = new short[4782969];
@@ -879,14 +876,14 @@ void RXPatternGenerate::encode_eval() {
                                                             + id4*pow3[4] + id5*pow3[5] + id6*pow3[6] + id7*pow3[7]
                                                             + id8*pow3[8] + id9*pow3[9] + idA*pow3[10] + idB*pow3[11]
                                                             + idC*pow3[12];
-                                                            
-                                                            if(id5 == 0 && id6 == 0) {
-                                                                int corner2 = id0*pow3[0] + id1*pow3[1] + id2*pow3[2] + id3*pow3[3] + id4*pow3[4] + id7*pow3[5] + id8*pow3[6] + id9*pow3[7] + idA*pow3[8] + idB*pow3[9] + idC*pow3[10];
-                                                                eval_2[iStage][0][pattern_13] = RXEvaluation::eval_w[iStage][14][corner2];
-                                                            } else {
-                                                                int corner1 = id0*pow3[0] + id3*pow3[1] + id2*pow3[2] + id4*pow3[3] + id5*pow3[4] + id6*pow3[5] + id7*pow3[6] + id8*pow3[7] + idA*pow3[8] + id9*pow3[9] + idC*pow3[10];
-                                                                eval_2[iStage][0][pattern_13] = RXEvaluation::eval_w[iStage][13][corner1];
-                                                            }
+//                                                            
+//                                                            if(id5 == 0 && id6 == 0) {
+//                                                                int corner2 = id0*pow3[0] + id1*pow3[1] + id2*pow3[2] + id3*pow3[3] + id4*pow3[4] + id7*pow3[5] + id8*pow3[6] + id9*pow3[7] + idA*pow3[8] + idB*pow3[9] + idC*pow3[10];
+//                                                                eval_2[iStage][0][pattern_13] = RXEvaluation::eval_w[iStage][13][corner2];
+//                                                            } else {
+//                                                                int corner1 = id0*pow3[0] + id3*pow3[1] + id2*pow3[2] + id4*pow3[3] + id5*pow3[4] + id6*pow3[5] + id7*pow3[6] + id8*pow3[7] + idA*pow3[8] + id9*pow3[9] + idC*pow3[10];
+//                                                                eval_2[iStage][0][pattern_13] = RXEvaluation::eval_w[iStage][12][corner1];
+//                                                            }
                                                             
                                                             for(int idD =-1; idD<2; ++idD) {
                                                                 
@@ -975,7 +972,7 @@ void RXPatternGenerate::encode_eval() {
     //ecriture de l'evaluation
     std::string dir_str = "/Users/caussebruno/Documents/developpement/Evaluation";
     
-    std::string file_name_out = dir_str + "/eval_v10.1.bin";
+    std::string file_name_out = dir_str + "/eval_v11.bin";
     // 2. Ouvrir le fichier en mode ecriture binaire
     // ios::out pour l'ecriture et ios::binary pour le mode binaire
     std::ofstream out(file_name_out, std::ios::out | std::ios::binary);
@@ -997,20 +994,21 @@ void RXPatternGenerate::encode_eval() {
 
             eval_2[iStage][1] -= 4782969/2;
 
-            //diag 8 id_patt = 5
+            //edge 2*(3/2))
             RXEvaluation::eval_w[iStage][8] -= 59049/2;
-            //diag 8 id_patt = 5
+            //edge 2*5
             RXEvaluation::eval_w[iStage][9] -= 59049/2;
 
             //hv_2 id_patt = 10
             RXEvaluation::eval_w[iStage][10] -= 6561/2;
-            //hv_3 id_patt = 10
+            //hv_3 id_patt = 11
             RXEvaluation::eval_w[iStage][11] -= 6561/2;
-            //hv_4 id_patt = 11
+            //hv_4 id_patt = 12
             RXEvaluation::eval_w[iStage][12] -= 6561/2;
 
-            eval_2[iStage][0] -= 1594323/2;
-            
+            //corner 4/3/3/1 id_patt = 13
+            RXEvaluation::eval_w[iStage][13] -= 177147/2;
+
             
             //mob player
             out.write(reinterpret_cast<const char*>(RXEvaluation::eval_w[iStage][0]), 24*sizeof(short));
@@ -1029,11 +1027,10 @@ void RXPatternGenerate::encode_eval() {
             // edge 8+6
             out.write(reinterpret_cast<const char*>(eval_2[iStage][1]), 4782969*sizeof(short));
             
-            //hv 2
+            //edge 2*(3/2))
             out.write(reinterpret_cast<const char*>(RXEvaluation::eval_w[iStage][8]), 59049*sizeof(short));
-            //hv 3
+            //edge 2*5
             out.write(reinterpret_cast<const char*>(RXEvaluation::eval_w[iStage][9]), 59049*sizeof(short));
-
 
             //hv 2
             out.write(reinterpret_cast<const char*>(RXEvaluation::eval_w[iStage][10]), 6561*sizeof(short));
@@ -1042,8 +1039,8 @@ void RXPatternGenerate::encode_eval() {
             //hv 4
             out.write(reinterpret_cast<const char*>(RXEvaluation::eval_w[iStage][12]), 6561*sizeof(short));
             
-            // corner 5/4/3/2/1
-            out.write(reinterpret_cast<const char*>(eval_2[iStage][0]), 1594323*sizeof(short));
+            //corner 4/3/3/1
+            out.write(reinterpret_cast<const char*>(RXEvaluation::eval_w[iStage][13]), 177147*sizeof(short));
 
             //diag 5 id_patt = 2
             RXEvaluation::eval_w[iStage][2] += 243/2;
@@ -1056,7 +1053,7 @@ void RXPatternGenerate::encode_eval() {
 
             //edge3
             RXEvaluation::eval_w[iStage][8] += 59049/2;
-            //edge4
+            //edge3
             RXEvaluation::eval_w[iStage][9] += 59049/2;
 
             //hv_2 id_patt = 10
@@ -1065,14 +1062,19 @@ void RXPatternGenerate::encode_eval() {
             RXEvaluation::eval_w[iStage][11] += 6561/2;
             //hv_4 id_patt = 12
             RXEvaluation::eval_w[iStage][12] += 6561/2;
-            
-            delete eval_2[iStage][0];
+
+            //corner 4/3/31
+            RXEvaluation::eval_w[iStage][13] += 177147/2;
+
+//            delete eval_2[iStage][0];
             delete eval_2[iStage][1];
         }
     }
     
     // 5. Fermeture du fichier
     out.close();
+    
+    RXEvaluation::unload();
 
 
 

@@ -7,15 +7,18 @@ import math
 # --- definition des patterns ---
 # a implementer nanuellement en fonctions des patterns choisis
 
+# ************************************* cas particulier mobility *************************************
+# ATTENTION : verifier "cas particulier mobility"
+
 # mobility player and opponent
 # diag4, diag5, diag6, diag7, diag8
-# edge+2X, edge 6+4, edge 2*5
+# edge+2X, edge 6+4, edge2*(3/2), edge 2*5
 # hv2, hv3, hv4
-# corner9
-index_offset = [24, 24, 81, 243, 729, 2187, 6561, 59049, 59049, 59049, 6561, 6561, 6561, 19683]
-type_rotate  = [ 0,  0,  4,   5,   6,    7,    8,    10,    10,     0,    8,    8,    8,    23]
+# corner4/3/3/1
+# index_offset = [24, 24, 81, 243, 729, 2187, 6561, 59049, 59049, 59049, 59049, 6561, 6561, 6561, 177147]
+# type_rotate  = [ 0,  0,  4,   5,   6,    7,    8,    10,    10,    10,     0,    8,    8,    8,     17]
 
-# ATTENTION : verifier "cas particulier mobility"
+
 
 # 🔄 --- Conversion entre Index Global et Index Local/Individuel ---
 #
@@ -40,7 +43,7 @@ def get_local_index(global_index):
         if id < index_offset[i]:
             break
         id -= index_offset[i]
-        
+
     if i < 2: # cas particulier mobility
         return id
 		        
@@ -49,7 +52,7 @@ def get_local_index(global_index):
 def get_global_index(local_index, id_offset):
     
     id = local_index
-    
+
     if id_offset > 1: # cas particulier mobility
     	id += ((index_offset[id_offset]-1)//2)
         
@@ -252,7 +255,7 @@ for filename_in in filenames_in:
 # 2) Compter les occurrences
 compte = Counter(all_indices)
 
-# cas particulier mobility
+#************************************* cas particulier mobility *************************************
 # S'assurer que chaque indice de 0 à 47 (mobility) > 0 a au moins 50 occurrences pour ne pas etre supprimé
 for i in range(48):
     if compte[i] != 0:

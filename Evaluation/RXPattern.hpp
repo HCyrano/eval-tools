@@ -79,7 +79,6 @@ inline void RXPattern::clear() {
 
 
 
-
 inline void RXPattern::set_BLACK_A1() { patt[12]  -=       1; patt[14]  -=       3; patt[17]  -=    6561; patt[22]  -=     243; patt[29]  -=     243; patt[42]  -=      81; };
 inline void RXPattern::set_BLACK_B1() { patt[ 9]  -=       1; patt[14]  -=       9; patt[18]  -=       9; patt[22]  -=     729; patt[29]  -=      81; patt[33]  -=    2187; patt[42]  -=    2187; };
 inline void RXPattern::set_BLACK_C1() { patt[ 5]  -=       1; patt[14]  -=      27; patt[18]  -=      27; patt[22]  -=    2187; patt[37]  -=    2187; patt[42]  -=    6561; };
@@ -362,5 +361,6 @@ inline void RXPattern::flip_WHITE_D8() { patt[ 2]  +=     162; patt[16]  +=     
 inline void RXPattern::flip_WHITE_E8() { patt[ 3]  +=       2; patt[16]  +=     162; patt[20]  +=     162; patt[24]  +=   13122; patt[28]  +=   39366; patt[39]  +=    4374; patt[44]  +=  118098; };
 inline void RXPattern::flip_WHITE_F8() { patt[ 7]  +=       2; patt[16]  +=      54; patt[20]  +=      54; patt[24]  +=    4374; patt[35]  +=    4374; patt[44]  +=   13122; };
 inline void RXPattern::flip_WHITE_G8() { patt[11]  +=       2; patt[16]  +=      18; patt[20]  +=      18; patt[24]  +=    1458; patt[27]  +=     162; patt[31]  +=    4374; patt[44]  +=    4374; };
+
 
 #endif

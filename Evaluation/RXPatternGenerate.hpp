@@ -76,7 +76,7 @@ class RXPatternGenerate {
         
         //[{last index of pattern, offset index global, n_index local, rotate index}
         
-        //mobility player
+/*        //mobility player
         {0, 0, 24, 0},
         //mobility opponent
         {1, 24, 24, 0},
@@ -94,9 +94,45 @@ class RXPatternGenerate {
         {19, 9768, 59049, 10},
         // edge 6+4
         {23, 68817, 59049, 10},
+        // edge 2*(3/2)
+        {27, 127866, 59049, 10},
+        // edge 2*5
+        {35, 186915, 59049, 0},
+
+        // hv_2
+        {39, 245964, 6561, 8},
+        // hv_3
+        {43, 252525, 6561, 8},
+        // hv_4
+        {47, 259069, 6561, 8},
+        
+        // corner 4/3/3/1
+        {51, 265647, 177147, 17},
+
+        // 442 794 indexs
+*/
+        
+        //mobility player
+        {0, 0, 24, 0},
+        //mobility opponent
+        {1, 24, 24, 0},
+        
+        //diag_5
+        {5, 48, 243, 5},
+        //diag_6
+        {9, 291, 729, 6},
+        //diag_7
+        {13, 1020, 2187, 7},
+        //diag_8
+        {15, 3207, 6561, 8},
+        
+        // edge + 2X
+        {19, 9768, 59049, 10},
+        // edge 6+4
+        {23, 68817, 59049, 10},
         // edge 2*5
         {31, 127866, 59049, 0},
-
+        
         // hv_2
         {35, 186915, 6561, 8},
         // hv_3
@@ -105,12 +141,11 @@ class RXPatternGenerate {
         {43, 200037, 6561, 8},
         
         // corner 4/3/3/1
-        {47, 206598, 177147, 17},
-
+        {47, 206598, 177147, 17}
+        
         // 383 745 indexs
-
     };
-
+    
     const unsigned int N_INDEX = 383745;
     const unsigned int RANK = 16;
 
@@ -167,6 +202,15 @@ class RXPatternGenerate {
         { 10, { G2, H1, H2, H3, H4, H5, H6, H7, H8, G7}},
         { 10, { G7, H8, G8, F8, E8, D8, C8, B8, A8, B7}},
         { 10, { B7, A8, A7, A6, A5, A4, A3, A2, A1, B2}},
+ 
+        // edge ALT 6+4
+        // . X X X X X X .
+        // . . X X X X . .
+        { 10, { D2, C2, B1, C1, D1, E1, F1, G1, F2, E2}},
+        { 10, { G4, G3, H2, H3, H4, H5, H6, H7, G6, G5}},
+        { 10, { E7, F7, G8, F8, E8, D8, C8, B8, C7, D7}},
+        { 10, { B5, B6, A7, A6, A5, A4, A3, A2, B3, B4}},
+
 /*
         // edge + 2CX
         // X X X X X X X X
@@ -175,15 +219,8 @@ class RXPatternGenerate {
         { 12, { G2, G1, H1, H2, H3, H4, H5, H6, H7, H8, G8, G7}},
         { 12, { G7, H7, H8, G8, F8, E8, D8, C8, B8, A8, A7, B7}},
         { 12, { B7, B8, A8, A7, A6, A5, A4, A3, A2, A1, B1, B2}},
-*/
-        // edge ALT 6+4
-        // . X X X X X X .
-        // . . X X X X . .
-        { 10, { D2, C2, B1, C1, D1, E1, F1, G1, F2, E2}},
-        { 10, { G4, G3, H2, H3, H4, H5, H6, H7, G6, G5}},
-        { 10, { E7, F7, G8, F8, E8, D8, C8, B8, C7, D7}},
-        { 10, { B5, B6, A7, A6, A5, A4, A3, A2, B3, B4}},
-/*
+
+
         // edge 8+6
         // X X X X X X X X
         // . X X X X X X .
@@ -191,6 +228,7 @@ class RXPatternGenerate {
         { 14, { G4, G3, G2, H1, H2, H3, H4, H5, H6, H7, H8, G7, G6, G5}},
         { 14, { E7, F7, G7, H8, G8, F8, E8, D8, C8, B8, A8, B7, C7, D7}},
         { 14, { B5, B6, B7, A8, A7, A6, A5, A4, A3, A2, A1, B2, B3, B4}},
+        
 
         // edge 8+8
         // X X X X X X X X
@@ -208,7 +246,7 @@ class RXPatternGenerate {
         { 10, { F4, F3, G4, H3, H4, H5, H6, G5, F6, F5}},
         { 10, { E6, F6, E7, F8, E8, D8, C8, D7, C6, D6}},
         { 10, { C5, C6, B5, A6, A5, A4, A3, B4, C3, C4}},
-
+ 
         // edge 2*(3/2)
         // X X X . . X X X
         // X X . . . . X X
@@ -225,7 +263,6 @@ class RXPatternGenerate {
         { 10, { E7, F7, H8, F8, E8, D8, C8, A8, C7, D7}},
         { 10, { B5, B6, A8, A6, A5, A4, A3, A1, B3, B4}},
 
-        
         // edge 2*(3/2)
         // X X X . . X X X
         // . X X . . X X .
@@ -374,7 +411,7 @@ class RXPatternGenerate {
         { 17, { A4, B3, A3, A2, A1, B2, C3, B1, C1, C2, D1}},
         { 17, { E1, F2, F1, G1, H1, G2, F3, H2, H3, G3, H4}},
         { 17, { H5, G6, H6, H7, H8, G7, F6, G8, F8, F7, E8}},
-        { 17, { D8, C7, C8, B8, A8, B7, C6, A7, A6, B6, A5}},
+        { 17, { D8, C7, C8, B8, A8, B7, C6, A7, A6, B6, A5}}
 /*
         // corner ALT :4/3/3/1
         //   X X X
@@ -385,7 +422,7 @@ class RXPatternGenerate {
         { 11, { E1, E2, F1, F2, G1, F3, H2, G3, H3, G4, H4}},
         { 11, { H5, G5, H6, G6, H7, F6, G8, F7, F8, E7, E8}},
         { 11, { D8, D7, C8, C7, B8, C6, A7, B6, A6, B5, A5}}
-
+ 
         // corner 4/4/3/2
         // X X X X
         // X X X X
