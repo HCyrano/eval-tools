@@ -40,7 +40,7 @@ from numba import njit
 # Config
 # =============================================================================
 
-N_INDEX  = 560892
+N_INDEX  = 442794
 PAD_IDX  = N_INDEX   # sentinelle hors-tableau
 N_STAGES = 60
 

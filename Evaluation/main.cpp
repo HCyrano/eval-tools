@@ -38,17 +38,16 @@ int main(int argc, const char * argv[]) {
 
 */
     
-//    RXEvaluation::load();
+    RXEvaluation::load();
  
     RXPatternGenerate* gen = new RXPatternGenerate();
 
-    //generation des index globaux et du score d'une position stage par stage
     for(int stage = 0; stage<60; ++stage)
-        gen->stage_to_data(stage);
+        gen->RMSE(stage);
 
     delete gen;
     
-//    RXEvaluation::unload();
+    RXEvaluation::unload();
 
 
     return EXIT_SUCCESS;

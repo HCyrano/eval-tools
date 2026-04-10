@@ -339,7 +339,7 @@ void RXPatternGenerate::stage_to_data(const unsigned int stage) {
     std::cout << "stage " << oss.str() << std::endl;
     
 //    std::string file_name_in  = dir_str + "/database/Edax_Egrcd_Roxane/stages/stage_" + oss.str() + ".txt";
-//    std::string file_name_out = dir_str + "/Evaluation/datas/data_" + oss.str() + "b.txt";
+//    std::string file_name_out = dir_str + "/Evaluation/datas/data_" + oss.str() + ".txt";
 
     std::string file_name_in  = dir_str + "/database/Edax_Egrcd_Roxane/stages_WS/stage_" + oss.str() + ".txt";
     std::string file_name_out = dir_str + "/Evaluation/datas_WS/data_" + oss.str() + ".txt";
@@ -681,12 +681,6 @@ void RXPatternGenerate::write_eval() {
                         weigths_out[i] = weigths_in[i]*256; //mobility opponent
                 } else {
                     norm_weight(weigths_in, n_occs_in, weigths_out, pattern_info[id_patt][1], pattern_info[id_patt][2], pattern_info[id_patt][3]);
-                    if (stage == 46 && id_patt == 2) {
-                        for(int i = 48; i < 291; ++i) {
-                            std::cout << weigths_out[i]/256.0f << std::endl;
-                        }
-                    }
-
                 }
             
             
@@ -801,7 +795,7 @@ void RXPatternGenerate::write_FM() {
     
     std::string dir_str = "/Users/caussebruno/Documents/developpement/Evaluation" ;
     
-    std::string file_name_out = dir_str + "/fm_V_v12.bin";
+    std::string file_name_out = dir_str + "/weight_V_v11.bin";
     // 2. Ouvrir le fichier en mode ecriture binaire
     // ios::out pour l'ecriture et ios::binary pour le mode binaire
     std::ofstream out(file_name_out, std::ios::out | std::ios::binary);
@@ -820,7 +814,7 @@ void RXPatternGenerate::write_FM() {
             // 2. Boucle de lecture jusqu'a la fin du fichier (ou erreur)
             // La condition 'fichier >> valeur_lue' est vraie tant qu'un float peut etre lu.
             
-            //mobility player id_patt = 0
+            //charge les datas : les mobilités sont en place
             fm_ifs.read(reinterpret_cast<char*> (fm_in), sizeof(short)*N_INDEX * RANK);
             
             // 4. Verification de la raison de la sortie de la boucle
